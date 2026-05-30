@@ -1,0 +1,47 @@
+[
+  {
+    "title": "Best DCIM Software for Data Center Operators 2026",
+    "url": "https://reliamag.com/guides/best-dcim-software/",
+    "snippet": "Best DCIM software 2026: independent comparison of Schneider EcoStruxure IT, Sunbird, Nlyte, Eaton Brightlayer, EkkoSense, Hyperview, ..."
+  },
+  {
+    "title": "Top data center infrastructure management software in 2026",
+    "url": "https://www.techtarget.com/searchdatacenter/feature/A-close-look-at-DCIM-software-and-the-broad-vendor-options",
+    "snippet": "DCIM tools can improve data center management and operation. Learn how six prominent products can help organizations control costs, manage energy and track ..."
+  },
+  {
+    "title": "Data Center Infrastructure Management (DCIM) Tools",
+    "url": "https://www.gartner.com/reviews/market/data-center-infrastructure-management-tools",
+    "snippet": "iTRACS DCIM is software designed for data center infrastructure management, providing features to monitor, manage, and optimize physical assets and environments ..."
+  },
+  {
+    "title": "Best DCIM Software for Data Centers: 2026 Rankings",
+    "url": "https://archilabs.ai/posts/best-dcim-software-for-data-centers-2026-rankings",
+    "snippet": "Ranking the Best DCIM Software for 2026 (Data Centers) · 1. Sunbird DCIM – User-Friendly, Integration-Focused Management · 2. Nlyte – Robust ..."
+  },
+  {
+    "title": "Top 10: DCIM Solution Providers",
+    "url": "https://datacentremagazine.com/top10/top-10-dcim-solution-providers",
+    "snippet": "Top 10: DCIM Solution Providers · 10) EkkoSense · 9) Huawei · 8) Cisco · 7) Eaton · 6) ABB · 5) Siemens · 4) Sunbird Software · 3) Nlyte Software."
+  },
+  {
+    "title": "Data Center Infrastructure Management (DCIM) Software",
+    "url": "https://www.saasworthy.com/list/data-center-infrastructure-management-dcim",
+    "snippet": "Best Data Center Infrastructure Management (DCIM) Software for 2026 · Model · Atlassian Data Center · Cisco Data Center Network Manager."
+  },
+  {
+    "title": "Best Data Center Managed Service Providers 2026",
+    "url": "https://www.talentmsh.com/insights/best-data-center-managed-service-providers",
+    "snippet": "The top data center managed service providers in 2026 are MSH, Kyndryl, NTT Data, Rackspace Technology, Flexential, Equinix and Digital Realty. Top data center ..."
+  },
+  {
+    "title": "Top 15 Best Enterprise Data Management Platforms in 2026",
+    "url": "https://latam.tech/top-15-best-enterprise-data-management-platforms-in-2026/5314/",
+    "snippet": "Data governance controls; Data quality monitoring; Master data management; Security and compliance layers; Real-time analytics infrastructure ..."
+  },
+  {
+    "title": "Best Data Center Management Software 2026",
+    "url": "https://www.capterra.com/data-center-management-software/",
+    "snippet": "Best Data Center Management Software · ManageEngine OpManager Plus · ManageEngine OpManager · Nlyte DCIM · netTerrain DCIM · Drawbase · Google Cloud."
+  }
+]

@@ -1,0 +1,6 @@
+venv/
+site_payload/public/
+site_payload/.hugo_build.lock
+__pycache__/
+.DS_Store
+.env
