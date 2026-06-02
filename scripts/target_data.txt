@@ -1,8 +1,8 @@
 [
   {
-    "title": "Best DCIM Software for Data Center Operators 2026",
-    "url": "https://reliamag.com/guides/best-dcim-software/",
-    "snippet": "Best DCIM software 2026: independent comparison of Schneider EcoStruxure IT, Sunbird, Nlyte, Eaton Brightlayer, EkkoSense, Hyperview, ..."
+    "title": "Data Center Infrastructure Management (DCIM) Tools",
+    "url": "https://www.gartner.com/reviews/market/data-center-infrastructure-management-tools",
+    "snippet": "iTRACS DCIM is software designed for data center infrastructure management, providing features to monitor, manage, and optimize physical assets and environments ..."
   },
   {
     "title": "Top data center infrastructure management software in 2026",
@@ -10,24 +10,9 @@
     "snippet": "DCIM tools can improve data center management and operation. Learn how six prominent products can help organizations control costs, manage energy and track ..."
   },
   {
-    "title": "Data Center Infrastructure Management (DCIM) Tools",
-    "url": "https://www.gartner.com/reviews/market/data-center-infrastructure-management-tools",
-    "snippet": "iTRACS DCIM is software designed for data center infrastructure management, providing features to monitor, manage, and optimize physical assets and environments ..."
-  },
-  {
-    "title": "Best DCIM Software for Data Centers: 2026 Rankings",
-    "url": "https://archilabs.ai/posts/best-dcim-software-for-data-centers-2026-rankings",
-    "snippet": "Ranking the Best DCIM Software for 2026 (Data Centers) · 1. Sunbird DCIM – User-Friendly, Integration-Focused Management · 2. Nlyte – Robust ..."
-  },
-  {
-    "title": "Top 10: DCIM Solution Providers",
-    "url": "https://datacentremagazine.com/top10/top-10-dcim-solution-providers",
-    "snippet": "Top 10: DCIM Solution Providers · 10) EkkoSense · 9) Huawei · 8) Cisco · 7) Eaton · 6) ABB · 5) Siemens · 4) Sunbird Software · 3) Nlyte Software."
-  },
-  {
     "title": "Data Center Infrastructure Management (DCIM) Software",
-    "url": "https://www.saasworthy.com/list/data-center-infrastructure-management-dcim",
-    "snippet": "Best Data Center Infrastructure Management (DCIM) Software for 2026 · Model · Atlassian Data Center · Cisco Data Center Network Manager."
+    "url": "https://www.device42.com/features/data-center-management/",
+    "snippet": "A DCIM solution helps data center managers more efficiently manage and control operations, improve resource utilization and performance, control costs, and ..."
   },
   {
     "title": "Best Data Center Managed Service Providers 2026",
@@ -35,13 +20,28 @@
     "snippet": "The top data center managed service providers in 2026 are MSH, Kyndryl, NTT Data, Rackspace Technology, Flexential, Equinix and Digital Realty. Top data center ..."
   },
   {
-    "title": "Top 15 Best Enterprise Data Management Platforms in 2026",
-    "url": "https://latam.tech/top-15-best-enterprise-data-management-platforms-in-2026/5314/",
-    "snippet": "Data governance controls; Data quality monitoring; Master data management; Security and compliance layers; Real-time analytics infrastructure ..."
+    "title": "Data Center Infrastructure Management (DCIM) Software",
+    "url": "https://www.softwarereviews.com/categories/data-center-infrastructure-management",
+    "snippet": "Top Data Center Infrastructure Management Software 2026 ; IBM Data Center Services · 7.1 · 7.3 · 47 Reviews ; Trellis · 7.9 · 8.1 · 10 Reviews ; CENTEROS DCIM · 7.9 · 8.1 ..."
   },
   {
-    "title": "Best Data Center Management Software 2026",
-    "url": "https://www.capterra.com/data-center-management-software/",
-    "snippet": "Best Data Center Management Software · ManageEngine OpManager Plus · ManageEngine OpManager · Nlyte DCIM · netTerrain DCIM · Drawbase · Google Cloud."
+    "title": "Modern Data Center Infrastructure Management | Nlyte DCIM",
+    "url": "https://www.nlyte.com/solutions/data-center-infrastructure-management-dcim/",
+    "snippet": "Optimize hybrid environments with Nlyte data center infrastructure management for insight, workflow automation, and improved uptime."
+  },
+  {
+    "title": "7 Open Source Tools to Consider for Your Data Center",
+    "url": "https://www.datacenterknowledge.com/open-source-software/7-open-source-tools-to-consider-for-your-data-center",
+    "snippet": "7 Open Source Tools to Consider for Your Data Center · 1. OpenDCIM · 2. NetBox · 3. RackTables · 4. Nmap · 5. Tinkerbell · 6. Prometheus · 7. Grafana."
+  },
+  {
+    "title": "Best Data Center Infrastructure Management Tools",
+    "url": "https://www.g2.com/categories/data-center-infrastructure-management-dcim",
+    "snippet": "DCIM solutions help organizations understand how infrastructure components interact, enabling more informed operational and capacity planning decisions."
+  },
+  {
+    "title": "Data Center Infrastructure Management (DCIM) Market ...",
+    "url": "https://www.fortunebusinessinsights.com/data-center-infrastructure-management-market-105899",
+    "snippet": "The Data Center Infrastructure Management Market Research Report highlights growing demand for cloud-based and SaaS DCIM solutions that support ..."
   }
 ]

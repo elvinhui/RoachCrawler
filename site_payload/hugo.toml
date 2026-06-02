@@ -1,33 +1,11 @@
 baseURL = 'https://yourwebsite.com'
-languageCode = 'en-us'
-title = 'InfraOps Router'
-theme = 'PaperMod'
+theme = 'papermod'
+defaultContentLanguage = 'zh'
 
 [params]
-env = 'production'
-defaultTheme = 'auto' # 自动跟随用户电脑开启深色/浅色模式
-ShowReadingTime = true # 显示阅读时间
-ShowShareButtons = true # 开启文章底部的分享按钮
-ShowPostNavLinks = true # 开启上一篇/下一篇
-ShowBreadCrumbs = true # 开启顶部面包屑导航（对 SEO 极好）
-
-# 开启主页极客名片模式
-[params.profileMode]
-enabled = true
-title = "Automate The Infrastructure."
-subtitle = "专注于数据中心架构、Python 自动化脚本与网络路由协议的硬核笔记。"
-imageUrl = "https://raw.githubusercontent.com/adityatelange/hugo-PaperMod/exampleSite/static/apple-touch-icon.png" # 这里未来可以换成你自己的 Logo 链接
-imageWidth = 120
-imageHeight = 120
-
-# 配置底部的快捷跳转按键
-[[params.profileMode.buttons]]
-name = "查看所有技术文档"
-url = "/posts/"
-
-[[params.profileMode.buttons]]
-name = "GitHub 仓库"
-url = "https://github.com/"
+  env = 'production'
+  defaultTheme = 'auto'
+  ShowPostNavLinks = true
 
 # ================================
 # 中文网段配置 (默认路由 /)
@@ -36,19 +14,17 @@ url = "https://github.com/"
   languageName = "中文"
   title = "InfraOps Router"
   weight = 1
-  
+
   [languages.zh.params.profileMode]
     enabled = true
     title = "数据中心与基建自动化"
     subtitle = "专注 Data Center 工程、Python 脚本与架构管理的硬核笔记。"
-    imageUrl = "/avatar.png" # 直接调用本地 static 目录下的图片
+    imageUrl = "/avatar.png"
     imageWidth = 120
     imageHeight = 120
-    
     [[languages.zh.params.profileMode.buttons]]
-      name = "查看技术文档"
+      name = "查看文章"
       url = "/posts/"
-      
     [[languages.zh.params.profileMode.buttons]]
       name = "English Version"
       url = "/en/"
@@ -60,19 +36,17 @@ url = "https://github.com/"
   languageName = "English"
   title = "InfraOps Router"
   weight = 2
-  
+
   [languages.en.params.profileMode]
     enabled = true
     title = "Data Center & Automation"
     subtitle = "Hardcore notes on Data Center engineering, Python scripts, and infrastructure."
-    imageUrl = "/avatar.png" # 中英双语共享同一张本地图片
+    imageUrl = "/avatar.png"
     imageWidth = 120
     imageHeight = 120
-    
     [[languages.en.params.profileMode.buttons]]
-      name = "Read Docs"
+      name = "Read Posts"
       url = "/en/posts/"
-      
     [[languages.en.params.profileMode.buttons]]
       name = "中文版本"
       url = "/"
