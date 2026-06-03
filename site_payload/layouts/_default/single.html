@@ -1,0 +1,51 @@
+{{ define "main" }}
+<main class="ops-shell py-12 sm:py-16">
+  <article class="mx-auto max-w-5xl px-6 lg:px-8">
+    <header class="mx-auto max-w-3xl text-center">
+      <a href="{{ if eq .Lang "zh" }}/posts/{{ else }}/en/posts/{{ end }}" class="ops-chip">
+        <span class="h-2 w-2 rounded-full bg-emerald-500"></span>
+        {{ if eq .Lang "zh" }}运维笔记{{ else }}Ops Notes{{ end }}
+      </a>
+      <h1 class="mt-6 text-4xl font-black leading-tight tracking-normal text-slate-950 sm:text-6xl dark:text-white">
+        {{ .Title }}
+      </h1>
+      {{ with .Description }}
+      <p class="mx-auto mt-5 max-w-2xl text-lg leading-8 text-slate-600 dark:text-zinc-300">{{ . }}</p>
+      {{ end }}
+      <div class="mt-6 flex flex-wrap items-center justify-center gap-3 text-sm font-semibold text-slate-500 dark:text-zinc-400">
+        <time datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format "Jan 2, 2006" }}</time>
+        <span>·</span>
+        <span>Tan Jia Hui</span>
+        {{ with .Params.categories }}
+        <span>·</span>
+        <span class="rounded-full bg-teal-50 px-3 py-1 text-teal-700 dark:bg-teal-400/10 dark:text-teal-200">{{ index . 0 }}</span>
+        {{ end }}
+      </div>
+    </header>
+
+    {{ with .Params.cover.image }}
+    <div class="mx-auto mt-10 max-w-5xl overflow-hidden rounded-lg border border-white/70 bg-white shadow-2xl shadow-slate-200/70 dark:border-white/10 dark:bg-zinc-900 dark:shadow-black/30">
+      <img src="{{ . }}" alt="{{ $.Params.cover.alt | default $.Title }}" class="h-[260px] w-full object-cover sm:h-[420px]" />
+    </div>
+    {{ end }}
+
+    <div class="ops-card mx-auto mt-10 max-w-3xl p-6 sm:p-10">
+      <div class="ops-article-content">
+        {{ if .Content }}
+          {{ if not (.Param "disableAnchoredHeadings") }}
+            {{ partial "anchored_headings.html" .Content }}
+          {{ else }}
+            {{ .Content }}
+          {{ end }}
+        {{ end }}
+      </div>
+    </div>
+
+    <footer class="mx-auto mt-8 max-w-3xl">
+      {{ if (.Param "ShowPostNavLinks") }}
+        {{ partial "post_nav_links.html" . }}
+      {{ end }}
+    </footer>
+  </article>
+</main>
+{{ end }}
