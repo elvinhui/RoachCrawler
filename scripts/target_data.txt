@@ -1,47 +1,47 @@
 [
   {
-    "title": "Data Center Infrastructure Management (DCIM) Tools",
-    "url": "https://www.gartner.com/reviews/market/data-center-infrastructure-management-tools",
-    "snippet": "iTRACS DCIM is software designed for data center infrastructure management, providing features to monitor, manage, and optimize physical assets and environments ..."
+    "title": "What's a sane way to scrape a few pages in 2026?",
+    "url": "https://www.reddit.com/r/WebScrapingInsider/comments/1r2ly2s/whats_a_sane_way_to_scrape_a_few_pages_in_2026/",
+    "snippet": "I’m trying to figure out a decent way to scrape a couple of websites for a small personal project, but I just keep going in circles. Most of the guides ..."
   },
   {
-    "title": "Top data center infrastructure management software in 2026",
-    "url": "https://www.techtarget.com/searchdatacenter/feature/A-close-look-at-DCIM-software-and-the-broad-vendor-options",
-    "snippet": "DCIM tools can improve data center management and operation. Learn how six prominent products can help organizations control costs, manage energy and track ..."
+    "title": "Build a Python Web Scraper in 5 Steps [2026] - Tech Insider",
+    "url": "https://tech-insider.org/python-web-scraping-tutorial-beautifulsoup-playwright-2026/",
+    "snippet": "Learn how to build a Python web scraper in 5 practical steps. Covers requests, BeautifulSoup, handling pagination, and avoiding IP bans."
   },
   {
-    "title": "Data Center Infrastructure Management (DCIM) Software",
-    "url": "https://www.device42.com/features/data-center-management/",
-    "snippet": "A DCIM solution helps data center managers more efficiently manage and control operations, improve resource utilization and performance, control costs, and ..."
+    "title": "The Ultimate Guide to Web Scraping (2026)",
+    "url": "https://browser-use.com/posts/web-scraping-guide-2026",
+    "snippet": "Web scraping in 2026 looks nothing like it used to. This guide covers how it works, what's changed, and which tools to use."
   },
   {
-    "title": "Data Center Infrastructure Management (DCIM) Software",
-    "url": "https://www.softwarereviews.com/categories/data-center-infrastructure-management",
-    "snippet": "Top Data Center Infrastructure Management Software 2026 ; IBM Data Center Services · 7.1 · 7.3 · 47 Reviews ; Trellis · 7.9 · 8.1 · 10 Reviews ; CENTEROS DCIM · 7.9 · 8.1 ..."
+    "title": "Python Web Scraping 2026: The Senior Engineer's Guide ...",
+    "url": "https://medium.com/@onlineproxypmm/python-web-scraping-2026-the-senior-engineers-guide-to-the-extraction-ecosystem-713dde1351fa",
+    "snippet": "The golden era of “copy-paste” scraping is officially over. In 2026, the web is no longer a collection of static HTML documents; ..."
   },
   {
-    "title": "Modern Data Center Infrastructure Management | Nlyte DCIM",
-    "url": "https://www.nlyte.com/solutions/data-center-infrastructure-management-dcim/",
-    "snippet": "Optimize hybrid environments with Nlyte data center infrastructure management for insight, workflow automation, and improved uptime."
+    "title": "Building undetectable web scrapers for data extraction",
+    "url": "https://www.facebook.com/groups/dataengineeringpilipinas/posts/1921496581819733/",
+    "snippet": "How Web Scraping Works Select Your Source: Identify the websites or platforms you want to scrape. Build a Scraper: Use programming languages ( ..."
   },
   {
-    "title": "Best Data Center Managed Service Providers 2026",
-    "url": "https://www.talentmsh.com/insights/best-data-center-managed-service-providers",
-    "snippet": "The top data center managed service providers in 2026 are MSH, Kyndryl, NTT Data, Rackspace Technology, Flexential, Equinix and Digital Realty."
+    "title": "Web Scraping for Beginners in 2026: A No-BS Guide",
+    "url": "https://dev.to/agenthustler/web-scraping-for-beginners-in-2026-a-no-bs-guide-26m8",
+    "snippet": "Learn Scrapy — Python's most powerful scraping framework. · Learn CSS selectors and XPath — The better you are at targeting elements, the more ..."
   },
   {
-    "title": "Best DCIM Software for Data Centers: 2026 Rankings",
-    "url": "https://archilabs.ai/posts/best-dcim-software-for-data-centers-2026-rankings",
-    "snippet": "Ranking the Best DCIM Software for 2026 (Data Centers) · 1. Sunbird DCIM – User-Friendly, Integration-Focused Management · 2. Nlyte – Robust ..."
+    "title": "REGISTRATION CLOSED ISSR Summer Methodology ...",
+    "url": "https://www.umass.edu/social-science-research/events/registration-closed-issr-summer-methodology-workshop-web-scraping-python",
+    "snippet": "REGISTRATION CLOSED ISSR Summer Methodology Workshop | Web Scraping in Python. June 02, 2026 9:00 am - 12:00 pm ET."
   },
   {
-    "title": "Data Center Infrastructure Management (DCIM) Market ...",
-    "url": "https://www.fortunebusinessinsights.com/data-center-infrastructure-management-market-105899",
-    "snippet": "4.3 billion in 2026. DCIM solutions provide real-time visibility into power, cooling, space utilization, network connectivity, and equipment ..."
+    "title": "Advanced Web Scraping Tutorial! (w/ Python Beautiful Soup ...",
+    "url": "https://www.youtube.com/watch?v=DcI_AZqfZVc",
+    "snippet": "Setting up and understanding the HTML structure of a web page · Extracting data using Beautiful Soup and handling dynamic content · Implementing ..."
   },
   {
-    "title": "Best Data Center Infrastructure Management Tools",
-    "url": "https://www.g2.com/categories/data-center-infrastructure-management-dcim",
-    "snippet": "DCIM solutions help organizations understand how infrastructure components interact, enabling more informed operational and capacity planning decisions."
+    "title": "Web Scraping Using Python: Complete Beginner-to- ...",
+    "url": "https://www.proxyrack.com/blog/web-scraping-using-python/",
+    "snippet": "Python also has excellent scraping libraries that handle: HTML parsing. Browser automation. JavaScript rendering. Data cleaning. API requests."
   }
 ]
