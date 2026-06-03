@@ -1,0 +1,64 @@
+{{ define "main" }}
+{{ $posts := where site.RegularPages "Section" "posts" }}
+{{ $recent := first 3 $posts }}
+<main class="ops-shell">
+  <section class="mx-auto grid min-h-[calc(100vh-96px)] max-w-7xl grid-cols-1 items-center gap-10 px-6 py-12 lg:grid-cols-[1.05fr_0.95fr] lg:px-8">
+    <div class="max-w-3xl">
+      <span class="ops-chip">
+        <span class="h-2 w-2 rounded-full bg-emerald-500"></span>
+        InfraOps Router
+      </span>
+      <h1 class="mt-6 text-5xl font-black leading-[0.98] tracking-normal text-slate-950 sm:text-6xl lg:text-7xl dark:text-white">
+        {{ if eq .Lang "zh" }}数据中心与自动化运维{{ else }}Data Center & Automation Ops{{ end }}
+      </h1>
+      <p class="mt-6 max-w-2xl text-lg leading-8 text-slate-600 dark:text-zinc-300">
+        {{ if eq .Lang "zh" }}把搜索、脚本、AI 洗稿和基础设施观察汇入同一个发布路由，让运维知识持续沉淀成可读、可复用的工程笔记。{{ else }}A focused publishing route for infrastructure notes, Python automation, and AI-assisted operations research.{{ end }}
+      </p>
+      <div class="mt-8 flex flex-wrap gap-3">
+        <a class="ops-button" href="{{ if eq .Lang "zh" }}/posts/{{ else }}/en/posts/{{ end }}">{{ if eq .Lang "zh" }}查看文章{{ else }}Read Posts{{ end }}</a>
+        <a class="ops-button-secondary" href="{{ if eq .Lang "zh" }}/en/{{ else }}/{{ end }}">{{ if eq .Lang "zh" }}English{{ else }}中文版本{{ end }}</a>
+      </div>
+      <div class="mt-10 grid max-w-2xl grid-cols-3 gap-3">
+        <div class="ops-card p-4">
+          <p class="text-2xl font-black text-slate-950 dark:text-white">{{ len $posts }}</p>
+          <p class="mt-1 text-xs font-semibold uppercase tracking-[0.16em] text-slate-500 dark:text-zinc-400">{{ if eq .Lang "zh" }}文章{{ else }}Posts{{ end }}</p>
+        </div>
+        <div class="ops-card p-4">
+          <p class="text-2xl font-black text-slate-950 dark:text-white">AI</p>
+          <p class="mt-1 text-xs font-semibold uppercase tracking-[0.16em] text-slate-500 dark:text-zinc-400">{{ if eq .Lang "zh" }}流水线{{ else }}Pipeline{{ end }}</p>
+        </div>
+        <div class="ops-card p-4">
+          <p class="text-2xl font-black text-slate-950 dark:text-white">DCIM</p>
+          <p class="mt-1 text-xs font-semibold uppercase tracking-[0.16em] text-slate-500 dark:text-zinc-400">{{ if eq .Lang "zh" }}专题{{ else }}Focus{{ end }}</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="ops-card overflow-hidden">
+      <div class="border-b border-slate-200/80 bg-slate-950 px-5 py-4 dark:border-white/10">
+        <div class="flex items-center justify-between gap-4">
+          <div>
+            <p class="text-xs font-bold uppercase tracking-[0.22em] text-teal-300">Control Plane</p>
+            <h2 class="mt-1 text-xl font-black text-white">{{ if eq .Lang "zh" }}最新运维信号{{ else }}Latest Ops Signals{{ end }}</h2>
+          </div>
+          <div class="rounded-md border border-emerald-400/30 bg-emerald-400/10 px-3 py-1 text-xs font-bold text-emerald-200">LIVE</div>
+        </div>
+      </div>
+      <div class="divide-y divide-slate-200/80 dark:divide-white/10">
+        {{ range $recent }}
+        <a href="{{ .Permalink }}" class="group block p-5 transition hover:bg-teal-50/70 dark:hover:bg-white/[0.04]">
+          <div class="flex items-start justify-between gap-4">
+            <div>
+              <p class="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500 dark:text-zinc-400">{{ .Date.Format "Jan 2, 2006" }}</p>
+              <h3 class="mt-2 text-lg font-black leading-6 text-slate-950 group-hover:text-teal-700 dark:text-white dark:group-hover:text-teal-200">{{ .Title }}</h3>
+            </div>
+            <span class="mt-1 rounded-md border border-slate-200 px-2 py-1 text-xs font-bold text-slate-500 transition group-hover:border-teal-300 group-hover:text-teal-700 dark:border-white/10 dark:text-zinc-400 dark:group-hover:border-teal-300/60 dark:group-hover:text-teal-200">&nearr;</span>
+          </div>
+          <p class="mt-3 line-clamp-2 text-sm leading-6 text-slate-600 dark:text-zinc-400">{{ .Summary | plainify }}</p>
+        </a>
+        {{ end }}
+      </div>
+    </div>
+  </section>
+</main>
+{{ end }}

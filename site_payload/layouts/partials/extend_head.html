@@ -1,1 +1,51 @@
+<script>
+  window.tailwind = window.tailwind || {};
+  window.tailwind.config = {
+    darkMode: ['selector', '[data-theme="dark"]'],
+    theme: {
+      extend: {
+        fontFamily: {
+          sans: ['Inter', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+        },
+        boxShadow: {
+          glow: '0 24px 80px -32px rgba(20, 184, 166, 0.65)',
+        },
+      },
+    },
+  };
+</script>
+<script src="https://cdn.tailwindcss.com"></script>
+<style type="text/tailwindcss">
+  @layer base {
+    body {
+      @apply bg-slate-50 text-slate-950 antialiased dark:bg-zinc-950 dark:text-zinc-50;
+    }
+
+    .main {
+      @apply max-w-none px-0;
+    }
+  }
+
+  @layer components {
+    .ops-shell {
+      @apply min-h-[calc(100vh-96px)] bg-[radial-gradient(circle_at_top_left,rgba(20,184,166,0.18),transparent_34rem),linear-gradient(180deg,#f8fafc_0%,#eef2ff_46%,#f8fafc_100%)] text-slate-950 dark:bg-[radial-gradient(circle_at_top_left,rgba(45,212,191,0.12),transparent_34rem),linear-gradient(180deg,#09090b_0%,#111827_52%,#09090b_100%)] dark:text-white;
+    }
+
+    .ops-card {
+      @apply rounded-lg border border-white/70 bg-white/[0.86] shadow-xl shadow-slate-200/60 backdrop-blur dark:border-white/10 dark:bg-zinc-900/[0.72] dark:shadow-black/30;
+    }
+
+    .ops-chip {
+      @apply inline-flex items-center gap-2 rounded-full border border-teal-200 bg-teal-50 px-3 py-1 text-xs font-semibold uppercase tracking-[0.18em] text-teal-800 dark:border-teal-400/25 dark:bg-teal-400/10 dark:text-teal-200;
+    }
+
+    .ops-button {
+      @apply inline-flex items-center justify-center gap-2 rounded-md bg-teal-500 px-4 py-2.5 text-sm font-bold text-slate-950 shadow-glow transition hover:-translate-y-0.5 hover:bg-teal-300 focus:outline-none focus:ring-2 focus:ring-teal-300 focus:ring-offset-2 focus:ring-offset-slate-50 dark:focus:ring-offset-zinc-950;
+    }
+
+    .ops-button-secondary {
+      @apply inline-flex items-center justify-center rounded-md border border-slate-300 bg-white/75 px-4 py-2.5 text-sm font-bold text-slate-800 transition hover:-translate-y-0.5 hover:border-teal-300 hover:text-teal-700 dark:border-white/15 dark:bg-white/5 dark:text-zinc-100 dark:hover:border-teal-300/60 dark:hover:text-teal-100;
+    }
+  }
+</style>
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9134811771930340" crossorigin="anonymous"></script>
