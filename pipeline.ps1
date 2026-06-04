@@ -30,7 +30,7 @@ Write-Host "`n[*] 阶段 1/3: 启动 Serp Sniffer 探测目标网关 (从 SQLite
 & $py_engine scripts/serp_sniffer.py
 # 错误熔断：如果探针报错崩溃，立刻停止流水线，不执行后续消耗 Token 的操作
 if ($LASTEXITCODE -ne 0) { Write-Host "[-] 探针层执行失败，流水线熔断。" -ForegroundColor Red; exit }
-
+5
 Write-Host "`n[*] 阶段 2/3: 调度 DeepSeek 算力重构中英双语载荷与核销..." -ForegroundColor Yellow
 $env:HTTP_PROXY=""
 $env:HTTPS_PROXY=""
