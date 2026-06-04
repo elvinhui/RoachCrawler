@@ -1,47 +1,60 @@
-[
-  {
-    "title": "What's a sane way to scrape a few pages in 2026?",
-    "url": "https://www.reddit.com/r/WebScrapingInsider/comments/1r2ly2s/whats_a_sane_way_to_scrape_a_few_pages_in_2026/",
-    "snippet": "I’m trying to figure out a decent way to scrape a couple of websites for a small personal project, but I just keep going in circles. Most of the guides ..."
-  },
-  {
-    "title": "Build a Python Web Scraper in 5 Steps [2026] - Tech Insider",
-    "url": "https://tech-insider.org/python-web-scraping-tutorial-beautifulsoup-playwright-2026/",
-    "snippet": "Learn how to build a Python web scraper in 5 practical steps. Covers requests, BeautifulSoup, handling pagination, and avoiding IP bans."
-  },
-  {
-    "title": "The Ultimate Guide to Web Scraping (2026)",
-    "url": "https://browser-use.com/posts/web-scraping-guide-2026",
-    "snippet": "Web scraping in 2026 looks nothing like it used to. This guide covers how it works, what's changed, and which tools to use."
-  },
-  {
-    "title": "Python Web Scraping 2026: The Senior Engineer's Guide ...",
-    "url": "https://medium.com/@onlineproxypmm/python-web-scraping-2026-the-senior-engineers-guide-to-the-extraction-ecosystem-713dde1351fa",
-    "snippet": "The golden era of “copy-paste” scraping is officially over. In 2026, the web is no longer a collection of static HTML documents; ..."
-  },
-  {
-    "title": "Building undetectable web scrapers for data extraction",
-    "url": "https://www.facebook.com/groups/dataengineeringpilipinas/posts/1921496581819733/",
-    "snippet": "How Web Scraping Works Select Your Source: Identify the websites or platforms you want to scrape. Build a Scraper: Use programming languages ( ..."
-  },
-  {
-    "title": "Web Scraping for Beginners in 2026: A No-BS Guide",
-    "url": "https://dev.to/agenthustler/web-scraping-for-beginners-in-2026-a-no-bs-guide-26m8",
-    "snippet": "Learn Scrapy — Python's most powerful scraping framework. · Learn CSS selectors and XPath — The better you are at targeting elements, the more ..."
-  },
-  {
-    "title": "REGISTRATION CLOSED ISSR Summer Methodology ...",
-    "url": "https://www.umass.edu/social-science-research/events/registration-closed-issr-summer-methodology-workshop-web-scraping-python",
-    "snippet": "REGISTRATION CLOSED ISSR Summer Methodology Workshop | Web Scraping in Python. June 02, 2026 9:00 am - 12:00 pm ET."
-  },
-  {
-    "title": "Advanced Web Scraping Tutorial! (w/ Python Beautiful Soup ...",
-    "url": "https://www.youtube.com/watch?v=DcI_AZqfZVc",
-    "snippet": "Setting up and understanding the HTML structure of a web page · Extracting data using Beautiful Soup and handling dynamic content · Implementing ..."
-  },
-  {
-    "title": "Web Scraping Using Python: Complete Beginner-to- ...",
-    "url": "https://www.proxyrack.com/blog/web-scraping-using-python/",
-    "snippet": "Python also has excellent scraping libraries that handle: HTML parsing. Browser automation. JavaScript rendering. Data cleaning. API requests."
-  }
-]
+{
+  "target_keyword": "Dell PowerEdge R760 vs R660 power consumption and IOPS comparison",
+  "expected_structure": "表格对比两代CPU能耗比、PCIe 5.0吞吐量差异，以及数据中心机架散热建议。",
+  "organic_intel": [
+    {
+      "title": "DELL R660 vs R760: Complete Server Comparison 2026",
+      "snippet": "Detailed DELL PowerEdge R660 vs R760 comparison ⚙️ Specs, performance, applications. Choose the optimal server for your business needs!"
+    },
+    {
+      "title": "poweredge-r660-technical-guide.pdf",
+      "snippet": "The PowerEdge R660 system is a 1U server that supports: The system features: ○ Up to two 4th Generation Intel Xeon Scalable processors with up to 56 cores ..."
+    },
+    {
+      "title": "Dell PowerEdge R670 vs R660 vs R760: Full Comparison Guide",
+      "snippet": "The Dell PowerEdge R670, R660, and R760 models target dense computing needs, but key differences in form factor, processor support, and scalability set them ..."
+    },
+    {
+      "title": "Dell PowerEdge R760 & R660 | 2023",
+      "snippet": "Dell PowerEdge R760 & R660 servers have been designed to offer customers maximum performance and configurability within standard server form factors."
+    },
+    {
+      "title": "How many watts is the Dell PowerEdge R660? : r/Skywardtel",
+      "snippet": "According to the official manual, the PowerEdge R660 can be equipped with power supplies of different wattages, including 700W, 800W, 1100W, ..."
+    },
+    {
+      "title": "PowerEdge “xs” vs. “Standard” vs. “xa” vs. “xd2”",
+      "snippet": "The R660/R760 “standard” models have been designed to accommodate the flexibility necessary to address a wide variety of workloads. With support ..."
+    },
+    {
+      "title": "Dell PowerEdge R660 vs R760 - Al-Ishara",
+      "snippet": "-Choose the R660 if you need a powerful server in a space-saving 1U form factor. -Choose the R760 if you need maximum expandability, storage flexibility, and ..."
+    },
+    {
+      "title": "Dell PowerEdge R660 Server with 4th Gen Intel Xeon ...",
+      "snippet": "2U Dell PowerEdge R760 server REVIEW with 4th gen Intel Xeon Scalable CPUs | IT Creations. IT Creations, Inc. · 7.6K views ; R730XD Still the BEST ..."
+    },
+    {
+      "title": "PowerEdge R760/R660 Servers",
+      "snippet": "Performance is maximized with innovative cooling solutions that reduce power consumption. Multiple configurations are enabled with customizable internal layouts"
+    }
+  ],
+  "paa_questions": [
+    {
+      "question": "What is the difference between Dell R660 and R760?",
+      "snippet": "Both servers belong to the 16th generation PowerEdge lineup but have significant differences in form factor, performance, and scalability. The R660 is a compact 1U rack server optimized for virtualization and cloud computing, while the R760 is a powerful 2U platform with enhanced storage capabilities and GPU support."
+    },
+    {
+      "question": "How much power does a Dell R660 use?",
+      "snippet": "The Dell R660 typically consumes 350–900 watts depending on the configuration, workload, and PSU efficiency. Optimal tuning with efficient processors and low-power components helps reduce energy draw while maintaining peak performance."
+    },
+    {
+      "question": "How much power does a Dell R760 use?",
+      "snippet": null
+    },
+    {
+      "question": "How much power does the PowerEdge R660xs draw?",
+      "snippet": "In our tests, the Dell PowerEdge R660xs powered by two Intel Xeon Gold 6448Y processors supported 290 VDI sessions and consumed an average of 714 watts at peak usage."
+    }
+  ]
+}

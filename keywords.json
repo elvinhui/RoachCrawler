@@ -1,0 +1,37 @@
+[
+  {
+    "keyword": "Dell PowerEdge R760 vs R660 power consumption and IOPS comparison",
+    "intent": "b2b_hardware_decision",
+    "niche": "data_center",
+    "status": "processing",
+    "expected_structure": "表格对比两代CPU能耗比、PCIe 5.0吞吐量差异，以及数据中心机架散热建议。"
+  },
+  {
+    "keyword": "Proxmox VE vs VMware ESXi 8.0 enterprise migration guide 2026",
+    "intent": "enterprise_software_migration",
+    "niche": "virtualization",
+    "status": "pending",
+    "expected_structure": "分析 VMware 授权模式变更后的成本测算，给出详细的虚拟机跨平台迁移命令和避坑指南。"
+  },
+  {
+    "keyword": "Cisco CCNA 200-301 IPv4 subnetting cheat sheet and troubleshooting commands",
+    "intent": "certification_study",
+    "niche": "networking",
+    "status": "pending",
+    "expected_structure": "生成可直接复制的子网掩码计算速查表（Cheat Sheet），以及真实的路由器 CLI 排错命令演练。"
+  },
+  {
+    "keyword": "FortiGate 100F vs Palo Alto PA-440 throughput and license cost",
+    "intent": "b2b_security_procurement",
+    "niche": "network_security",
+    "status": "pending",
+    "expected_structure": "对比两款主流下一代防火墙（NGFW）开启全量安全防护后的真实吞吐量暴跌情况，及年度订阅费对比。"
+  },
+  {
+    "keyword": "BeautifulSoup vs Scrapy for dynamic javascript websites scraping Python",
+    "intent": "developer_tool_selection",
+    "niche": "python_automation",
+    "status": "pending",
+    "expected_structure": "深度对比轻量级库和工业级框架在应对反爬虫和 JS 渲染时的性能差异，附带简单的代码片段。"
+  }
+]
