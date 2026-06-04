@@ -3,6 +3,7 @@ import os
 import httpx
 import random
 import re
+import sqlite3  # [新增] 引入 SQLite 库用于任务核销
 from datetime import datetime
 from dotenv import load_dotenv
 
@@ -20,8 +21,9 @@ def process_payload():
     with open(data_path, "r", encoding="utf-8") as f:
         try:
             payload_data = json.load(f)
+            # [新增]：提取上游传过来的 task_id，用于后续数据库核销
+            task_id = payload_data.get("task_id")
             keyword_context = payload_data.get("target_keyword", "Tech Update")
-            # [核心微调1]：接住上游传来的强结构要求
             expected_structure = payload_data.get("expected_structure", "进行深度的技术与商业价值分析。")
             organic_text = json.dumps(payload_data.get("organic_intel", []), ensure_ascii=False)
             paa_text = json.dumps(payload_data.get("paa_questions", []), ensure_ascii=False)
@@ -38,7 +40,7 @@ def process_payload():
     random_seed = random.randint(1000, 9999)
     current_time = datetime.now().astimezone().isoformat()
 
-    # [核心微调2]：将 expected_structure 强行注入给 DeepSeek
+    # 核心指令重构：强加“信息增量”限制与双语隔离墙
     prompt = f"""
     You are an elite infrastructure engineer and senior tech analyst.
     Your target topic is: "{keyword_context}"
@@ -70,7 +72,7 @@ draft: false
 categories: ["Infrastructure"]
 tags: ["Tech", "Analysis"]
 cover:
-  image: "[https://loremflickr.com/1200/600/server,datacenter,python?lock=](https://loremflickr.com/1200/600/server,datacenter,python?lock=){random_seed}"
+  image: "https://loremflickr.com/1200/600/server,datacenter,python?lock={random_seed}"
   alt: "基建可视化"
   hiddenInList: false
   hiddenInSingle: false
@@ -88,7 +90,7 @@ draft: false
 categories: ["Infrastructure"]
 tags: ["Tech", "Analysis"]
 cover:
-  image: "[https://loremflickr.com/1200/600/server,datacenter,python?lock=](https://loremflickr.com/1200/600/server,datacenter,python?lock=){random_seed}"
+  image: "https://loremflickr.com/1200/600/server,datacenter,python?lock={random_seed}"
   alt: "Infrastructure Visualization"
   hiddenInList: false
   hiddenInSingle: false
@@ -105,9 +107,7 @@ cover:
     }
 
     try:
-        # [核心微调3]：修正网络请求代码，去掉多余的 markdown 符号，设置 timeout=60
-        r = httpx.post("(https://api.deepseek.com/chat/completions)",
-                       headers=headers, json=payload, timeout=90)
+        r = httpx.post("https://api.deepseek.com/chat/completions", headers=headers, json=payload, timeout=60)
         r.raise_for_status()
         content = r.json()["choices"][0]["message"]["content"].strip()
 
@@ -137,6 +137,26 @@ cover:
             print(f"[+] 自动化双语矩阵对齐成功！")
             print(f"    -> 中文节点: {zh_path}")
             print(f"    -> 英文节点: {en_path}")
+
+            # ==========================================
+            # 第三阶段核心：向 SQLite 数据库汇报战果，完成核销
+            # ==========================================
+            if task_id:
+                db_path = os.path.join(cwd, "..", "roach_matrix.db")
+                if os.path.exists(db_path):
+                    conn = sqlite3.connect(db_path)
+                    cursor = conn.cursor()
+                    current_time_db = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+                    # 将状态更新为 published
+                    cursor.execute("UPDATE seo_matrix SET status = 'published', published_at = ? WHERE id = ?", (current_time_db, task_id))
+                    conn.commit()
+                    conn.close()
+                    print(f"[+] 任务 ID: {task_id} 已在矩阵中标记为 Published。全链路闭环达成！")
+                else:
+                    print("[-] 警告：未找到 roach_matrix.db 数据库，状态核销跳过。")
+            else:
+                print("[-] 警告：本次载荷缺少 task_id，无法进行数据库核销。")
+
         else:
             print("[-] 异常：大模型未按照规定格式生成语言隔离墙，无法分流落盘。建议检查 Token 是否截断。")
 

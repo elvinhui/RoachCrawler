@@ -1,42 +1,47 @@
 {
-  "target_keyword": "Dell PowerEdge R760 vs R660 power consumption and IOPS comparison",
-  "expected_structure": "表格对比两代CPU能耗比、PCIe 5.0吞吐量差异，以及数据中心机架散热建议。",
+  "task_id": 2,
+  "target_keyword": "Dell PowerEdge R760 vs Dell PowerEdge R660 IOPS performance benchmark 2026",
+  "expected_structure": "生成标准的 B2B 评测格式，包含 Dell PowerEdge R760 和 Dell PowerEdge R660 的详细参数对比表格，并深入分析 IOPS performance benchmark 场景下的优劣。",
   "organic_intel": [
     {
       "title": "DELL R660 vs R760: Complete Server Comparison 2026",
       "snippet": "Detailed DELL PowerEdge R660 vs R760 comparison ⚙️ Specs, performance, applications. Choose the optimal server for your business needs!"
     },
     {
-      "title": "poweredge-r660-technical-guide.pdf",
-      "snippet": "The PowerEdge R660 system is a 1U server that supports: The system features: ○ Up to two 4th Generation Intel Xeon Scalable processors with up to 56 cores ..."
+      "title": "Test Report: PowerEdge R760 with SQL Server",
+      "snippet": "To reduce these complications, we decided to benchmark the new R760 with a lower cost processor that enables both Speed Select and QAT so that we can compare ..."
     },
     {
       "title": "Dell PowerEdge R670 vs R660 vs R760: Full Comparison Guide",
-      "snippet": "The Dell PowerEdge R670, R660, and R760 models target dense computing needs, but key differences in form factor, processor support, and scalability set them ..."
+      "snippet": "Recent Dell Performance Labs tests show R670 and R770 variants with Xeon 6 achieving 67% gains over R660/R760 in SpecCPU integer throughput and 36% higher ..."
     },
     {
-      "title": "Dell PowerEdge R760 & R660 | 2023",
-      "snippet": "Dell PowerEdge R760 & R660 servers have been designed to offer customers maximum performance and configurability within standard server form factors."
+      "title": "Dell PowerEdge R670 vs. R660: What's New in 17G and ...",
+      "snippet": "Dell PowerEdge R670 vs R660: Explore Dell 17G improvements in Xeon 6 CPUs, NVMe density, PCIe Gen5, and smarter virtualization scaling."
     },
     {
-      "title": "How many watts is the Dell PowerEdge R660? : r/Skywardtel",
-      "snippet": "According to the official manual, the PowerEdge R660 can be equipped with power supplies of different wattages, including 700W, 800W, 1100W, ..."
-    },
-    {
-      "title": "PowerEdge “xs” vs. “Standard” vs. “xa” vs. “xd2”",
-      "snippet": "The R660/R760 “standard” models have been designed to accommodate the flexibility necessary to address a wide variety of workloads. With support ..."
-    },
-    {
-      "title": "Dell PowerEdge R660 vs R760 - Al-Ishara",
-      "snippet": "-Choose the R660 if you need a powerful server in a space-saving 1U form factor. -Choose the R760 if you need maximum expandability, storage flexibility, and ..."
+      "title": "Which one is better? : r/servers",
+      "snippet": "Dell PowerEdge R750xs Xeon Silver 4314 - 2.4 GHz 32GB 480GB Rack Server Vs HPE ProLiant DL360 Gen11 Intel Xeon-S 4410Y 12-Core (2.00GHz 30.00MB) 32GB ..."
     },
     {
       "title": "Dell PowerEdge R660 Server with 4th Gen Intel Xeon ...",
       "snippet": "2U Dell PowerEdge R760 server REVIEW with 4th gen Intel Xeon Scalable CPUs | IT Creations. IT Creations, Inc. · 7.6K views ; R730XD Still the BEST ..."
     },
     {
-      "title": "PowerEdge R760/R660 Servers",
-      "snippet": "Performance is maximized with innovative cooling solutions that reduce power consumption. Multiple configurations are enabled with customizable internal layouts"
+      "title": "The 16 th Generation Dell PowerEdge R760 server ...",
+      "snippet": "We found that the PowerEdge R760 with a Broadcom NIC offered up to 24.2 percent better operations per second per watt than the 14 th Generation ..."
+    },
+    {
+      "title": "Dell PowerEdge R760 & R660 | 2023",
+      "snippet": "Dell PowerEdge R760 & R660 servers have been designed to offer customers maximum performance and configurability within standard server form factors."
+    },
+    {
+      "title": "Dell PowerEdge R660 vs R760 - Al-Ishara",
+      "snippet": "Comparison: Both use high-performance Intel Xeon Scalable processors, but the R760 specifically uses 4th generation processors. Memory. R660: Up to 32 DDR5 ..."
+    },
+    {
+      "title": "Dell PowerEdge R760 Review",
+      "snippet": "The R760 also supports more PCIe slots than the PowerEdge R660, with four Gen5 and eight Gen4 versus the R660's two Gen5 and three Gen4."
     }
   ],
   "paa_questions": [
@@ -45,16 +50,16 @@
       "snippet": "Both servers belong to the 16th generation PowerEdge lineup but have significant differences in form factor, performance, and scalability. The R660 is a compact 1U rack server optimized for virtualization and cloud computing, while the R760 is a powerful 2U platform with enhanced storage capabilities and GPU support."
     },
     {
-      "question": "How much power does a Dell R660 use?",
-      "snippet": "The Dell R660 typically consumes 350–900 watts depending on the configuration, workload, and PSU efficiency. Optimal tuning with efficient processors and low-power components helps reduce energy draw while maintaining peak performance."
+      "question": "What is the difference between Dell PowerEdge R660 and R660xs?",
+      "snippet": "The primary difference is that the R660xs supports DDR5 memory at speeds up to 4800 MHz and provides more drive bay configurations. The DELL PowerEdge R660 is a compact single-processor server designed for medium-scale tasks where density and energy efficiency are priorities."
     },
     {
-      "question": "How much power does a Dell R760 use?",
+      "question": "When was the Dell PowerEdge R760 released?",
+      "snippet": "Dell PowerEdge R760 is available globally in February 2023 . Dell PowerEdge HS5620, HS5610 are available globally in April 2023 ."
+    },
+    {
+      "question": "What is the difference between Dell R660 and R670?",
       "snippet": null
-    },
-    {
-      "question": "How much power does the PowerEdge R660xs draw?",
-      "snippet": "In our tests, the Dell PowerEdge R660xs powered by two Intel Xeon Gold 6448Y processors supported 290 VDI sessions and consumed an average of 714 watts at peak usage."
     }
   ]
 }

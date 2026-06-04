@@ -1,15 +1,45 @@
 import requests
 import json
 import os
+import sqlite3
 from dotenv import load_dotenv
 
 # 强制挂载根目录的机密金库 (.env)
 load_dotenv(os.path.join(os.path.dirname(__file__), '..', '.env'))
 
 
-def deploy_recon_probe(keyword_item, json_file_path, all_keywords):
-    keyword = keyword_item.get("keyword")
-    expected_structure = keyword_item.get("expected_structure", "进行深度技术分析。")
+def get_task_from_db():
+    """从 SQLite 数据库获取一个 pending 的任务并上锁"""
+    db_path = os.path.join(os.path.dirname(__file__), '..', 'roach_matrix.db')
+    if not os.path.exists(db_path):
+        print(f"[-] 找不到数据库文件: {db_path}。请先运行 core_db.py 初始化并生成矩阵。")
+        return None
+
+    conn = sqlite3.connect(db_path)
+    cursor = conn.cursor()
+
+    # 寻找第一个排队的任务
+    cursor.execute("SELECT id, keyword, expected_structure FROM seo_matrix WHERE status = 'pending' LIMIT 1")
+    row = cursor.fetchone()
+
+    if not row:
+        conn.close()
+        return None
+
+    task_id, keyword, expected_structure = row
+
+    # 立即上锁，将状态改为 processing，防止其他并发探针抢夺
+    cursor.execute("UPDATE seo_matrix SET status = 'processing' WHERE id = ?", (task_id,))
+    conn.commit()
+    conn.close()
+
+    return {"id": task_id, "keyword": keyword, "expected_structure": expected_structure}
+
+
+def deploy_recon_probe(task):
+    keyword = task.get("keyword")
+    expected_structure = task.get("expected_structure")
+    task_id = task.get("id")
 
     api_key = os.getenv("SERP_API_KEY")
     if not api_key:
@@ -18,8 +48,6 @@ def deploy_recon_probe(keyword_item, json_file_path, all_keywords):
 
     print(f"[*] 探针点火。正在扫描 Niche 路由节点: '{keyword}'...")
     endpoint = "https://serpapi.com/search"
-
-    # 构造探测包载荷
     params = {"engine": "google", "q": keyword, "api_key": api_key, "num": 4}
 
     try:
@@ -31,43 +59,30 @@ def deploy_recon_probe(keyword_item, json_file_path, all_keywords):
 
         # 1. 抓取自然流量节点
         organic_data = response_data.get("organic_results", [])
-        extracted_organic = []
-        for node in organic_data:
-            extracted_organic.append({
-                "title": node.get('title'),
-                "snippet": node.get('snippet')
-            })
+        extracted_organic = [{"title": n.get('title'), "snippet": n.get('snippet')} for n in organic_data]
 
         # 2. 抓取 PAA (People Also Ask)
         paa_data = response_data.get("related_questions", [])
-        extracted_paa = []
-        for node in paa_data:
-            extracted_paa.append({
-                "question": node.get('question'),
-                "snippet": node.get('snippet')
-            })
+        extracted_paa = [{"question": n.get('question'), "snippet": n.get('snippet')} for n in paa_data]
 
-        # [核心升级] 组装高维数据载荷，把 expected_structure 传给下游
+        # ==========================================
+        # [核心修复]：组装载荷时，强制注入 task_id
+        # ==========================================
         final_payload = {
+            "task_id": task_id,  # <--- 就是这里，把 ID 传给下游
             "target_keyword": keyword,
-            "expected_structure": expected_structure,  # 强制结构要求
+            "expected_structure": expected_structure,
             "organic_intel": extracted_organic,
             "paa_questions": extracted_paa
         }
 
-        # 物理层数据交接
+        # 物理层数据交接：将清洗后的 JSON 报文写入同级目录
         relay_file = os.path.join(os.path.dirname(__file__), "target_data.txt")
         with open(relay_file, "w", encoding="utf-8") as f:
             json.dump(final_payload, f, ensure_ascii=False, indent=2)
 
         print(f"[+] 嗅探成功。截获 {len(extracted_organic)} 个核心节点与 {len(extracted_paa)} 个痛点提问。")
-        print("[+] 数据载荷已成功落盘。")
-
-        # 标记 JSON 中该词汇的状态为 processing (防止重复抓取)
-        keyword_item["status"] = "processing"
-        with open(json_file_path, "w", encoding="utf-8") as f:
-            json.dump(all_keywords, f, ensure_ascii=False, indent=2)
-        print("[+] 词库状态已更新为 processing。")
+        print(f"[+] 数据载荷 (包含 Task ID: {task_id}) 已成功落盘。")
 
     except requests.exceptions.Timeout:
         print("[-] 探针坠毁：网络层超时。目标网关响应超过 30 秒，连接自动熔断。")
@@ -78,28 +93,12 @@ def deploy_recon_probe(keyword_item, json_file_path, all_keywords):
 
 
 if __name__ == "__main__":
-    # ==========================================
-    # 从 keywords.json 读取流水线任务
-    # ==========================================
-    json_path = os.path.join(os.path.dirname(__file__), '..', 'keywords.json')
+    print("[*] 正在连接 SQLite 矩阵中枢...")
+    task = get_task_from_db()
 
-    if not os.path.exists(json_path):
-        print(f"[-] 找不到词汇矩阵文件: {json_path}")
-        exit()
-
-    with open(json_path, 'r', encoding='utf-8') as f:
-        all_keywords = json.load(f)
-
-    # 寻找第一个状态为 pending 的任务
-    target_item = None
-    for item in all_keywords:
-        if item.get("status") == "pending":
-            target_item = item
-            break
-
-    if not target_item:
-        print("[*] 所有的关键词节点均已处理完毕 (无 pending 状态)。流水线进入休眠。")
+    if not task:
+        print("[*] 矩阵中所有长尾词节点均已打光！流水线进入休眠。")
     else:
-        print(f"[*] 动态弹药装填完毕。即将执行词库任务...")
+        print(f"[*] 锁定目标节点 ID: {task['id']} -> [{task['keyword']}]")
         print(f"[*] =========================================")
-        deploy_recon_probe(target_item, json_path, all_keywords)
+        deploy_recon_probe(task)
