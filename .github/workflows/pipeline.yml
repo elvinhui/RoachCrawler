@@ -59,7 +59,7 @@ jobs:
           HTTPS_PROXY: ""
         run: python scripts/coder_agent.py
 
-      # ── Step 9: 阶段 3 — 发布：随机化提交时间，推送触发 Vercel ──
+      # ── Step 9: 阶段 3 — 发布：推送触发 Vercel ──────────────────
       - name: Phase 3 - Commit & Push (trigger Vercel deploy)
         run: |
           git add .
@@ -67,12 +67,8 @@ jobs:
           if git diff --cached --quiet; then
             echo "[*] 本次无新内容生成，跳过 Git 推送。"
           else
-            # 防风控：加入随机延迟 (0~30分钟)，模拟人工发布节奏
-            DELAY=$((RANDOM % 1800))
-            echo "[*] 随机化发布延迟 ${DELAY}s ..."
-            sleep $DELAY
             TIMESTAMP=$(date "+%Y-%m-%d %H:%M UTC")
             git commit -m "auto: content matrix refresh at ${TIMESTAMP}"
             git push origin main
-            echo "[+] 推送完成！Vercel 已触发全球边缘节点自动部署。"
+            echo "[+] 推送完成！Vercel 已触发自动部署。"
           fi
