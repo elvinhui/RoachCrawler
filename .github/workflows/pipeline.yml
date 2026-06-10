@@ -12,15 +12,15 @@ jobs:
     name: Content Generation & Deploy
     runs-on: ubuntu-latest
     permissions:
-      contents: write   # 允许 github-actions[bot] 推送 commit
+      contents: write
 
     steps:
       # ── Step 1: 拉取代码 ─────────────────────────────────────────
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
+          # 需要完整历史以便正确 git push
           fetch-depth: 0
-          token: ${{ secrets.GITHUB_TOKEN }}
 
       # ── Step 2: 配置 Python 环境 ──────────────────────────────────
       - name: Set up Python 3.12
