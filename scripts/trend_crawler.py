@@ -1,7 +1,7 @@
 """
 trend_crawler.py — Multi-Source Keyword Discovery Engine
 三层容灾架构：
-  Layer 1: Google Trends via pytrends (rate-limited, may be blocked)
+  Layer 1: Hacker News Top Stories (Real-time tech trends, no rate limits)
   Layer 2: Reddit RSS feeds (no API key, reliable)
   Layer 3: Programmatic combinatorial expansion (always works, local only)
 """
@@ -86,55 +86,49 @@ def build_expected_structure(keyword):
                 f"or code blocks, and a best-practices summary table.")
 
 
-# ── Layer 1: Google Trends ────────────────────────────────────────────────────
-def fetch_from_google_trends(cursor):
-    # GitHub Actions 共享 IP 必定被 429 封锁，直接跳过节省时间
-    if os.environ.get('GITHUB_ACTIONS') == 'true':
-        print("[*] Layer 1: Google Trends — skipped in CI (shared IPs always rate-limited)")
-        return 0
-
+# ── Layer 1: Hacker News Top Stories ──────────────────────────────────────────
+def fetch_from_hacker_news(cursor):
+    print("[*] Layer 1: Hacker News Top Stories")
     count = 0
+    top_url = "https://hacker-news.firebaseio.com/v0/topstories.json"
+    
     try:
-        from pytrends.request import TrendReq
-        pytrends = TrendReq(hl='en-US', tz=0, timeout=(10, 20),
-                            retries=1, backoff_factor=1.0)
-    except Exception as e:
-        print(f"[!] pytrends init failed: {e}")
-        return 0
-
-    print("[*] Layer 1: Google Trends")
-    for seed in SEED_MATRIX:
-        try:
-            sleep_time = random.uniform(20, 40)
-            print(f"    Waiting {sleep_time:.0f}s before querying '{seed}'...")
-            time.sleep(sleep_time)
-
-            pytrends.build_payload([seed], timeframe='today 1-m')
-            related = pytrends.related_queries()
-
-            if seed not in related or related[seed]['rising'] is None:
-                print(f"    No rising queries for '{seed}'")
-                continue
-
-            rising_df = related[seed]['rising']
-            for _, row in rising_df.iterrows():
-                query = str(row['query'])
-                if not any(mod in query.lower() for mod in INTENT_MODIFIERS):
+        resp = requests.get(top_url, timeout=10)
+        if resp.status_code != 200:
+            print("    [-] HN API fetch failed")
+            return 0
+            
+        story_ids = resp.json()[:30] # Check top 30 stories
+        
+        # IT & Infrastructure relevant keywords
+        it_keywords = [
+            'server', 'network', 'cloud', 'aws', 'linux', 'docker', 'kubernetes',
+            'database', 'postgres', 'router', 'vmware', 'datacenter', 'security',
+            'api', 'infrastructure', 'devops', 'tcp', 'networking'
+        ]
+        
+        for sid in story_ids:
+            item_url = f"https://hacker-news.firebaseio.com/v0/item/{sid}.json"
+            item_resp = requests.get(item_url, timeout=5)
+            if item_resp.status_code == 200:
+                item = item_resp.json()
+                title = item.get("title", "")
+                
+                # Check relevance
+                if not any(kw in title.lower() for kw in it_keywords):
                     continue
-
-                structure = build_expected_structure(query)
-                if inject_keyword(cursor, query, 'trends_discovery', 'IT_Infrastructure', structure):
-                    print(f"    [+] Injected (Trends): {query}")
+                    
+                # Hacker News often has "Show HN" or "Ask HN", we clean it
+                clean_title = title.replace("Show HN: ", "").replace("Ask HN: ", "")
+                
+                structure = build_expected_structure(clean_title)
+                if inject_keyword(cursor, clean_title, 'hn_trending', 'IT_Industry', structure):
+                    print(f"    [+] Injected (Hacker News): {clean_title}")
                     count += 1
-
-        except Exception as e:
-            err = str(e)
-            if '429' in err:
-                print(f"    [!] Rate limited on '{seed}'. Stopping Trends layer.")
-                break
-            else:
-                print(f"    [-] Error on '{seed}': {e}")
-
+                    
+    except Exception as e:
+        print(f"    [-] Hacker News API error: {e}")
+        
     return count
 
 
@@ -272,8 +266,8 @@ def run_crawler():
 
     print("[*] RoachCrawler Keyword Discovery Engine starting...\n")
 
-    # Layer 1: Google Trends (best quality, but may be rate-limited)
-    t1 = fetch_from_google_trends(cursor)
+    # Layer 1: Hacker News API (Reliable, fast, tech-focused)
+    t1 = fetch_from_hacker_news(cursor)
     conn.commit()
     total += t1
     print(f"[~] Layer 1 result: {t1} keywords\n")
