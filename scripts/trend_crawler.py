@@ -88,12 +88,16 @@ def build_expected_structure(keyword):
 
 # ── Layer 1: Google Trends ────────────────────────────────────────────────────
 def fetch_from_google_trends(cursor):
+    # GitHub Actions 共享 IP 必定被 429 封锁，直接跳过节省时间
+    if os.environ.get('GITHUB_ACTIONS') == 'true':
+        print("[*] Layer 1: Google Trends — skipped in CI (shared IPs always rate-limited)")
+        return 0
+
     count = 0
     try:
         from pytrends.request import TrendReq
-        # Longer timeouts and retries to reduce 429s
-        pytrends = TrendReq(hl='en-US', tz=0, timeout=(15, 30),
-                            retries=2, backoff_factor=1.5)
+        pytrends = TrendReq(hl='en-US', tz=0, timeout=(10, 20),
+                            retries=1, backoff_factor=1.0)
     except Exception as e:
         print(f"[!] pytrends init failed: {e}")
         return 0
@@ -101,7 +105,6 @@ def fetch_from_google_trends(cursor):
     print("[*] Layer 1: Google Trends")
     for seed in SEED_MATRIX:
         try:
-            # Long sleep BEFORE each request to avoid 429
             sleep_time = random.uniform(20, 40)
             print(f"    Waiting {sleep_time:.0f}s before querying '{seed}'...")
             time.sleep(sleep_time)
@@ -127,8 +130,8 @@ def fetch_from_google_trends(cursor):
         except Exception as e:
             err = str(e)
             if '429' in err:
-                print(f"    [!] Rate limited on '{seed}'. Skipping Trends layer.")
-                break  # Stop trying if we hit 429 - don't keep retrying
+                print(f"    [!] Rate limited on '{seed}'. Stopping Trends layer.")
+                break
             else:
                 print(f"    [-] Error on '{seed}': {e}")
 
