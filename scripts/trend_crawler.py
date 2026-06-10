@@ -1,129 +1,295 @@
+"""
+trend_crawler.py — Multi-Source Keyword Discovery Engine
+三层容灾架构：
+  Layer 1: Google Trends via pytrends (rate-limited, may be blocked)
+  Layer 2: Reddit RSS feeds (no API key, reliable)
+  Layer 3: Programmatic combinatorial expansion (always works, local only)
+"""
 import os
+import re
+import sys
 import sqlite3
 import time
 import random
+import hashlib
 import requests
-from pytrends.request import TrendReq
+import itertools
+import xml.etree.ElementTree as ET
 
-# 锁定数据库路径在根目录
+# Force UTF-8 output
+if hasattr(sys.stdout, 'reconfigure'):
+    sys.stdout.reconfigure(encoding='utf-8')
+
 DB_PATH = os.path.join(os.path.dirname(__file__), '..', 'roach_matrix.db')
 
-# 核心种子词库
+# ── Core seed matrix ─────────────────────────────────────────────────────────
 SEED_MATRIX = [
-    "Dell PowerEdge",
-    "Redfish API",
-    "iDRAC",
-    "Cisco CCNA",
-    "VLAN config",
-    "Data Center HVAC"
+    "Dell PowerEdge", "Redfish API", "iDRAC", "HPE ProLiant",
+    "Cisco CCNA", "VLAN config", "OSPF routing", "Cisco switch CLI",
+    "Data Center HVAC", "PDU load", "server rack cooling",
+    "VMware ESXi", "Proxmox", "Kubernetes cluster", "Ansible automation",
 ]
 
-# 意图修饰词过滤
-INTENT_MODIFIERS = ["how to", "error", "failed", "vs", "tutorial", "code", "guide", "issue"]
+INTENT_MODIFIERS = [
+    "how to", "error", "failed", "vs", "tutorial", "fix", "issue",
+    "not working", "guide", "configuration", "setup", "install",
+    "troubleshoot", "best practice", "review", "comparison",
+]
+
+# ── Reddit RSS subreddits ────────────────────────────────────────────────────
+REDDIT_FEEDS = [
+    "https://www.reddit.com/r/homelab/top/.rss?t=week",
+    "https://www.reddit.com/r/sysadmin/top/.rss?t=week",
+    "https://www.reddit.com/r/ccna/top/.rss?t=week",
+    "https://www.reddit.com/r/networking/top/.rss?t=week",
+    "https://www.reddit.com/r/DataCenter/top/.rss?t=week",
+]
+
+REDDIT_HEADERS = {
+    "User-Agent": "Mozilla/5.0 (compatible; RoachCrawler/1.0; keyword research bot)"
+}
+
 
 def init_db():
     if not os.path.exists(DB_PATH):
-        print(f"[-] 数据库 {DB_PATH} 不存在，请先初始化 core_db.py。")
+        print(f"[-] DB not found at {DB_PATH}. Run core_db.py first.")
         return None
     return sqlite3.connect(DB_PATH)
 
-def cross_validate_reddit(keyword):
-    """
-    通过 Reddit API 搜索进行交叉验证。
-    如果能找到相关讨论，认为是高优 P0 词。
-    """
-    forums = ["homelab", "ccna", "sysadmin"]
-    headers = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36"}
-    
-    for forum in forums:
-        url = f"https://www.reddit.com/r/{forum}/search.json?q={requests.utils.quote(keyword)}&restrict_sr=1&type=link"
-        try:
-            res = requests.get(url, headers=headers, timeout=10)
-            if res.status_code == 200:
-                data = res.json()
-                children = data.get("data", {}).get("children", [])
-                if len(children) > 0:
-                    return True  # 发现大量提问
-        except Exception as e:
-            pass
-        time.sleep(1) # 防封控
-    return False
 
-def generate_expected_structure(keyword):
-    if "vs" in keyword.lower():
-        return f"生成标准的 B2B 评测格式，包含对比对象的详细参数表格，并深入分析应用场景下的优劣。"
-    elif "error" in keyword.lower() or "failed" in keyword.lower() or "issue" in keyword.lower():
-        return f"生成详细的技术排错指南（Troubleshooting Guide）。必须包含问题重现、日志分析、以及具体解决该报错的具体步骤或代码/CLI 命令。"
+def inject_keyword(cursor, keyword, intent, niche, expected_structure):
+    """Insert keyword into the matrix if not already present."""
+    try:
+        cursor.execute(
+            "INSERT INTO seo_matrix (keyword, intent, niche, expected_structure, status) "
+            "VALUES (?, ?, ?, ?, 'pending')",
+            (keyword, intent, niche, expected_structure)
+        )
+        return True
+    except sqlite3.IntegrityError:
+        return False  # Already exists
+
+
+def build_expected_structure(keyword):
+    kw = keyword.lower()
+    if any(w in kw for w in ["vs", "comparison", "review"]):
+        return (f"Generate a professional B2B comparison article for '{keyword}'. "
+                f"MUST include a detailed Markdown comparison table with specs, pros/cons. "
+                f"Conclude with a clear recommendation for different use cases.")
+    elif any(w in kw for w in ["error", "failed", "not working", "issue", "fix", "troubleshoot"]):
+        return (f"Generate a step-by-step troubleshooting guide for '{keyword}'. "
+                f"MUST include: symptom description, root cause analysis, "
+                f"and numbered resolution steps with actual CLI commands or config snippets.")
     else:
-        return f"生成专业的技术教程或概念解析（Tutorial/Guide）。需包含清晰的步骤、示例代码或配置片段，以及该技术的最佳实践注意事项。"
+        return (f"Generate a professional technical tutorial or deep-dive for '{keyword}'. "
+                f"MUST include: clear step-by-step instructions, real config examples "
+                f"or code blocks, and a best-practices summary table.")
 
+
+# ── Layer 1: Google Trends ────────────────────────────────────────────────────
+def fetch_from_google_trends(cursor):
+    count = 0
+    try:
+        from pytrends.request import TrendReq
+        # Longer timeouts and retries to reduce 429s
+        pytrends = TrendReq(hl='en-US', tz=0, timeout=(15, 30),
+                            retries=2, backoff_factor=1.5)
+    except Exception as e:
+        print(f"[!] pytrends init failed: {e}")
+        return 0
+
+    print("[*] Layer 1: Google Trends")
+    for seed in SEED_MATRIX:
+        try:
+            # Long sleep BEFORE each request to avoid 429
+            sleep_time = random.uniform(20, 40)
+            print(f"    Waiting {sleep_time:.0f}s before querying '{seed}'...")
+            time.sleep(sleep_time)
+
+            pytrends.build_payload([seed], timeframe='today 1-m')
+            related = pytrends.related_queries()
+
+            if seed not in related or related[seed]['rising'] is None:
+                print(f"    No rising queries for '{seed}'")
+                continue
+
+            rising_df = related[seed]['rising']
+            for _, row in rising_df.iterrows():
+                query = str(row['query'])
+                if not any(mod in query.lower() for mod in INTENT_MODIFIERS):
+                    continue
+
+                structure = build_expected_structure(query)
+                if inject_keyword(cursor, query, 'trends_discovery', 'IT_Infrastructure', structure):
+                    print(f"    [+] Injected (Trends): {query}")
+                    count += 1
+
+        except Exception as e:
+            err = str(e)
+            if '429' in err:
+                print(f"    [!] Rate limited on '{seed}'. Skipping Trends layer.")
+                break  # Stop trying if we hit 429 - don't keep retrying
+            else:
+                print(f"    [-] Error on '{seed}': {e}")
+
+    return count
+
+
+# ── Layer 2: Reddit RSS ───────────────────────────────────────────────────────
+def fetch_from_reddit_rss(cursor):
+    count = 0
+    print("[*] Layer 2: Reddit RSS Top Posts (week)")
+
+    for feed_url in REDDIT_FEEDS:
+        try:
+            time.sleep(random.uniform(2, 4))
+            resp = requests.get(feed_url, headers=REDDIT_HEADERS, timeout=15)
+            if resp.status_code != 200:
+                print(f"    [-] RSS fetch failed ({resp.status_code}): {feed_url}")
+                continue
+
+            root = ET.fromstring(resp.content)
+            # RSS 2.0 namespace
+            ns = {'atom': 'http://www.w3.org/2005/Atom'}
+
+            # Try both Atom and RSS formats
+            entries = root.findall('.//item') or root.findall('.//atom:entry', ns)
+
+            subreddit = feed_url.split('/r/')[1].split('/')[0]
+            injected_this_feed = 0
+
+            for entry in entries[:20]:  # Top 20 posts per subreddit
+                # Get title
+                title_el = entry.find('title')
+                if title_el is None:
+                    continue
+                title = title_el.text or ''
+
+                # Clean up title (Reddit RSS often includes HTML)
+                title = re.sub(r'<[^>]+>', '', title).strip()
+                if len(title) < 10 or len(title) > 120:
+                    continue
+
+                # Only keep posts with intent signals
+                if not any(mod in title.lower() for mod in INTENT_MODIFIERS):
+                    continue
+
+                # Only keep if it relates to our IT niche
+                it_keywords = [
+                    'server', 'network', 'switch', 'router', 'vlan', 'data center',
+                    'esxi', 'vmware', 'proxmox', 'nas', 'rack', 'pdu', 'ups',
+                    'cisco', 'dell', 'hp', 'hpe', 'unifi', 'pfsense', 'firewall',
+                    'kubernetes', 'docker', 'ansible', 'terraform', 'linux',
+                    'windows server', 'active directory', 'dns', 'dhcp', 'vpn',
+                    'fiber', 'sfp', 'idrac', 'ilo', 'bmc', 'ipmi', 'redfish',
+                    'ccna', 'ospf', 'bgp', 'spanning tree', 'lag', 'lacp',
+                ]
+                if not any(kw in title.lower() for kw in it_keywords):
+                    continue
+
+                structure = build_expected_structure(title)
+                niche = f'reddit_{subreddit}'
+                if inject_keyword(cursor, title, 'reddit_trending', niche, structure):
+                    print(f"    [+] Injected (Reddit r/{subreddit}): {title[:70]}...")
+                    count += 1
+                    injected_this_feed += 1
+
+            print(f"    [~] r/{subreddit}: {injected_this_feed} new keywords")
+
+        except ET.ParseError:
+            print(f"    [-] XML parse error for {feed_url}")
+        except Exception as e:
+            print(f"    [-] Error fetching {feed_url}: {e}")
+
+    return count
+
+
+# ── Layer 3: Programmatic Combinatorial Expansion ─────────────────────────────
+def fetch_from_programmatic(cursor):
+    print("[*] Layer 3: Programmatic SEO Combinatorial Expansion")
+    count = 0
+
+    hardware_a = [
+        "Dell PowerEdge R760", "HPE ProLiant DL380 Gen11", "Cisco UCS C240 M7",
+        "Supermicro BigTwin", "Lenovo ThinkSystem SR650 V3",
+    ]
+    hardware_b = [
+        "Dell PowerEdge R660", "HPE ProLiant DL360 Gen11", "Cisco UCS C220 M7",
+        "Supermicro SuperServer", "Lenovo ThinkSystem SR630 V3",
+    ]
+    intents = [
+        "power consumption comparison 2026",
+        "IOPS benchmark test",
+        "virtualization performance",
+        "rack density cooling guide",
+        "memory configuration guide",
+        "NVMe storage benchmark",
+    ]
+
+    software_targets = [
+        "iDRAC 9", "HPE iLO 6", "Redfish API", "VMware ESXi 8",
+        "Proxmox VE 8", "Cisco IOS-XE",
+    ]
+    software_intents = [
+        "configuration guide 2026",
+        "error code fix",
+        "automation script python",
+        "best practices",
+        "REST API tutorial",
+    ]
+
+    # Hardware vs hardware combos
+    for a, b, intent in itertools.product(hardware_a, hardware_b, intents):
+        if a == b:
+            continue
+        kw = f"{a} vs {b} {intent}"
+        structure = build_expected_structure(kw)
+        if inject_keyword(cursor, kw, 'programmatic_comparison', 'data_center', structure):
+            count += 1
+
+    # Software how-to combos
+    for sw, intent in itertools.product(software_targets, software_intents):
+        kw = f"{sw} {intent}"
+        structure = build_expected_structure(kw)
+        if inject_keyword(cursor, kw, 'programmatic_howto', 'IT_ops', structure):
+            count += 1
+
+    print(f"    [+] Programmatic: injected {count} new long-tail keywords")
+    return count
+
+
+# ── Main ──────────────────────────────────────────────────────────────────────
 def run_crawler():
     conn = init_db()
     if not conn:
         return
 
     cursor = conn.cursor()
-    print("[*] 正在唤醒 Data Crawler & Trend Analyzer...")
-    
-    try:
-        pytrends = TrendReq(hl='en-US', tz=360)
-    except Exception as e:
-        print(f"[-] pytrends 初始化失败 (可能需代理): {e}")
-        return
+    total = 0
 
-    total_injected = 0
+    print("[*] RoachCrawler Keyword Discovery Engine starting...\n")
 
-    for seed in SEED_MATRIX:
-        print(f"\n[*] 正在拉取 Google Trends 种子词飙升趋势: {seed}")
-        try:
-            pytrends.build_payload([seed], timeframe='today 1-m') # 过去30天
-            related = pytrends.related_queries()
-        except Exception as e:
-            print(f"[-] 拉取 {seed} 失败: {e}")
-            time.sleep(5)
-            continue
-        
-        if seed not in related or not related[seed]['rising'] is not None:
-            print(f"[*] {seed} 暂无飙升词汇")
-            continue
-        
-        rising_df = related[seed]['rising']
-        
-        for index, row in rising_df.iterrows():
-            query = row['query']
-            
-            # 过滤高意图修饰词
-            has_intent = any(mod in query.lower() for mod in INTENT_MODIFIERS)
-            if not has_intent:
-                continue
-                
-            print(f"[+] 发现高意图趋势词: '{query}'")
-            
-            # 论坛交叉验证
-            is_p0 = cross_validate_reddit(query)
-            niche = "IT_Infrastructure"
-            intent = "troubleshooting_or_guide"
-            
-            expected_structure = generate_expected_structure(query)
-            if is_p0:
-                expected_structure += " 【注意：此话题在 Reddit/技术社区热度极高，请深入探讨并解决社区痛点】"
-
-            try:
-                # status 为 pending，优先级靠前的可以设定，此处直接按时间顺序让 sniffer 去抓
-                cursor.execute('''
-                INSERT INTO seo_matrix (keyword, intent, niche, expected_structure, status)
-                VALUES (?, ?, ?, ?, 'pending')
-                ''', (query, intent, niche, expected_structure))
-                total_injected += 1
-                print(f"  -> [P0={is_p0}] 已注入矩阵排队池！")
-            except sqlite3.IntegrityError:
-                print(f"  -> 跳过: '{query}' (矩阵中已存在)")
-
-        time.sleep(random.uniform(2, 5)) # 防封控休眠
-
+    # Layer 1: Google Trends (best quality, but may be rate-limited)
+    t1 = fetch_from_google_trends(cursor)
     conn.commit()
-    conn.close()
-    print(f"\n[+] Data Crawler 执行完毕。本次成功向底层矩阵注入 {total_injected} 个高优长尾词！")
+    total += t1
+    print(f"[~] Layer 1 result: {t1} keywords\n")
 
-if __name__ == "__main__":
+    # Layer 2: Reddit RSS (reliable, no API key needed)
+    t2 = fetch_from_reddit_rss(cursor)
+    conn.commit()
+    total += t2
+    print(f"[~] Layer 2 result: {t2} keywords\n")
+
+    # Layer 3: Programmatic (always runs, fills the queue)
+    t3 = fetch_from_programmatic(cursor)
+    conn.commit()
+    total += t3
+    print(f"[~] Layer 3 result: {t3} keywords\n")
+
+    conn.close()
+    print(f"[+] Discovery complete. Total new keywords injected: {total}")
+
+
+if __name__ == '__main__':
     run_crawler()
