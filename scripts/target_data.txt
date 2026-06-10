@@ -1,64 +1,64 @@
 {
-  "task_id": 2,
-  "target_keyword": "Dell PowerEdge R760 vs Dell PowerEdge R660 IOPS performance benchmark 2026",
-  "expected_structure": "生成标准的 B2B 评测格式，包含 Dell PowerEdge R760 和 Dell PowerEdge R660 的详细参数对比表格，并深入分析 IOPS performance benchmark 场景下的优劣。",
+  "task_id": 4,
+  "target_keyword": "Dell PowerEdge R760 vs Dell PowerEdge R660 maintenance and rack cooling guide 2026",
+  "expected_structure": "生成标准的 B2B 评测格式，包含 Dell PowerEdge R760 和 Dell PowerEdge R660 的详细参数对比表格，并深入分析 maintenance and rack cooling guide 场景下的优劣。",
   "organic_intel": [
+    {
+      "title": "poweredge-r660-technical-guide.pdf",
+      "snippet": "Cooling Options. ○ Air Cooling. ○ Optional Direct Liquid Cooling (DLC). NOTE: DLC is a rack solution and requires rack manifolds and a cooling distribution unit ..."
+    },
     {
       "title": "DELL R660 vs R760: Complete Server Comparison 2026",
       "snippet": "Detailed DELL PowerEdge R660 vs R760 comparison ⚙️ Specs, performance, applications. Choose the optimal server for your business needs!"
     },
     {
-      "title": "Test Report: PowerEdge R760 with SQL Server",
-      "snippet": "To reduce these complications, we decided to benchmark the new R760 with a lower cost processor that enables both Speed Select and QAT so that we can compare ..."
-    },
-    {
       "title": "Dell PowerEdge R670 vs R660 vs R760: Full Comparison Guide",
-      "snippet": "Recent Dell Performance Labs tests show R670 and R770 variants with Xeon 6 achieving 67% gains over R660/R760 in SpecCPU integer throughput and 36% higher ..."
+      "snippet": "The Dell PowerEdge R670, R660, and R760 models target dense computing needs, but key differences in form factor, processor support, and scalability set them ..."
     },
     {
-      "title": "Dell PowerEdge R670 vs. R660: What's New in 17G and ...",
-      "snippet": "Dell PowerEdge R670 vs R660: Explore Dell 17G improvements in Xeon 6 CPUs, NVMe density, PCIe Gen5, and smarter virtualization scaling."
+      "title": "Comprehensive Guide to Dell PowerEdge Corrective ...",
+      "snippet": "The engineer must remove the cold plate when replacing a CPU or liquid cooled GPU. Engineers do not need to remover the entire cold plate module ..."
+    },
+    {
+      "title": "Dell PowerEdge R760 & R660 | 2023",
+      "snippet": "The new “Smart Flow” cooling system increases airflow by approximately 10%. This is an essential improvement to cool highpower CPUs and GPUs running demanding ..."
+    },
+    {
+      "title": "‎overview of differences between R440, R640, R650 and so ...",
+      "snippet": "Hi! I am about to buy a few new servers, and again i wonder, do i need a R640 or can i settle with a R440? and so on:) So i wonder, is there ..."
+    },
+    {
+      "title": "2023 New Released: Dell PowerEdge R760 and R660 Servers",
+      "snippet": "The new Dell PowerEdge R660 is a 1U, two-socket rack server. Gain the performance you need with this full-featured enterprise server, ..."
     },
     {
       "title": "Which one is better? : r/servers",
       "snippet": "Dell PowerEdge R750xs Xeon Silver 4314 - 2.4 GHz 32GB 480GB Rack Server Vs HPE ProLiant DL360 Gen11 Intel Xeon-S 4410Y 12-Core (2.00GHz 30.00MB) 32GB ..."
     },
     {
-      "title": "Dell PowerEdge R660 Server with 4th Gen Intel Xeon ...",
-      "snippet": "2U Dell PowerEdge R760 server REVIEW with 4th gen Intel Xeon Scalable CPUs | IT Creations. IT Creations, Inc. · 7.6K views ; R730XD Still the BEST ..."
+      "title": "Selecting a Dell PowerEdge Server: Strategies and expert ...",
+      "snippet": "Learn how to choose the right Dell PowerEdge server for your business needs. Explore model ranges, technical specs, and expert strategies ..."
     },
     {
-      "title": "The 16 th Generation Dell PowerEdge R760 server ...",
-      "snippet": "We found that the PowerEdge R760 with a Broadcom NIC offered up to 24.2 percent better operations per second per watt than the 14 th Generation ..."
-    },
-    {
-      "title": "Dell PowerEdge R760 & R660 | 2023",
-      "snippet": "Dell PowerEdge R760 & R660 servers have been designed to offer customers maximum performance and configurability within standard server form factors."
-    },
-    {
-      "title": "Dell PowerEdge R660 vs R760 - Al-Ishara",
-      "snippet": "Comparison: Both use high-performance Intel Xeon Scalable processors, but the R760 specifically uses 4th generation processors. Memory. R660: Up to 32 DDR5 ..."
-    },
-    {
-      "title": "Dell PowerEdge R760 Review",
-      "snippet": "The R760 also supports more PCIe slots than the PowerEdge R660, with four Gen5 and eight Gen4 versus the R660's two Gen5 and three Gen4."
+      "title": "Installing a Dell PowerEdge R760 / R660 server.",
+      "snippet": "Rack Installation: The R760 is a rack-mountable server. You'll need a standard server rack. Dell typically provides rack rails with the server."
     }
   ],
   "paa_questions": [
     {
-      "question": "What is the difference between Dell R660 and R760?",
+      "question": "What is the difference between PowerEdge R660 and R760?",
       "snippet": "Both servers belong to the 16th generation PowerEdge lineup but have significant differences in form factor, performance, and scalability. The R660 is a compact 1U rack server optimized for virtualization and cloud computing, while the R760 is a powerful 2U platform with enhanced storage capabilities and GPU support."
     },
     {
-      "question": "What is the difference between Dell PowerEdge R660 and R660xs?",
-      "snippet": "The primary difference is that the R660xs supports DDR5 memory at speeds up to 4800 MHz and provides more drive bay configurations. The DELL PowerEdge R660 is a compact single-processor server designed for medium-scale tasks where density and energy efficiency are priorities."
-    },
-    {
-      "question": "When was the Dell PowerEdge R760 released?",
-      "snippet": "Dell PowerEdge R760 is available globally in February 2023 . Dell PowerEdge HS5620, HS5610 are available globally in April 2023 ."
+      "question": "What is the difference between Dell PowerEdge R650 and R660?",
+      "snippet": "The main difference between the models lies in the form factor and the resulting expansion capabilities. The R650 in 1U format offers up to 10 bays for 2.5\" drives or 4 bays for 3.5\" drives, while the R660 in 2U format supports up to 8 bays for 2.5\" drives."
     },
     {
       "question": "What is the difference between Dell R660 and R670?",
+      "snippet": null
+    },
+    {
+      "question": "Is the Dell R720 end of life?",
       "snippet": null
     }
   ]
