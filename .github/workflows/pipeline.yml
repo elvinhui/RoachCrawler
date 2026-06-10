@@ -1,0 +1,78 @@
+name: 🪳 RoachCrawler Auto Pipeline
+
+on:
+  # 每天北京时间 08:00 (UTC 00:00) 定时触发
+  schedule:
+    - cron: '0 0 * * *'
+  # 手动触发入口
+  workflow_dispatch:
+
+jobs:
+  run-pipeline:
+    name: Content Generation & Deploy
+    runs-on: ubuntu-latest
+
+    steps:
+      # ── Step 1: 拉取代码 ─────────────────────────────────────────
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          # 需要完整历史以便正确 git push
+          fetch-depth: 0
+
+      # ── Step 2: 配置 Python 环境 ──────────────────────────────────
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: 'pip'
+
+      # ── Step 3: 安装依赖 ──────────────────────────────────────────
+      - name: Install Python dependencies
+        run: pip install -r requirements.txt
+
+      # ── Step 4: 从 GitHub Secrets 重建 .env 机密金库 ─────────────
+      - name: Rebuild .env from secrets
+        run: |
+          echo "SERP_API_KEY=${{ secrets.SERP_API_KEY }}" >> .env
+          echo "DEEPSEEK_API_KEY=${{ secrets.DEEPSEEK_API_KEY }}" >> .env
+          echo "[*] .env 金库重建完毕"
+
+      # ── Step 5: 配置 Git 身份（用于后续 commit & push）──────────
+      - name: Configure Git identity
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+      # ── Step 6: 阶段 0 — Trend Crawler 挖掘热词注入矩阵 ─────────
+      - name: Phase 0 - Trend Crawler
+        run: python scripts/trend_crawler.py || echo "[-] Trend Crawler 异常，跳过"
+
+      # ── Step 7: 阶段 1 — Serp Sniffer 公网流量嗅探 ───────────────
+      - name: Phase 1 - Serp Sniffer
+        run: python scripts/serp_sniffer.py
+
+      # ── Step 8: 阶段 2 — DeepSeek AI 双语文章生成 ────────────────
+      - name: Phase 2 - AI Content Generation (DeepSeek)
+        env:
+          HTTP_PROXY: ""
+          HTTPS_PROXY: ""
+        run: python scripts/coder_agent.py
+
+      # ── Step 9: 阶段 3 — 发布：随机化提交时间，推送触发 Vercel ──
+      - name: Phase 3 - Commit & Push (trigger Vercel deploy)
+        run: |
+          git add .
+          # 检查是否有新文件变动
+          if git diff --cached --quiet; then
+            echo "[*] 本次无新内容生成，跳过 Git 推送。"
+          else
+            # 防风控：加入随机延迟 (0~30分钟)，模拟人工发布节奏
+            DELAY=$((RANDOM % 1800))
+            echo "[*] 随机化发布延迟 ${DELAY}s ..."
+            sleep $DELAY
+            TIMESTAMP=$(date "+%Y-%m-%d %H:%M UTC")
+            git commit -m "auto: content matrix refresh at ${TIMESTAMP}"
+            git push origin main
+            echo "[+] 推送完成！Vercel 已触发全球边缘节点自动部署。"
+          fi
