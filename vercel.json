@@ -1,0 +1,6 @@
+{
+  "buildCommand": "cd site_payload && hugo --gc --minify",
+  "outputDirectory": "site_payload/public",
+  "installCommand": "curl -L https://github.com/gohugoio/hugo/releases/download/v0.162.1/hugo_extended_0.162.1_linux-amd64.tar.gz | tar -xz && mv hugo /usr/local/bin/hugo",
+  "framework": null
+}
