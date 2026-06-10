@@ -15,7 +15,7 @@
       <div class="mt-6 flex flex-wrap items-center justify-center gap-3 text-sm font-semibold text-slate-500 dark:text-zinc-400">
         <time datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format "Jan 2, 2006" }}</time>
         <span>·</span>
-        <span>Tan Jia Hui</span>
+        <span>InfraOps Router</span>
         {{ with .Params.categories }}
         <span>·</span>
         <span class="rounded-full bg-teal-50 px-3 py-1 text-teal-700 dark:bg-teal-400/10 dark:text-teal-200">{{ index . 0 }}</span>
@@ -31,19 +31,16 @@
 
     <div class="ops-card mx-auto mt-10 max-w-3xl p-6 sm:p-10">
       <div class="ops-article-content">
-        {{ if .Content }}
-          {{ if not (.Param "disableAnchoredHeadings") }}
-            {{ partial "anchored_headings.html" .Content }}
-          {{ else }}
-            {{ .Content }}
-          {{ end }}
-        {{ end }}
+        {{ .Content }}
       </div>
     </div>
 
-    <footer class="mx-auto mt-8 max-w-3xl">
-      {{ if (.Param "ShowPostNavLinks") }}
-        {{ partial "post_nav_links.html" . }}
+    <footer class="mx-auto mt-8 max-w-3xl flex justify-between">
+      {{ with .PrevInSection }}
+      <a href="{{ .Permalink }}" class="ops-button-secondary text-sm">← {{ .Title }}</a>
+      {{ end }}
+      {{ with .NextInSection }}
+      <a href="{{ .Permalink }}" class="ops-button-secondary text-sm ml-auto">{{ .Title }} →</a>
       {{ end }}
     </footer>
   </article>

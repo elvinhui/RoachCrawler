@@ -41,8 +41,8 @@
               {{ .Title }}
             </a>
           </h2>
-          <p class="mt-4 line-clamp-3 text-sm leading-6 text-slate-600 dark:text-zinc-400">
-            {{ .Summary | plainify }}
+          <p class="mt-4 text-sm leading-6 text-slate-600 dark:text-zinc-400" style="display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;">
+            {{ .Summary | plainify | truncate 100 }}
           </p>
 
           <div class="mt-auto flex items-center justify-between pt-8">

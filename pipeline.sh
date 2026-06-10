@@ -25,7 +25,11 @@ if [ -d "venv" ]; then
     source venv/bin/activate
 fi
 
-# 4. 阶段一：公网流量嗅探
+# 4. 阶段零：趋势词挖掘
+echo "[*] 阶段 0/3: 启动 Data Crawler 挖掘最新热词并注入矩阵..."
+python scripts/trend_crawler.py || echo "[-] Trend Crawler 异常，跳过挖掘阶段。"
+
+# 5. 阶段一：公网流量嗅探
 echo "[*] 阶段 1/3: 启动 Serp Sniffer，拦截高价值行业动态..."
 python scripts/serp_sniffer.py
 

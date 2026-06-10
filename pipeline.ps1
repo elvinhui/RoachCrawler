@@ -1,4 +1,4 @@
-﻿# ====================================================================
+# ====================================================================
 # Infrastructure Operations Automation Router - Windows Pipeline
 # ====================================================================
 $ErrorActionPreference = "Stop"
@@ -25,6 +25,10 @@ if (-not (Test-Path "roach_matrix.db")) {
 # 动态寻路：智能定位 Python 引擎
 # ==========================================
 $py_engine = "C:\Users\KATANA 17 B13V\AppData\Local\Python\pythoncore-3.14-64\python.exe"
+
+Write-Host "`n[*] 阶段 0/3: 启动 Data Crawler 挖掘最新热词并注入矩阵..." -ForegroundColor Yellow
+& $py_engine scripts/trend_crawler.py
+if ($LASTEXITCODE -ne 0) { Write-Host "[-] Trend Crawler 异常，跳过挖掘阶段。" -ForegroundColor DarkGray }
 
 Write-Host "`n[*] 阶段 1/3: 启动 Serp Sniffer 探测目标网关 (从 SQLite 矩阵提取指令)..." -ForegroundColor Yellow
 & $py_engine scripts/serp_sniffer.py

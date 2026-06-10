@@ -72,7 +72,7 @@ draft: false
 categories: ["Infrastructure"]
 tags: ["Tech", "Analysis"]
 cover:
-  image: "https://loremflickr.com/1200/600/server,datacenter,python?lock={random_seed}"
+  image: "https://picsum.photos/seed/{random_seed}/1200/600"
   alt: "基建可视化"
   hiddenInList: false
   hiddenInSingle: false
@@ -90,7 +90,7 @@ draft: false
 categories: ["Infrastructure"]
 tags: ["Tech", "Analysis"]
 cover:
-  image: "https://loremflickr.com/1200/600/server,datacenter,python?lock={random_seed}"
+  image: "https://picsum.photos/seed/{random_seed}en/1200/600"
   alt: "Infrastructure Visualization"
   hiddenInList: false
   hiddenInSingle: false

@@ -1,5 +1,4 @@
 baseURL = 'https://yourwebsite.com'
-theme = 'papermod'
 defaultContentLanguage = 'zh'
 
 [params]
@@ -11,42 +10,14 @@ defaultContentLanguage = 'zh'
 # 中文网段配置 (默认路由 /)
 # ================================
 [languages.zh]
-  languageName = "中文"
+  label = "中文"
   title = "InfraOps Router"
   weight = 1
-
-  [languages.zh.params.profileMode]
-    enabled = true
-    title = "数据中心与基建自动化"
-    subtitle = "专注 Data Center 工程、Python 脚本与架构管理的硬核笔记。"
-    imageUrl = "/avatar.png"
-    imageWidth = 120
-    imageHeight = 120
-    [[languages.zh.params.profileMode.buttons]]
-      name = "查看文章"
-      url = "/posts/"
-    [[languages.zh.params.profileMode.buttons]]
-      name = "English Version"
-      url = "/en/"
 
 # ================================
 # 英文网段配置 (路由 /en/)
 # ================================
 [languages.en]
-  languageName = "English"
+  label = "English"
   title = "InfraOps Router"
   weight = 2
-
-  [languages.en.params.profileMode]
-    enabled = true
-    title = "Data Center & Automation"
-    subtitle = "Hardcore notes on Data Center engineering, Python scripts, and infrastructure."
-    imageUrl = "/avatar.png"
-    imageWidth = 120
-    imageHeight = 120
-    [[languages.en.params.profileMode.buttons]]
-      name = "Read Posts"
-      url = "/en/posts/"
-    [[languages.en.params.profileMode.buttons]]
-      name = "中文版本"
-      url = "/"

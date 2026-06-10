@@ -97,7 +97,7 @@
       <a class="ops-post-card" href="{{ .Permalink }}">
         <span class="ops-post-date">{{ .Date.Format "Jan 2, 2006" }}</span>
         <h3>{{ .Title }}</h3>
-        <p>{{ .Summary | plainify }}</p>
+        <p style="display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;">{{ .Summary | plainify | truncate 90 }}</p>
       </a>
       {{ end }}
     </div>
