@@ -1,4 +1,4 @@
-baseURL = 'https://yourwebsite.com'
+baseURL = '/'
 defaultContentLanguage = 'zh'
 
 [params]
