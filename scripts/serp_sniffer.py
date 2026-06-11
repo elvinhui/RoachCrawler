@@ -19,21 +19,30 @@ def get_task_from_db():
     cursor = conn.cursor()
 
     # 寻找第一个排队的任务
-    cursor.execute("SELECT id, keyword, expected_structure FROM seo_matrix WHERE status = 'pending' LIMIT 1")
+    # Niche rotation: prioritize niches with fewest published articles to ensure diversity
+    cursor.execute("""
+        SELECT id, keyword, expected_structure, niche FROM seo_matrix
+        WHERE status = 'pending'
+        ORDER BY
+            (SELECT COUNT(*) FROM seo_matrix AS s2
+             WHERE s2.niche = seo_matrix.niche AND s2.status = 'published') ASC,
+            RANDOM()
+        LIMIT 1
+    """)
     row = cursor.fetchone()
 
     if not row:
         conn.close()
         return None
 
-    task_id, keyword, expected_structure = row
+    task_id, keyword, expected_structure, niche = row
 
     # 立即上锁，将状态改为 processing，防止其他并发探针抢夺
     cursor.execute("UPDATE seo_matrix SET status = 'processing' WHERE id = ?", (task_id,))
     conn.commit()
     conn.close()
 
-    return {"id": task_id, "keyword": keyword, "expected_structure": expected_structure}
+    return {"id": task_id, "keyword": keyword, "expected_structure": expected_structure, "niche": niche}
 
 
 def deploy_recon_probe(task):
@@ -69,9 +78,10 @@ def deploy_recon_probe(task):
         # [核心修复]：组装载荷时，强制注入 task_id
         # ==========================================
         final_payload = {
-            "task_id": task_id,  # <--- 就是这里，把 ID 传给下游
+            "task_id": task_id,
             "target_keyword": keyword,
             "expected_structure": expected_structure,
+            "niche": task.get("niche", "IT_general"),
             "organic_intel": extracted_organic,
             "paa_questions": extracted_paa
         }

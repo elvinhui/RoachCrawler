@@ -10,6 +10,23 @@ from dotenv import load_dotenv
 # 强制挂载根目录的机密金库 (.env)
 load_dotenv(os.path.join(os.path.dirname(__file__), '..', '.env'))
 
+# 动态分类映射：根据上游 niche 字段自动匹配文章分类
+CATEGORY_MAP = {
+    "data_center": ("Data Center", "infrastructure engineer and data center specialist"),
+    "networking": ("Networking", "network engineer and CCNA/CCNP specialist"),
+    "cloud_devops": ("Cloud & DevOps", "cloud architect and DevOps engineer"),
+    "cybersecurity": ("Cybersecurity", "cybersecurity analyst and penetration testing specialist"),
+    "developer_tools": ("Developer Tools", "senior backend engineer and database specialist"),
+    "ai_ml_infra": ("AI & ML Infrastructure", "ML infrastructure engineer and GPU computing specialist"),
+    "sre_observability": ("SRE & Observability", "site reliability engineer and observability specialist"),
+}
+DEFAULT_CATEGORY = ("Infrastructure", "infrastructure engineer and senior tech analyst")
+
+
+def resolve_category(niche):
+    """Map niche tag to (category_name, role_description) tuple."""
+    return CATEGORY_MAP.get(niche, DEFAULT_CATEGORY)
+
 
 def process_payload():
     cwd = os.path.dirname(__file__)
@@ -25,6 +42,7 @@ def process_payload():
             task_id = payload_data.get("task_id")
             keyword_context = payload_data.get("target_keyword", "Tech Update")
             expected_structure = payload_data.get("expected_structure", "进行深度的技术与商业价值分析。")
+            niche = payload_data.get("niche", "data_center")
             organic_text = json.dumps(payload_data.get("organic_intel", []), ensure_ascii=False)
             paa_text = json.dumps(payload_data.get("paa_questions", []), ensure_ascii=False)
         except json.JSONDecodeError:
@@ -39,10 +57,11 @@ def process_payload():
     # 锁定核心参数
     random_seed = random.randint(1000, 9999)
     current_time = datetime.now().astimezone().isoformat()
+    category_name, role_desc = resolve_category(niche)
 
     # 核心指令重构：强加“信息增量”限制与双语隔离墙
     prompt = f"""
-    You are an elite infrastructure engineer and senior tech analyst.
+    You are an elite {role_desc}.
     Your target topic is: "{keyword_context}"
 
     CRITICAL STRUCTURAL REQUIREMENT: 
@@ -69,11 +88,11 @@ def process_payload():
 title: "生成一个包含 {keyword_context} 的硬核中文标题"
 date: {current_time}
 draft: false
-categories: ["Infrastructure"]
+categories: ["{category_name}"]
 tags: ["Tech", "Analysis"]
 cover:
   image: "https://picsum.photos/seed/{random_seed}/1200/600"
-  alt: "基建可视化"
+  alt: "{category_name} 技术可视化"
   hiddenInList: false
   hiddenInSingle: false
 ---
@@ -87,11 +106,11 @@ cover:
 title: "Generate a hardcore English title for {keyword_context}"
 date: {current_time}
 draft: false
-categories: ["Infrastructure"]
+categories: ["{category_name}"]
 tags: ["Tech", "Analysis"]
 cover:
   image: "https://picsum.photos/seed/{random_seed}en/1200/600"
-  alt: "Infrastructure Visualization"
+  alt: "{category_name} Visualization"
   hiddenInList: false
   hiddenInSingle: false
 ---
