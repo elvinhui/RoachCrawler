@@ -1,6 +1,10 @@
 baseURL = '/'
 defaultContentLanguage = 'zh'
 
+[outputs]
+  home = ["HTML", "RSS", "JSON"]
+
+
 [params]
   env = 'production'
   defaultTheme = 'auto'

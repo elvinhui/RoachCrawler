@@ -29,6 +29,36 @@
       </div>
     </div>
 
+    <aside class="ops-panel ops-panel-content" style="background: transparent; border: none; box-shadow: none; backdrop-filter: none;">
+      <div class="ops-panel-head" style="background: transparent; border-bottom: 1px solid rgba(255,255,255,0.1); padding-left: 0; padding-right: 0;">
+        <div class="ops-panel-title" style="font-size: 20px;">{{ if eq .Lang "zh" }}探索话题{{ else }}Explore Topics{{ end }}</div>
+      </div>
+      <div class="ops-tag-cloud">
+        {{ range $name, $taxonomy := .Site.Taxonomies.categories }}
+          <a href="{{ "/categories/" | relLangURL }}{{ $name | urlize }}" class="ops-tag">#{{ $name }} <span>{{ $taxonomy.Count }}</span></a>
+        {{ end }}
+      </div>
+      
+      <div class="ops-panel-head" style="background: transparent; border-bottom: 1px solid rgba(255,255,255,0.1); padding-left: 0; padding-right: 0; margin-top: 32px;">
+        <div class="ops-panel-title" style="font-size: 20px;">{{ if eq .Lang "zh" }}精选推荐{{ else }}Featured Notes{{ end }}</div>
+      </div>
+      <div class="ops-featured-list">
+        {{ $featured := where $posts "Params.featured" true }}
+        {{ if eq (len $featured) 0 }}
+          {{ $featured = first 3 $posts }}
+        {{ else }}
+          {{ $featured = first 3 $featured }}
+        {{ end }}
+        {{ range $featured }}
+        <a href="{{ .Permalink }}" class="ops-featured-item">
+          <div class="ops-featured-title">{{ .Title }}</div>
+          <div class="ops-featured-meta">
+            {{ if isset .Params "categories" }}{{ index .Params.categories 0 }}{{ else }}Tech{{ end }} · {{ .Date.Format "Jan 2" }}
+          </div>
+        </a>
+        {{ end }}
+      </div>
+    </aside>
   </section>
 
   <section class="ops-home-wrap ops-section">
