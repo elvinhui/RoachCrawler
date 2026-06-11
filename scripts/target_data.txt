@@ -1,65 +1,57 @@
 {
-  "task_id": 4,
-  "target_keyword": "Dell PowerEdge R760 vs Dell PowerEdge R660 maintenance and rack cooling guide 2026",
-  "expected_structure": "生成标准的 B2B 评测格式，包含 Dell PowerEdge R760 和 Dell PowerEdge R660 的详细参数对比表格，并深入分析 maintenance and rack cooling guide 场景下的优劣。",
+  "task_id": 6,
+  "target_keyword": "Dell PowerEdge R760 vs Lenovo ThinkSystem SR650 IOPS performance benchmark 2026",
+  "expected_structure": "生成标准的 B2B 评测格式，包含 Dell PowerEdge R760 和 Lenovo ThinkSystem SR650 的详细参数对比表格，并深入分析 IOPS performance benchmark 场景下的优劣。",
   "organic_intel": [
     {
-      "title": "poweredge-r660-technical-guide.pdf",
-      "snippet": "Cooling Options. ○ Air Cooling. ○ Optional Direct Liquid Cooling (DLC). NOTE: DLC is a rack solution and requires rack manifolds and a cooling distribution unit ..."
+      "title": "Lenovo ThinkSystem or Dell PowerEdge? - Wecent",
+      "snippet": "Both Lenovo ThinkSystem and Dell PowerEdge offer exceptional enterprise performance. Dell excels in computational power for AI and HPC, while Lenovo focuses on ..."
     },
     {
-      "title": "DELL R660 vs R760: Complete Server Comparison 2026",
-      "snippet": "Detailed DELL PowerEdge R660 vs R760 comparison ⚙️ Specs, performance, applications. Choose the optimal server for your business needs!"
+      "title": "Lenovo vs Dell Servers: Choosing the Right ...",
+      "snippet": "Compare Lenovo vs Dell servers in 2026 for performance, management, security, cost, and the right fit for your business."
     },
     {
-      "title": "Dell PowerEdge R670 vs R660 vs R760: Full Comparison Guide",
-      "snippet": "The Dell PowerEdge R670, R660, and R760 models target dense computing needs, but key differences in form factor, processor support, and scalability set them ..."
+      "title": "Lenovo ThinkSystem Servers Continue to Lead the ...",
+      "snippet": "View all Performance Benchmark Reports. The following Lenovo ThinkSystem benchmark world records are current as of May 1, 2026. SAP SD 2T Reports; SAP Q2C ..."
     },
     {
-      "title": "Comprehensive Guide to Dell PowerEdge Corrective ...",
-      "snippet": "The engineer must remove the cold plate when replacing a CPU or liquid cooled GPU. Engineers do not need to remover the entire cold plate module ..."
+      "title": "Dell PowerEdge R760 Rack Server vs Lenovo ...",
+      "snippet": "The server comparison table provides a quick overview of the key specifications and key features for Dell PowerEdge R760 Rack Server and Lenovo ThinkSystem ..."
     },
     {
-      "title": "Dell PowerEdge R760 & R660 | 2023",
-      "snippet": "The new “Smart Flow” cooling system increases airflow by approximately 10%. This is an essential improvement to cool highpower CPUs and GPUs running demanding ..."
+      "title": "Dell PowerEdge vs HPE ProLiant vs Lenovo ThinkSystem ...",
+      "snippet": "At equivalent spec — same CPU, same memory, same drive config — there's essentially no performance difference between Dell, HPE, and Lenovo."
     },
     {
-      "title": "‎overview of differences between R440, R640, R650 and so ...",
-      "snippet": "Hi! I am about to buy a few new servers, and again i wonder, do i need a R640 or can i settle with a R440? and so on:) So i wonder, is there ..."
+      "title": "Achieving Significant Virtualization Performance Gains with ...",
+      "snippet": "The Dell PowerEdge R760 servers equipped with new KIOXIA CM7 Series enterprise NVMe SSDs outperformed the Dell PowerEdge 740xd servers and SSDs ..."
     },
     {
-      "title": "2023 New Released: Dell PowerEdge R760 and R660 Servers",
-      "snippet": "The new Dell PowerEdge R660 is a 1U, two-socket rack server. Gain the performance you need with this full-featured enterprise server, ..."
+      "title": "Lenovo ThinkSystem SR630 (RAID 930-24i) vs. Dell ...",
+      "snippet": "Stronger RAID engine: Lenovo's RAID 930-24i (12 Gb/s SAS) offers up to 4–8 GB of flash-backed cache and 24 internal SAS lanes, enabling higher ..."
     },
     {
-      "title": "Which one is better? : r/servers",
-      "snippet": "Dell PowerEdge R750xs Xeon Silver 4314 - 2.4 GHz 32GB 480GB Rack Server Vs HPE ProLiant DL360 Gen11 Intel Xeon-S 4410Y 12-Core (2.00GHz 30.00MB) 32GB ..."
+      "title": "Dell PowerEdge R760 Review New 2U Server Standard",
+      "snippet": "This is one of Dell's fanciest mainstream servers it's the r760. It has all these kind of great features like for example you can do awesome things."
     },
     {
-      "title": "Selecting a Dell PowerEdge Server: Strategies and expert ...",
-      "snippet": "Learn how to choose the right Dell PowerEdge server for your business needs. Explore model ranges, technical specs, and expert strategies ..."
+      "title": "AMD EPYC Servers: Dell vs Lenovo - Which Delivers ...",
+      "snippet": "Dell vs Lenovo 1U AMD EPYC servers compared: performance, specs and cost - see which offers the best value."
     },
     {
-      "title": "Installing a Dell PowerEdge R760 / R660 server.",
-      "snippet": "Rack Installation: The R760 is a rack-mountable server. You'll need a standard server rack. Dell typically provides rack rails with the server."
+      "title": "PCIe performance in R760 vs. Lenovo's SR650",
+      "snippet": "Same card under same OS works in the expected data rate in Lenovo's SR650. But with R760 we got data rate which is ~4 times less. How can I know ..."
     }
   ],
   "paa_questions": [
     {
-      "question": "What is the difference between PowerEdge R660 and R760?",
-      "snippet": "Both servers belong to the 16th generation PowerEdge lineup but have significant differences in form factor, performance, and scalability. The R660 is a compact 1U rack server optimized for virtualization and cloud computing, while the R760 is a powerful 2U platform with enhanced storage capabilities and GPU support."
+      "question": "What is the Lenovo SR650?",
+      "snippet": "Lenovo Think system SR650 rack server is the topmost performing server for data centers. The SR650 offers support for hybrid cloud, data analytics, hyper-converged infrastructure, high-performance computing, video surveillance, and much more."
     },
     {
-      "question": "What is the difference between Dell PowerEdge R650 and R660?",
-      "snippet": "The main difference between the models lies in the form factor and the resulting expansion capabilities. The R650 in 1U format offers up to 10 bays for 2.5\" drives or 4 bays for 3.5\" drives, while the R660 in 2U format supports up to 8 bays for 2.5\" drives."
-    },
-    {
-      "question": "What is the difference between Dell R660 and R670?",
-      "snippet": null
-    },
-    {
-      "question": "Is the Dell R720 end of life?",
-      "snippet": null
+      "question": "What is the difference between Dell PowerEdge R760 and HP Proliant DL380 Gen11?",
+      "snippet": "Dell's PowerEdge line tends to offer more granular configuration options, especially around NVMe storage and GPU acceleration. The R760 supports up to 24 NVMe drives in a 2U form factor, while the DL380 Gen11 offers 8 NVMe bays in its standard configuration (expandable with add-on cages)."
     }
   ]
 }
