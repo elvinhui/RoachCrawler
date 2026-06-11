@@ -7,31 +7,94 @@
     "expected_structure": "表格对比两代CPU能耗比、PCIe 5.0吞吐量差异，以及数据中心机架散热建议。"
   },
   {
+    "keyword": "Terraform vs Pulumi infrastructure as code comparison 2026",
+    "intent": "developer_tool_selection",
+    "niche": "cloud_devops",
+    "status": "pending",
+    "expected_structure": "对比两大 IaC 工具在多云支持、语言生态、状态管理和团队协作方面的差异，附带 HCL vs TypeScript 代码片段。"
+  },
+  {
+    "keyword": "Kubernetes pod CrashLoopBackOff troubleshooting step by step guide",
+    "intent": "troubleshooting",
+    "niche": "cloud_devops",
+    "status": "pending",
+    "expected_structure": "系统性排查 CrashLoopBackOff 的完整流程：从 kubectl describe 到日志分析，涵盖 OOMKilled、镜像拉取失败、探针配置错误等常见根因及修复命令。"
+  },
+  {
+    "keyword": "CrowdStrike vs SentinelOne EDR endpoint detection comparison enterprise",
+    "intent": "b2b_security_procurement",
+    "niche": "cybersecurity",
+    "status": "pending",
+    "expected_structure": "从检测率、误报率、部署复杂度、年度许可费等维度对比两大 EDR 方案，并给出不同企业规模的推荐。"
+  },
+  {
+    "keyword": "Zero trust architecture implementation guide for small business 2026",
+    "intent": "security_architecture",
+    "niche": "cybersecurity",
+    "status": "pending",
+    "expected_structure": "从身份验证、网络分段、最小权限原则三个支柱出发，给出中小企业零信任架构的落地路线图和工具链推荐。"
+  },
+  {
+    "keyword": "PostgreSQL vs MySQL performance tuning for high traffic web applications",
+    "intent": "developer_tool_selection",
+    "niche": "developer_tools",
+    "status": "pending",
+    "expected_structure": "深度对比两大关系型数据库在高并发读写、JSON 支持、索引策略、连接池等方面的性能差异，附带基准测试数据和调优参数。"
+  },
+  {
+    "keyword": "NVIDIA H100 vs A100 GPU training performance benchmark LLM fine-tuning",
+    "intent": "hardware_benchmark",
+    "niche": "ai_ml_infra",
+    "status": "pending",
+    "expected_structure": "对比 H100 和 A100 在大语言模型微调场景下的训练吞吐量、显存效率和性价比，附带 PyTorch 分布式训练配置示例。"
+  },
+  {
+    "keyword": "Prometheus vs Datadog monitoring cost and feature comparison for SRE teams",
+    "intent": "tool_comparison",
+    "niche": "sre_observability",
+    "status": "pending",
+    "expected_structure": "从自建 vs SaaS 的角度，对比指标采集、告警规则、仪表盘、长期存储和总拥有成本，附带 PromQL 和 Datadog 查询语法示例。"
+  },
+  {
     "keyword": "Proxmox VE vs VMware ESXi 8.0 enterprise migration guide 2026",
     "intent": "enterprise_software_migration",
-    "niche": "virtualization",
+    "niche": "data_center",
     "status": "pending",
     "expected_structure": "分析 VMware 授权模式变更后的成本测算，给出详细的虚拟机跨平台迁移命令和避坑指南。"
   },
   {
-    "keyword": "Cisco CCNA 200-301 IPv4 subnetting cheat sheet and troubleshooting commands",
-    "intent": "certification_study",
-    "niche": "networking",
+    "keyword": "GitHub Actions vs GitLab CI CD pipeline setup tutorial for monorepo",
+    "intent": "devops_tutorial",
+    "niche": "cloud_devops",
     "status": "pending",
-    "expected_structure": "生成可直接复制的子网掩码计算速查表（Cheat Sheet），以及真实的路由器 CLI 排错命令演练。"
+    "expected_structure": "对比两大 CI/CD 平台在 monorepo 场景下的配置方式、缓存策略和并行构建能力，附带完整的 YAML 配置示例。"
   },
   {
-    "keyword": "FortiGate 100F vs Palo Alto PA-440 throughput and license cost",
-    "intent": "b2b_security_procurement",
-    "niche": "network_security",
+    "keyword": "OpenTelemetry distributed tracing setup guide microservices 2026",
+    "intent": "observability_tutorial",
+    "niche": "sre_observability",
     "status": "pending",
-    "expected_structure": "对比两款主流下一代防火墙（NGFW）开启全量安全防护后的真实吞吐量暴跌情况，及年度订阅费对比。"
+    "expected_structure": "从零搭建 OpenTelemetry 分布式追踪系统的完整教程，涵盖 SDK 接入、Collector 部署、Jaeger 后端集成和采样策略配置。"
   },
   {
-    "keyword": "BeautifulSoup vs Scrapy for dynamic javascript websites scraping Python",
-    "intent": "developer_tool_selection",
-    "niche": "python_automation",
+    "keyword": "Top 5 SIEM tools for enterprise security operations center 2026",
+    "intent": "tool_ranking",
+    "niche": "cybersecurity",
     "status": "pending",
-    "expected_structure": "深度对比轻量级库和工业级框架在应对反爬虫和 JS 渲染时的性能差异，附带简单的代码片段。"
+    "expected_structure": "横评 Splunk、Elastic SIEM、Microsoft Sentinel、IBM QRadar、Sumo Logic 五大 SIEM 平台，给出功能矩阵对比表和不同预算的推荐方案。"
+  },
+  {
+    "keyword": "Docker compose vs Kubernetes for small team deployment decision guide",
+    "intent": "architecture_decision",
+    "niche": "developer_tools",
+    "status": "pending",
+    "expected_structure": "从团队规模、运维复杂度、扩展性需求等角度，帮助小团队选择容器编排方案，附带两种方案的部署脚本示例。"
+  },
+  {
+    "keyword": "MLflow vs Weights and Biases experiment tracking platform comparison",
+    "intent": "ml_tool_selection",
+    "niche": "ai_ml_infra",
+    "status": "pending",
+    "expected_structure": "对比两大 MLOps 实验追踪平台的功能、集成生态、定价模型和自托管能力，给出不同团队规模的推荐选择。"
   }
 ]
