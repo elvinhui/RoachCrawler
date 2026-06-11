@@ -1,57 +1,62 @@
 {
-  "task_id": 6,
-  "target_keyword": "Dell PowerEdge R760 vs Lenovo ThinkSystem SR650 IOPS performance benchmark 2026",
-  "expected_structure": "生成标准的 B2B 评测格式，包含 Dell PowerEdge R760 和 Lenovo ThinkSystem SR650 的详细参数对比表格，并深入分析 IOPS performance benchmark 场景下的优劣。",
+  "task_id": 295,
+  "target_keyword": "Prometheus alerting rules configuration guide",
+  "expected_structure": "Generate a professional technical tutorial or deep-dive for 'Prometheus alerting rules configuration guide'. MUST include: clear step-by-step instructions, real config examples or code blocks, and a best-practices summary table.",
+  "niche": "sre_observability",
   "organic_intel": [
     {
-      "title": "Lenovo ThinkSystem or Dell PowerEdge? - Wecent",
-      "snippet": "Both Lenovo ThinkSystem and Dell PowerEdge offer exceptional enterprise performance. Dell excels in computational power for AI and HPC, while Lenovo focuses on ..."
+      "title": "Alerting rules",
+      "snippet": "Alerting rules allow you to define alert conditions based on Prometheus expression language expressions and to send notifications about firing alerts to an ..."
     },
     {
-      "title": "Lenovo vs Dell Servers: Choosing the Right ...",
-      "snippet": "Compare Lenovo vs Dell servers in 2026 for performance, management, security, cost, and the right fit for your business."
+      "title": "Defining recording rules",
+      "snippet": "Prometheus supports two types of rules which may be configured and then evaluated at regular intervals: recording rules and alerting rules. To include rules in ..."
     },
     {
-      "title": "Lenovo ThinkSystem Servers Continue to Lead the ...",
-      "snippet": "View all Performance Benchmark Reports. The following Lenovo ThinkSystem benchmark world records are current as of May 1, 2026. SAP SD 2T Reports; SAP Q2C ..."
+      "title": "How Do I Add Alerts to Prometheus - Step-by-Step Guide",
+      "snippet": "Learn how to add alerts to Prometheus with this comprehensive guide. Set up Alertmanager, create rules, and configure notifications for ..."
     },
     {
-      "title": "Dell PowerEdge R760 Rack Server vs Lenovo ...",
-      "snippet": "The server comparison table provides a quick overview of the key specifications and key features for Dell PowerEdge R760 Rack Server and Lenovo ThinkSystem ..."
+      "title": "Awesome Prometheus Alert Rules",
+      "snippet": "Collection of 954 copy-pasteable Prometheus alerting rules for 93 services — covering databases, Kubernetes, cloud providers, message brokers, and more."
     },
     {
-      "title": "Dell PowerEdge vs HPE ProLiant vs Lenovo ThinkSystem ...",
-      "snippet": "At equivalent spec — same CPU, same memory, same drive config — there's essentially no performance difference between Dell, HPE, and Lenovo."
+      "title": "Configuring PrometheusRules",
+      "snippet": "Go to the cluster where you want to create rule groups. Click Monitoring > Advanced and click Prometheus Rules. Click Create. Enter a Group Name ..."
     },
     {
-      "title": "Achieving Significant Virtualization Performance Gains with ...",
-      "snippet": "The Dell PowerEdge R760 servers equipped with new KIOXIA CM7 Series enterprise NVMe SSDs outperformed the Dell PowerEdge 740xd servers and SSDs ..."
+      "title": "Alerting Routes - Prometheus Operator",
+      "snippet": "In this guide, we'll explore the various methods for managing Alertmanager configurations within your Kubernetes cluster."
     },
     {
-      "title": "Lenovo ThinkSystem SR630 (RAID 930-24i) vs. Dell ...",
-      "snippet": "Stronger RAID engine: Lenovo's RAID 930-24i (12 Gb/s SAS) offers up to 4–8 GB of flash-backed cache and 24 internal SAS lanes, enabling higher ..."
+      "title": "How to Implement Prometheus Alert Rule Design",
+      "snippet": "A practical guide to designing effective Prometheus alert rules that reduce noise, catch real incidents, and integrate with modern ..."
     },
     {
-      "title": "Dell PowerEdge R760 Review New 2U Server Standard",
-      "snippet": "This is one of Dell's fanciest mainstream servers it's the r760. It has all these kind of great features like for example you can do awesome things."
+      "title": "Configure Prometheus Alerts & Surface Them in Grafana",
+      "snippet": "1) Write the alert rule (High CPU). Create a file alerts.yml (or add to your existing rules file):. groups: - name: node-rules rules: - alert ..."
     },
     {
-      "title": "AMD EPYC Servers: Dell vs Lenovo - Which Delivers ...",
-      "snippet": "Dell vs Lenovo 1U AMD EPYC servers compared: performance, specs and cost - see which offers the best value."
-    },
-    {
-      "title": "PCIe performance in R760 vs. Lenovo's SR650",
-      "snippet": "Same card under same OS works in the expected data rate in Lenovo's SR650. But with R760 we got data rate which is ~4 times less. How can I know ..."
+      "title": "Recording Rules and Sending Email Alerts Using AlertManager",
+      "snippet": "Alerting rules in Prometheus define conditions under which an alert should be triggered. These conditions are based on Prometheus queries, and ..."
     }
   ],
   "paa_questions": [
     {
-      "question": "What is the Lenovo SR650?",
-      "snippet": "Lenovo Think system SR650 rack server is the topmost performing server for data centers. The SR650 offers support for hybrid cloud, data analytics, hyper-converged infrastructure, high-performance computing, video surveillance, and much more."
+      "question": "When configuring Prometheus alerting rules, what is the purpose of the for clause?",
+      "snippet": "The optional FOR clause causes Prometheus to wait for a certain duration between first encountering a new expression output vector element (like an instance with a high HTTP error rate) and counting an alert as firing for this element."
     },
     {
-      "question": "What is the difference between Dell PowerEdge R760 and HP Proliant DL380 Gen11?",
-      "snippet": "Dell's PowerEdge line tends to offer more granular configuration options, especially around NVMe storage and GPU acceleration. The R760 supports up to 24 NVMe drives in a 2U form factor, while the DL380 Gen11 offers 8 NVMe bays in its standard configuration (expandable with add-on cages)."
+      "question": "How to setup alerts in Prometheus?",
+      "snippet": null
+    },
+    {
+      "question": "What is the alert rule in Prometheus?",
+      "snippet": null
+    },
+    {
+      "question": "How to create alert rules?",
+      "snippet": null
     }
   ]
 }
