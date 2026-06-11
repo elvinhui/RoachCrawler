@@ -76,6 +76,31 @@ def process_payload():
     2. You must generate TWO complete versions of the post: first in Chinese, then in English.
     3. Separate the two versions EXACTLY with the string: ====LANG_SEPARATOR====
 
+    [HUMAN WRITING STYLE — CRITICAL ANTI-AI-DETECTION RULES]
+    You MUST write like a real senior engineer sharing hard-won experience, NOT like an AI assistant.
+    Violating these rules will make the content flagged as AI-generated and worthless for SEO.
+
+    BANNED PHRASES (never use these or similar AI clichés):
+    - English: "In today's rapidly evolving", "It's worth noting that", "In the ever-changing landscape",
+      "Let's dive in", "without further ado", "In conclusion", "game-changer", "it's important to note",
+      "comprehensive guide", "Whether you're a seasoned", "navigating the complexities",
+      "unlock the power", "at the end of the day", "leverage", "harness the power",
+      "streamline", "empower", "delve into", "revolutionize", "robust solution"
+    - Chinese: "在当今快速发展的", "值得注意的是", "总而言之", "让我们深入探讨", "不容忽视",
+      "毋庸置疑", "综上所述", "赋能", "一站式", "保姆级", "助力", "深度赋能",
+      "全方位", "多维度", "颠覆性", "划时代"
+
+    MANDATORY WRITING TECHNIQUES:
+    1. SENTENCE RHYTHM: Mix short punchy sentences (5-10 words) with longer technical ones. Never write 3+ sentences of similar length in a row.
+    2. FIRST PERSON: Use "I", "we", "our team" naturally. Share specific scenarios like "Last month we hit this exact issue on our prod cluster" or "I personally tested this on a 3-node setup".
+    3. OPINIONS & EDGE: Take clear stances. Say "X is frankly overpriced for what you get" or "I'd pick A over B nine times out of ten". Don't hedge everything with "may" and "might".
+    4. IMPERFECTIONS: Occasionally use dashes, parenthetical asides (like this), rhetorical questions, and informal connectors ("honestly", "look", "here's the thing", "spoiler alert").
+    5. SPECIFIC NUMBERS: Use concrete data points ("saved us 340ms per request", "dropped our P99 from 2.1s to 380ms") instead of vague claims ("significantly improved performance").
+    6. PARAGRAPH VARIATION: Mix 1-sentence paragraphs with 3-4 sentence paragraphs. Not every paragraph should be the same length.
+    7. NATURAL TRANSITIONS: Don't start every section with a smooth transition. Sometimes just jump in. Other times use casual connectors like "So here's where it gets interesting" or "Now, the part everyone gets wrong".
+    8. COLLOQUIAL TOUCHES: Sprinkle in real engineer talk — "this blew up our monitoring", "we brute-forced the config", "the docs are garbage on this part".
+    9. For Chinese: write in a conversational technical blog tone (技术博客口语化), NOT in a formal report style. Use "我" and "我们" naturally. Mix in common developer slang where appropriate (比如"踩坑"、"翻车"、"真香"、"白嫖").
+
     [CONTENT QUALITY & SEO REQUIREMENTS (Applies to both versions)]
     - NEVER just summarize. You must add professional insights, technical nuances, or pros/cons.
     - MANDATORY: You must include at least one Markdown TABLE comparing key metrics, tools, or concepts derived from the data.
@@ -122,7 +147,7 @@ cover:
     payload = {
         "model": "deepseek-chat",
         "messages": [{"role": "system", "content": prompt}],
-        "temperature": 0.4  # 保持较低温度，确保生成的表格和技术术语准确
+        "temperature": 0.7  # 提高温度以增加文风多样性，降低 AI 感
     }
 
     try:
