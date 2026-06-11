@@ -29,40 +29,6 @@
       </div>
     </div>
 
-    <aside class="ops-panel">
-      <div class="ops-panel-head">
-        <div>
-          <div class="ops-panel-kicker">Pipeline Console</div>
-          <div class="ops-panel-title">{{ if eq .Lang "zh" }}内容生成链路{{ else }}Publishing Control Plane{{ end }}</div>
-        </div>
-        <span class="ops-live">LIVE</span>
-      </div>
-      <div class="ops-console">
-        <div class="ops-console-item">
-          <div class="ops-console-row">
-            <span>SERP Sniffer</span>
-            <span class="ops-tag">ONLINE</span>
-          </div>
-          <div class="ops-meter"><span></span></div>
-        </div>
-        <div class="ops-console-item">
-          <div class="ops-console-row">
-            <span>AI Rewrite Matrix</span>
-            <span class="ops-tag">ACTIVE</span>
-          </div>
-          <div class="ops-matrix">
-            {{ range seq 1 36 }}<span></span>{{ end }}
-          </div>
-        </div>
-        <div class="ops-console-item">
-          <div class="ops-console-row">
-            <span>Hugo Deploy Payload</span>
-            <span class="ops-tag">READY</span>
-          </div>
-          <p class="ops-terminal">build --minify --source site_payload<br>sync origin/main -> edge network</p>
-        </div>
-      </div>
-    </aside>
   </section>
 
   <section class="ops-home-wrap ops-section">
