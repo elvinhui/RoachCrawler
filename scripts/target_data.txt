@@ -1,44 +1,44 @@
 {
-  "task_id": 289,
-  "target_keyword": "PostgreSQL partitioning configuration guide",
-  "expected_structure": "Generate a professional technical tutorial or deep-dive for 'PostgreSQL partitioning configuration guide'. MUST include: clear step-by-step instructions, real config examples or code blocks, and a best-practices summary table.",
-  "niche": "developer_tools",
+  "task_id": 257,
+  "target_keyword": "BGP peering configuration guide 2026",
+  "expected_structure": "Generate a networking guide for 'BGP peering configuration guide' with CLI command examples and topology diagrams.",
+  "niche": "networking",
   "organic_intel": [
     {
-      "title": "Documentation: 18: 5.12. Table Partitioning",
-      "snippet": "PostgreSQL allows you to declare that a table is divided into partitions. The table that is divided is referred to as a partitioned table."
+      "title": "IP Routing: BGP Configuration Guide",
+      "snippet": "IP Routing: BGP Configuration Guide PDF - Complete Book (13.48 MB) View with Adobe Reader on a variety of devices Print Book"
     },
     {
-      "title": "Managing PostgreSQL partitions with the pg_partman ...",
-      "snippet": "After you enable the pg_partman extension, use the create_parent function to configure partitions inside the partition maintenance schema. The following example ..."
+      "title": "Configure BGP and BGP Routing Policy",
+      "snippet": "Objective. This guide provides instructions to configure Border Gateway Protocol (BGP) and BGP routing policies for your Customer Edge (CE) ..."
     },
     {
-      "title": "Database Partitioning Best Practices",
-      "snippet": "Effective practices for partitioning a production Postgres database to prevent downtime & maintain performance."
+      "title": "BGP Peering - Configuration Best Practices",
+      "snippet": "This article provides suggestions of BGP peering configuration, with general best practices and some particular considerations for manageability and security."
     },
     {
-      "title": "When to Consider Postgres Partitioning",
-      "snippet": "Postgres partitioning is a powerful tool for scaling your database. This guide explains how partitioning works and when to use it."
+      "title": "Azure BGP Peer - Microsoft Q&A",
+      "snippet": "Consult Azure Documentation: Azure provides detailed documentation on configuring BGP for VPN gateways. You can refer to the Azure BGP ..."
     },
     {
-      "title": "Postgres Partitioning with a Default Partition",
-      "snippet": "Keith discusses the importance of having a default partition, how to monitor the default, and how to move rows to new child tables."
+      "title": "Basic BGP Configuration > BGP Fundamentals",
+      "snippet": "The authors cover BGP Messages and Inter-Router Communication, Basic BGP Configuration for IOS, IOS XR, and NX-OS, IBGP Rules, EBGP Rules, and BGP Route ..."
     },
     {
-      "title": "A Guide to Partitioning Data In PostgreSQL",
-      "snippet": "Partitioning splits a table into multiple tables, and. Partitioning can be done on multiple columns, 'date' and a 'country' column."
+      "title": "BGP Routing: An In-Depth Tutorial and Examples",
+      "snippet": "From autonomous systems, routes, peering, and BGP configuration, our four-part tutorial provides key insights into how BGP can improve network ..."
     },
     {
-      "title": "Table partitioning",
-      "snippet": "Starting in PostgreSQL 10, we have declarative partitioning. With it, there is dedicated syntax to create range and list *partitioned* tables ..."
+      "title": "Example for Configuring Basic BGP Functions",
+      "snippet": "This document describes the concepts and configuration procedures of IP Service features on the device, and provides the configuration ..."
     },
     {
-      "title": "Guide to PostgreSQL Table Partitioning | by Rasiksuhail",
-      "snippet": "This guide will explore the concept of table partitioning in PostgreSQL and discuss how it can be leveraged to improve query performance and manage data ..."
+      "title": "BGP",
+      "snippet": "BGP (Border Gateway Protocol) is the routing protocol of the Internet. In our course we'll start with the basics of BGP and then move on to advanced topics."
     },
     {
-      "title": "Postgres Table Partitioning",
-      "snippet": "In this article, we describe different Postgres partitioning options, how to configure partitioning, and the use cases where partitioning can be used to ..."
+      "title": "BGP configuration best practices",
+      "snippet": "This document, created with the co-operation of French operators, is intended to present and describe good configuration practices for the BGP1 routing ..."
     }
   ],
   "paa_questions": []
