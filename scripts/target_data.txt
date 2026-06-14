@@ -1,44 +1,48 @@
 {
-  "task_id": 38,
-  "target_keyword": "Proxmox VE vs VMware ESXi 8.0 enterprise migration guide 2026",
-  "expected_structure": "分析 VMware 授权模式变更后的成本测算，给出详细的虚拟机跨平台迁移命令和避坑指南。",
-  "niche": "virtualization",
+  "task_id": 229,
+  "target_keyword": "Terraform vs Pulumi migration guide",
+  "expected_structure": "Compare Terraform and Pulumi for migration guide, include feature matrix table and code examples.",
+  "niche": "cloud_devops",
   "organic_intel": [
     {
-      "title": "Proxmox vs VMware 2026: 14x Cost Gap [Tested] - Tech Insider",
-      "snippet": "Proxmox VE 9.1 vs VMware vSphere 8 in 2026: pricing, benchmarks, ESXi import wizard, and the Broadcom 800-1500% price hike fallout."
+      "title": "Migrating from Terraform or CDKTF to Pulumi",
+      "snippet": "The pulumi-terraform-migrate tool provides a state-first approach to migration by translating your Terraform state into Pulumi state. You then use an LLM agent ..."
     },
     {
-      "title": "VMware Migration in 2026: Proxmox, KVM, XCP-ng & Veeam",
-      "snippet": "Learn how to migrate from VMware in 2026 using Proxmox, KVM, XCP-ng, Veeam, and open-source tools. Compare options, costs, and working ..."
+      "title": "Thinking about migrating from Terraform to Pulumi : r/devops",
+      "snippet": "Pulumi definitely offers more flexibility with programming languages like Python, which can make coding more intuitive if you're already ..."
     },
     {
-      "title": "The Infrastructure Needed for a Successful VMware to ...",
-      "snippet": "Migrating from VMware? Discover the essential CPU, RAM, storage, and network infrastructure needed for a successful Proxmox deployment."
+      "title": "Pulumi vs Terraform: An In-Depth Comparison [2026]",
+      "snippet": "While Terraform specializes in a focused, declarative approach with its HCL, Pulumi offers broader language support and flexibility, making each ..."
     },
     {
-      "title": "Migrate VMware ESXi to Proxmox VE: 2026 Step-by-Step",
-      "snippet": "Step-by-step guide to migrate VMware ESXi to Proxmox VE in 2026. Real commands, licensing math, storage and network mapping, Windows VirtIO cutover plan."
+      "title": "Pulumi vs. Terraform",
+      "snippet": "Pulumi and HashiCorp Terraform are both declarative infrastructure as code tools with overlapping capabilities and several meaningful differences."
     },
     {
-      "title": "VMware ESXi 8 vs Proxmox : r/homelab",
-      "snippet": "I'm currently running my homelab on Proxmox, but I'm considering switching to VMware vSphere Enterprise Plus (ESXi 8) since I have a full"
+      "title": "How to Migrate from Pulumi to Terraform",
+      "snippet": "Migrating from Pulumi to Terraform involves converting code from a general-purpose language to HCL, extracting resource IDs from Pulumi state, ..."
     },
     {
-      "title": "New Import Wizard Available for Migrating VMware ESXi ...",
-      "snippet": "Proxmox VE now provides an integrated VM import wizard re-using the storage plugin system for native integration into the API and web-based user interface."
+      "title": "Terraform vs. Pulumi vs. Crossplane: Choosing the right ...",
+      "snippet": "A practical guide comparing Terraform, Pulumi, and Crossplane for platform engineers and DevOps teams. Learn key differences, strengths, ..."
     },
     {
-      "title": "How to Migrate VMware to Proxmox: Step-by-Step Guide ...",
-      "snippet": "A 2026 technical guide to migrate VMware to Proxmox. Covers ESXi wizard setups, manual OVF exports, post-migration optimizations, and ..."
+      "title": "Pulumi vs. Terraform",
+      "snippet": "Pulumi is an IaC automation tool that partially depends on Terraform. Unlike Terraform, declarative configurations can be written using familiar programming ..."
     },
     {
-      "title": "Switching from VMware to Proxmox? What You Should ...",
-      "snippet": "We cover what actually changed in VMware licensing, what Proxmox replaces (and what it doesn't), the honest gotchas to know before you commit, ..."
+      "title": "Terraform vs Pulumi vs OpenTofu — which IaC tool in 2026?",
+      "snippet": "I present a detailed comparison, a decision tree, and real migration scenarios. No corporate jargon, with concrete data and deployment ..."
     },
     {
-      "title": "Enterprise Migration from VMware ESXi to Proxmox VE 8.4 ...",
-      "snippet": "This technical guide demonstrates a production-ready migration path from VMware ESXi 8.0 to Proxmox VE 8.4, leveraging distributed Ceph ..."
+      "title": "How to Migrate From Terraform to Pulumi",
+      "snippet": "Pulumi and Terraform are both infrastructure as code (IaC) platforms, however they have fundamental differences in how they approach the ..."
+    },
+    {
+      "title": "Pulumi vs Terraform 2026: 4,800 vs 1,800 Providers [Tested]",
+      "snippet": "The single biggest differentiator between Terraform and Pulumi is how you write infrastructure code. Terraform uses HCL, a declarative domain- ..."
     }
   ],
   "paa_questions": []
