@@ -162,7 +162,8 @@ cover:
     payload = {
         "model": "deepseek-chat",
         "messages": [{"role": "system", "content": prompt}],
-        "temperature": 0.7  # 提高温度以增加文风多样性，降低 AI 感
+        "temperature": 0.7,  # 提高温度以增加文风多样性，降低 AI 感
+        "max_tokens": 8192
     }
 
     try:
@@ -218,6 +219,10 @@ cover:
 
         else:
             print("[-] 异常：大模型未按照规定格式生成语言隔离墙，无法分流落盘。建议检查 Token 是否截断。")
+            debug_path = os.path.join(cwd, "failed_payload.txt")
+            with open(debug_path, "w", encoding="utf-8") as f:
+                f.write(content)
+            print(f"[-] 原始输出已保存至 {debug_path} 以供调试。")
 
         # [清理] 成功流转后，删除物理层载荷文件
         try:
