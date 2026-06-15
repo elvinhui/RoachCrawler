@@ -15,7 +15,7 @@ defaultContentLanguage = 'zh'
 # ================================
 [languages.zh]
   label = "中文"
-  title = "InfraOps Router"
+  title = "SmartInfraLog"
   weight = 1
 
 # ================================
@@ -23,5 +23,5 @@ defaultContentLanguage = 'zh'
 # ================================
 [languages.en]
   label = "English"
-  title = "InfraOps Router"
+  title = "SmartInfraLog"
   weight = 2
