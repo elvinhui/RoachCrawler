@@ -81,7 +81,7 @@ REDDIT_FEEDS = [
 ]
 
 REDDIT_HEADERS = {
-    "User-Agent": "Mozilla/5.0 (compatible; RoachCrawler/1.0; keyword research bot)"
+    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36"
 }
 
 
@@ -217,7 +217,7 @@ def fetch_from_reddit_rss(cursor):
 
     for feed_url in REDDIT_FEEDS:
         try:
-            time.sleep(random.uniform(2, 4))
+            time.sleep(random.uniform(5, 8))
             resp = requests.get(feed_url, headers=REDDIT_HEADERS, timeout=15)
             if resp.status_code != 200:
                 print(f"    [-] RSS fetch failed ({resp.status_code}): {feed_url}")
