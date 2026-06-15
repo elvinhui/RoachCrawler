@@ -23,12 +23,13 @@
       --indigo: #6366f1;
     }
 
-    html { font-family: 'Geist Sans', ui-sans-serif, system-ui, sans-serif; scroll-behavior: smooth; }
+    html { font-family: 'Geist Sans', ui-sans-serif, system-ui, sans-serif; scroll-behavior: smooth; overflow-x: hidden; }
 
     body {
       background: var(--bg);
       color: var(--text);
       min-height: 100dvh;
+      overflow-x: hidden;
     }
 
     /* ── NAV ── */
@@ -184,6 +185,28 @@
       text-align: center;
       color: var(--muted);
       font-size: 13px;
+    }
+
+    /* ── MOBILE RESPONSIVE NAV ── */
+    @media (max-width: 640px) {
+      .site-nav {
+        gap: 12px;
+        padding: 0 16px;
+      }
+      .site-nav-links {
+        gap: 4px;
+      }
+      .site-nav-links a {
+        padding: 6px 8px;
+        font-size: 12px;
+      }
+      .search-input {
+        width: 140px;
+      }
+      .site-logo {
+        font-size: 14px;
+        gap: 6px;
+      }
     }
   </style>
 </head>
