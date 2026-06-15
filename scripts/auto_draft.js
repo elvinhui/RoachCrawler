@@ -2,8 +2,21 @@ const { execSync } = require('child_process');
 const fs = require('fs');
 const path = require('path');
 
-// 从命令行获取主题，默认为 Data Center Automation
-const topic = process.argv[2] || "Data Center Automation";
+// 从 serp_sniffer.py 生成的 target_data.txt 中提取任务关键字
+const dataPath = path.join(__dirname, 'target_data.txt');
+let topic = "Data Center Automation";
+
+if (fs.existsSync(dataPath)) {
+  try {
+    const payload = JSON.parse(fs.readFileSync(dataPath, 'utf-8'));
+    if (payload.target_keyword) {
+      topic = payload.target_keyword;
+    }
+  } catch (e) {
+    console.error("[-] 解析 target_data.txt 失败，使用默认关键字", e);
+  }
+}
+
 console.log(`\n🔍 开始针对主题 "${topic}" 进行全网 30 天舆情抓取...`);
 console.log(`这可能需要 1-3 分钟，请耐心等待...\n`);
 
@@ -17,44 +30,11 @@ try {
     stdio: ['pipe', 'pipe', 'ignore'] // 忽略 stderr 警告
   });
   
-  // 2. 生成 Hugo 草稿的 Frontmatter
-  const date = new Date();
-  const timestamp = Math.floor(date.getTime() / 1000);
-  const isoDate = date.toISOString();
+  // 2. 将结果保存到 target_social_data.txt 供 coder_agent.py 读取
+  const outPath = path.join(__dirname, 'target_social_data.txt');
+  fs.writeFileSync(outPath, output);
   
-  const frontmatter = `---
-title: "Research Log: ${topic} - ${isoDate.split('T')[0]}"
-date: ${isoDate}
-draft: true
-tags: ["Research", "last30days", "Automated"]
-categories: ["Automation Ideas"]
----
-
-> **自动生成的调研日志**  
-> 这份草稿由 \`last30days\` 脚本自动生成，汇总了全网过去 30 天关于 **${topic}** 的真实讨论和数据。
-> 你可以直接让 AI 基于下方的 Raw Data 为你生成一篇带观点的技术文章。
-
-<!--more-->
-
-## Raw Research Dump
-
-`;
-
-  // 3. 将抓取的内容和 Frontmatter 合并
-  const content = frontmatter + output;
-  const fileName = `research-${timestamp}.md`;
-  
-  // 4. 写入到 Hugo 内容目录（中英文双语文件夹）
-  const zhFilePath = path.join(__dirname, '../site_payload/content/posts', fileName);
-  const enFilePath = path.join(__dirname, '../site_payload/content/en/posts', fileName);
-  
-  fs.writeFileSync(zhFilePath, content);
-  fs.writeFileSync(enFilePath, content);
-  
-  console.log(`✅ 抓取完成！自动草稿已生成：`);
-  console.log(`   - 🇨🇳 ${zhFilePath}`);
-  console.log(`   - 🇺🇸 ${enFilePath}`);
-  console.log(`\n你可以在本地启动 Hugo 并在 drafts 中预览，或者让 AI 帮你根据这份草稿写成正式文章！`);
+  console.log(`✅ 抓取完成！社交舆情数据已写入 target_social_data.txt`);
   
 } catch (error) {
   console.error("❌ 抓取失败：");

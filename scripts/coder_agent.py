@@ -49,6 +49,16 @@ def process_payload():
             print("[-] 数据损坏：target_data.txt 不是合法的 JSON 格式。")
             return
 
+    # [新增] 读取社交舆情数据 (last30days 引擎生成)
+    social_data_path = os.path.join(cwd, "target_social_data.txt")
+    social_text = "No recent social data available."
+    if os.path.exists(social_data_path):
+        try:
+            with open(social_data_path, "r", encoding="utf-8") as sf:
+                social_text = sf.read()
+        except Exception as e:
+            print(f"[-] 读取 target_social_data.txt 异常: {e}")
+
     api_key = os.getenv("DEEPSEEK_API_KEY")
     if not api_key:
         print("[-] 致命异常：未能从 .env 金库中读取到 DEEPSEEK_API_KEY")
@@ -68,8 +78,13 @@ def process_payload():
     {expected_structure}
 
     Here is the scraped data you must analyze and synthesize:
-    [Organic Results]: {organic_text}
+    [Organic Results (Google)]: {organic_text}
     [People Also Ask / FAQs]: {paa_text}
+    [Social Sentiment (Last 30 Days from Reddit/HN/X)]: 
+    {social_text}
+
+    CRITICAL INSIGHT REQUIREMENT:
+    You MUST heavily leverage the [Social Sentiment] data. Quote real user complaints, reference recent community backlash or trends, and use these human signals to make the article highly engaging, contrarian, or uniquely insightful. Do not just summarize; inject these raw realities into your technical narrative.
 
     STRICT REQUIREMENTS:
     1. Output ONLY raw text. NO markdown code blocks (like ```markdown) wrapping the entire response.
@@ -203,6 +218,13 @@ cover:
 
         else:
             print("[-] 异常：大模型未按照规定格式生成语言隔离墙，无法分流落盘。建议检查 Token 是否截断。")
+
+        # [清理] 成功流转后，删除物理层载荷文件
+        try:
+            if os.path.exists(data_path): os.remove(data_path)
+            if os.path.exists(social_data_path): os.remove(social_data_path)
+        except Exception as e:
+            pass
 
     except httpx.HTTPStatusError as exc:
         print(f"[-] 算力调度异常：网关返回错误状态码 {exc.response.status_code}")

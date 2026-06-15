@@ -29,13 +29,13 @@ fi
 echo "[*] 阶段 0/3: 启动 Data Crawler 挖掘最新热词并注入矩阵..."
 python scripts/trend_crawler.py || echo "[-] Trend Crawler 异常，跳过挖掘阶段。"
 
-# 4.5 阶段 0.5：全网社交舆情雷达
-echo "[*] 阶段 0.5/3: 启动 Social Radar (last30days) 抓取全网真实讨论并生成草稿..."
-node scripts/auto_draft.js "Data Center Operations" || echo "[-] Social Radar 异常，跳过草稿生成。"
-
 # 5. 阶段一：公网流量嗅探
 echo "[*] 阶段 1/3: 启动 Serp Sniffer，拦截高价值行业动态..."
 python scripts/serp_sniffer.py
+
+# 5.5 阶段 1.5：全网社交舆情雷达
+echo "[*] 阶段 1.5/3: 启动 Social Radar (last30days) 抓取全网真实讨论..."
+node scripts/auto_draft.js || echo "[-] Social Radar 异常，跳过抓取。"
 
 # 5. 阶段二：算力调度与双语文章生成
 echo "[*] 阶段 2/3: 调度 DeepSeek 算力，重构中英双语对称载荷..."

@@ -30,15 +30,15 @@ Write-Host "`n[*] 阶段 0/3: 启动 Data Crawler 挖掘最新热词并注入矩
 & $py_engine scripts/trend_crawler.py
 if ($LASTEXITCODE -ne 0) { Write-Host "[-] Trend Crawler 异常，跳过挖掘阶段。" -ForegroundColor DarkGray }
 
-Write-Host "`n[*] 阶段 0.5/3: 启动 Social Radar (last30days) 抓取全网真实讨论并生成草稿..." -ForegroundColor Yellow
-node scripts/auto_draft.js "Data Center Operations"
-if ($LASTEXITCODE -ne 0) { Write-Host "[-] Social Radar 异常，跳过草稿生成。" -ForegroundColor DarkGray }
-
 Write-Host "`n[*] 阶段 1/3: 启动 Serp Sniffer 探测目标网关 (从 SQLite 矩阵提取指令)..." -ForegroundColor Yellow
 & $py_engine scripts/serp_sniffer.py
 # 错误熔断：如果探针报错崩溃，立刻停止流水线，不执行后续消耗 Token 的操作
 if ($LASTEXITCODE -ne 0) { Write-Host "[-] 探针层执行失败，流水线熔断。" -ForegroundColor Red; exit }
-5
+
+Write-Host "`n[*] 阶段 1.5/3: 启动 Social Radar (last30days) 抓取全网真实讨论..." -ForegroundColor Yellow
+node scripts/auto_draft.js
+if ($LASTEXITCODE -ne 0) { Write-Host "[-] Social Radar 异常，跳过抓取。" -ForegroundColor DarkGray }
+
 Write-Host "`n[*] 阶段 2/3: 调度 DeepSeek 算力重构中英双语载荷与核销..." -ForegroundColor Yellow
 $env:HTTP_PROXY=""
 $env:HTTPS_PROXY=""
