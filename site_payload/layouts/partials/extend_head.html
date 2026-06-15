@@ -101,8 +101,8 @@
   @media (min-width:640px) { .post-body { padding: 2.5rem; } }
 
   /* ── Post Footer Navigation ── */
-  .post-nav { max-width: 48rem; margin: 2rem auto 0; display: flex; justify-content: space-between; gap: 1rem; }
-  .post-nav .ops-button-secondary { font-size: 0.875rem; }
+  .post-nav { max-width: 48rem; margin: 2rem auto 0; display: flex; flex-wrap: wrap; justify-content: space-between; gap: 1rem; }
+  .post-nav .ops-button-secondary { font-size: 0.875rem; flex: 1 1 auto; justify-content: center; text-align: center; }
 
   /* ── Article Content Typography ── */
   .ops-article-content { font-size: 17px; line-height: 2rem; color: #d4d4d8; }
@@ -139,8 +139,9 @@
     background: rgba(45,212,191,0.15); color: #99f6e4;
   }
 
-  /* ── Article Tables ── */
-  .ops-article-content table { margin-top: 1.5rem; width: 100%; border-collapse: collapse; font-size: 0.875rem; }
+  /* ── Article Tables & Media ── */
+  .ops-article-content img { max-width: 100%; height: auto; border-radius: 0.75rem; }
+  .ops-article-content table { margin-top: 1.5rem; width: 100%; border-collapse: collapse; font-size: 0.875rem; display: block; overflow-x: auto; white-space: nowrap; }
   .ops-article-content th, .ops-article-content td { padding: 0.75rem 1rem; border: 1px solid rgba(255,255,255,0.1); text-align: left; }
   .ops-article-content th { background: rgba(255,255,255,0.05); font-weight: 700; color: #ffffff; }
 
@@ -684,24 +685,56 @@
     text-transform: uppercase;
   }
 
-  @media (max-width: 900px) {
+  @media (max-width: 1024px) {
+    .ops-hero {
+      grid-template-columns: 1fr;
+      padding-top: 40px;
+    }
+    
+    .ops-stat-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 16px;
+    }
+    
+    .ops-stat {
+      border-right: none;
+      border-bottom: 1px solid var(--border);
+      padding: 0 0 16px 0;
+    }
+    
+    .ops-stat:last-child {
+      border-bottom: none;
+      padding-bottom: 0;
+    }
+
+    .ops-feature-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+    
+    .ops-post-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media (max-width: 768px) {
     .ops-home-wrap {
       width: min(100% - 32px, 680px);
     }
 
-    .ops-hero,
     .ops-feature-grid,
     .ops-post-grid {
-      grid-template-columns: 1fr;
-    }
-
-    .ops-stat-grid {
       grid-template-columns: 1fr;
     }
 
     .ops-section-head {
       align-items: start;
       flex-direction: column;
+      gap: 16px;
+    }
+    
+    .ops-hero h1 {
+      font-size: clamp(38px, 9vw, 56px);
     }
   }
 </style>
