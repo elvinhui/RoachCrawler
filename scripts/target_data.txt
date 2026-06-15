@@ -1,57 +1,66 @@
 {
-  "task_id": 6,
-  "target_keyword": "Dell PowerEdge R760 vs Lenovo ThinkSystem SR650 IOPS performance benchmark 2026",
-  "expected_structure": "生成标准的 B2B 评测格式，包含 Dell PowerEdge R760 和 Lenovo ThinkSystem SR650 的详细参数对比表格，并深入分析 IOPS performance benchmark 场景下的优劣。",
+  "task_id": 215,
+  "target_keyword": "Cisco IOS-XE error code fix",
+  "expected_structure": "Generate a step-by-step troubleshooting guide for 'Cisco IOS-XE error code fix'. MUST include: symptom description, root cause analysis, and numbered resolution steps with actual CLI commands or config snippets.",
+  "niche": "IT_ops",
   "organic_intel": [
     {
-      "title": "Lenovo ThinkSystem or Dell PowerEdge? - Wecent",
-      "snippet": "Both Lenovo ThinkSystem and Dell PowerEdge offer exceptional enterprise performance. Dell excels in computational power for AI and HPC, while Lenovo focuses on ..."
+      "title": "Error and System Messages - Cisco IOS XE 17",
+      "snippet": "Error and System Messages ; Cisco IOS XE Amsterdam 17.3.1. System Message Guide for Cisco Catalyst Series Switches, Cisco IOS XE Amsterdam 17.3.x (XLSX - 2 MB)."
     },
     {
-      "title": "Lenovo vs Dell Servers: Choosing the Right ...",
-      "snippet": "Compare Lenovo vs Dell servers in 2026 for performance, management, security, cost, and the right fit for your business."
+      "title": "System Message Guide for Cisco IOS XE 17.15.x",
+      "snippet": "In most cases, the problem can be corrected by reloading the impacted hardware using the hw-module [slot | subslot] slot-number reload command."
     },
     {
-      "title": "Lenovo ThinkSystem Servers Continue to Lead the ...",
-      "snippet": "View all Performance Benchmark Reports. The following Lenovo ThinkSystem benchmark world records are current as of May 1, 2026. SAP SD 2T Reports; SAP Q2C ..."
+      "title": "Error and System Messages - Cisco IOS XE 16",
+      "snippet": "Error and System Messages · Support Documentation."
     },
     {
-      "title": "Dell PowerEdge R760 Rack Server vs Lenovo ...",
-      "snippet": "The server comparison table provides a quick overview of the key specifications and key features for Dell PowerEdge R760 Rack Server and Lenovo ThinkSystem ..."
+      "title": "Cisco IOS and IOS XE Software SNMP Denial of Service ...",
+      "snippet": "To cause the DoS, the attacker must have the SNMPv2c or earlier read-only community string or valid SNMPv3 user credentials. An authenticated, ..."
     },
     {
-      "title": "Dell PowerEdge vs HPE ProLiant vs Lenovo ThinkSystem ...",
-      "snippet": "At equivalent spec — same CPU, same memory, same drive config — there's essentially no performance difference between Dell, HPE, and Lenovo."
+      "title": "Cisco Router Errors – Common Codes and Messages",
+      "snippet": "Quick fix · If your router gets stuck in ROMmon mode during the boot process, examine the value of the configuration register by entering the confreg command."
     },
     {
-      "title": "Achieving Significant Virtualization Performance Gains with ...",
-      "snippet": "The Dell PowerEdge R760 servers equipped with new KIOXIA CM7 Series enterprise NVMe SSDs outperformed the Dell PowerEdge 740xd servers and SSDs ..."
+      "title": "Error and System Messages",
+      "snippet": "Error and System Messages ; System Message Guide for Cisco IOS XE 17.18.x 31/Jul/2025 ; System Message Guide for Cisco IOS XE 17.17.x 31/Mar/2025 ; System Message ..."
     },
     {
-      "title": "Lenovo ThinkSystem SR630 (RAID 930-24i) vs. Dell ...",
-      "snippet": "Stronger RAID engine: Lenovo's RAID 930-24i (12 Gb/s SAS) offers up to 4–8 GB of flash-backed cache and 24 internal SAS lanes, enabling higher ..."
+      "title": "Cisco BugID CSCwf83684 - IOS XE Router/Switch may ...",
+      "snippet": "MPOL is not required for this error message to be seen. Workaround. Remove the network 0.0.0.0 statement within the routing protocol to avoid the message: ..."
     },
     {
-      "title": "Dell PowerEdge R760 Review New 2U Server Standard",
-      "snippet": "This is one of Dell's fanciest mainstream servers it's the r760. It has all these kind of great features like for example you can do awesome things."
+      "title": "Troubleshooting Cisco Catalyst 9000 Series Switches",
+      "snippet": "• SMU's provide patches on top of IOS-XE. • - Hitless , No reload needed to apply on top of IOS-XE. - Reboot, Reload is performed to apply SMU."
     },
     {
-      "title": "AMD EPYC Servers: Dell vs Lenovo - Which Delivers ...",
-      "snippet": "Dell vs Lenovo 1U AMD EPYC servers compared: performance, specs and cost - see which offers the best value."
+      "title": "Troubleshoot Dot1x and Radius in IOS and IOS-XE",
+      "snippet": "You can clear the current authentication using clear authentication session interface x/x or shutdown the interface · Navigate to ISE > Operations > RADIUS > ..."
     },
     {
-      "title": "PCIe performance in R760 vs. Lenovo's SR650",
-      "snippet": "Same card under same OS works in the expected data rate in Lenovo's SR650. But with R760 we got data rate which is ~4 times less. How can I know ..."
+      "title": "Cisco issues fixes for numerous iOS XE, industrial router ...",
+      "snippet": "Cisco said that one vulnerability affects Cisco IOS, IOS XE, IOS XR, and NX-OS Software. Five vulnerabilities affect both Cisco IOS and IOS XE Software. Six ..."
     }
   ],
   "paa_questions": [
     {
-      "question": "What is the Lenovo SR650?",
-      "snippet": "Lenovo Think system SR650 rack server is the topmost performing server for data centers. The SR650 offers support for hybrid cloud, data analytics, hyper-converged infrastructure, high-performance computing, video surveillance, and much more."
+      "question": "How to recover an error-disabled port?",
+      "snippet": null
     },
     {
-      "question": "What is the difference between Dell PowerEdge R760 and HP Proliant DL380 Gen11?",
-      "snippet": "Dell's PowerEdge line tends to offer more granular configuration options, especially around NVMe storage and GPU acceleration. The R760 supports up to 24 NVMe drives in a 2U form factor, while the DL380 Gen11 offers 8 NVMe bays in its standard configuration (expandable with add-on cages)."
+      "question": "What is the current Cisco iOS XE version?",
+      "snippet": null
+    },
+    {
+      "question": "What causes ERR disabled?",
+      "snippet": null
+    },
+    {
+      "question": "What does confreg 0x2142 do?",
+      "snippet": null
     }
   ]
 }
