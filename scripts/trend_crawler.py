@@ -81,7 +81,7 @@ REDDIT_FEEDS = [
 ]
 
 REDDIT_HEADERS = {
-    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36"
+    "User-Agent": "script:roachcrawler:v1.0 (by /u/elvinhui)"
 }
 
 
@@ -215,7 +215,10 @@ def fetch_from_reddit_rss(cursor):
     count = 0
     print("[*] Layer 2: Reddit RSS Top Posts (week)")
 
-    for feed_url in REDDIT_FEEDS:
+    # To prevent rate limiting from Reddit on GitHub Action IPs,
+    # we only sample 2 subreddits per run.
+    sampled_feeds = random.sample(REDDIT_FEEDS, min(2, len(REDDIT_FEEDS)))
+    for feed_url in sampled_feeds:
         try:
             time.sleep(random.uniform(5, 8))
             resp = requests.get(feed_url, headers=REDDIT_HEADERS, timeout=15)
