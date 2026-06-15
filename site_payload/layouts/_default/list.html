@@ -17,11 +17,14 @@
       <a class="ops-button-secondary" href="{{ if eq .Lang "zh" }}/{{ else }}/en/{{ end }}">{{ if eq .Lang "zh" }}返回首页{{ else }}Back Home{{ end }}</a>
     </div>
 
-    <div class="mt-10 grid grid-cols-1 gap-5 sm:mt-14 lg:grid-cols-3">
+    <div class="mt-10 grid grid-cols-1 gap-8 sm:mt-14 lg:grid-cols-2 lg:gap-12">
       {{ range .Pages }}
-      <article class="ops-card group relative flex min-h-[280px] flex-col overflow-hidden transition duration-300 hover:-translate-y-1 hover:shadow-glow">
+      <article class="ops-card group relative flex min-h-[340px] flex-col overflow-hidden transition-all duration-400 hover:-translate-y-2">
         {{ with .Params.cover.image }}
-        <img src="{{ . }}" alt="" class="h-40 w-full object-cover" loading="lazy" />
+        <div class="relative h-56 w-full overflow-hidden">
+          <img src="{{ . }}" alt="" class="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105" loading="lazy" />
+          <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-60"></div>
+        </div>
         {{ end }}
         <div class="flex grow flex-col p-6">
           <div class="flex flex-wrap items-center gap-3 text-xs">
@@ -35,25 +38,25 @@
             {{ end }}
           </div>
 
-          <h2 class="mt-4 text-xl font-black leading-7 text-slate-950 transition group-hover:text-teal-700 dark:text-white dark:group-hover:text-teal-200">
+          <h2 class="mt-4 text-2xl font-black leading-snug tracking-tight text-slate-950 transition-colors group-hover:text-emerald-500 dark:text-white dark:group-hover:text-emerald-400">
             <a href="{{ .Permalink }}">
               <span class="absolute inset-0"></span>
               {{ .Title }}
             </a>
           </h2>
-          <p class="mt-4 text-sm leading-6 text-slate-600 dark:text-zinc-400" style="display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;">
-            {{ .Summary | plainify | truncate 100 }}
+          <p class="mt-4 text-base leading-relaxed text-slate-600 dark:text-zinc-400" style="display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;">
+            {{ .Summary | plainify | truncate 140 }}
           </p>
 
-          <div class="mt-auto flex items-center justify-between pt-8">
+          <div class="mt-auto flex items-center justify-between pt-8 border-t border-slate-100 dark:border-white/5 mt-6">
             <div class="flex items-center gap-3">
               <img src="/avatar.png" alt="Tan Jia Hui" class="h-10 w-10 rounded-full bg-slate-100 ring-1 ring-slate-200 dark:bg-zinc-800 dark:ring-white/10" />
               <div class="text-sm leading-5">
                 <p class="font-bold text-slate-950 dark:text-white">Tan Jia Hui</p>
-                <p class="text-slate-500 dark:text-zinc-400">Data Center Engineer</p>
+                <p class="text-slate-500 dark:text-zinc-500 font-mono text-xs mt-0.5 tracking-wider">DCIM ENG</p>
               </div>
             </div>
-            <span class="rounded-md border border-slate-200 px-2 py-1 text-sm font-black text-slate-500 transition group-hover:border-teal-300 group-hover:text-teal-700 dark:border-white/10 dark:text-zinc-400 dark:group-hover:border-teal-300/60 dark:group-hover:text-teal-200">&nearr;</span>
+            <span class="rounded-full bg-slate-100 p-2 text-slate-500 transition-all group-hover:bg-emerald-500 group-hover:text-white dark:bg-zinc-800 dark:text-zinc-400 dark:group-hover:bg-emerald-500 dark:group-hover:text-white">&nearr;</span>
           </div>
         </div>
       </article>
