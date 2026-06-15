@@ -24,8 +24,9 @@ try {
   // 1. 调用本地整合的 last30days 引擎
   const skillPath = path.join(__dirname, '../.agents/skills/last30days/scripts/last30days.py');
   
-  // 使用 py 或 python3 运行，开启 --auto-resolve 和 --emit=compact
-  const output = execSync(`py "${skillPath}" "${topic}" --auto-resolve --emit=compact`, { 
+  // 使用 python 运行，兼容 GitHub Actions (Linux) 和本地 (Windows)
+  const pythonCmd = process.platform === 'win32' ? 'python' : 'python3';
+  const output = execSync(`${pythonCmd} "${skillPath}" "${topic}" --auto-resolve --emit=compact`, { 
     encoding: 'utf-8', 
     stdio: ['pipe', 'pipe', 'ignore'] // 忽略 stderr 警告
   });

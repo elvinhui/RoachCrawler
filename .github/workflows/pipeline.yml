@@ -39,10 +39,6 @@ jobs:
       - name: Install Python dependencies
         run: pip install -r requirements.txt
 
-      - name: Install local Node skills (last30days)
-        run: npm install
-        working-directory: .agents/skills/last30days
-
       # ── Step 4: 从 GitHub Secrets 重建 .env 机密金库 ─────────────
       - name: Rebuild .env from secrets
         run: |
