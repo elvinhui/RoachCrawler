@@ -29,9 +29,19 @@ jobs:
           python-version: '3.12'
           cache: 'pip'
 
+      # ── Step 2.5: 配置 Node.js 环境 (用于 Social Radar) ─────────────
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
       # ── Step 3: 安装依赖 ──────────────────────────────────────────
       - name: Install Python dependencies
         run: pip install -r requirements.txt
+
+      - name: Install local Node skills (last30days)
+        run: npm install
+        working-directory: .agents/skills/last30days
 
       # ── Step 4: 从 GitHub Secrets 重建 .env 机密金库 ─────────────
       - name: Rebuild .env from secrets
@@ -50,9 +60,12 @@ jobs:
       - name: Phase 0 - Trend Crawler
         run: python scripts/trend_crawler.py || echo "[-] Trend Crawler 异常，跳过"
 
-      # ── Step 7 & 8: 循环生成 2 篇文章（Serp → AI，执行 2 次）────
+      # ── Step 7 & 8: 循环生成 2 篇文章（Serp → Social Radar → AI，执行 2 次）────
       - name: Article 1 - Serp Sniffer
         run: python scripts/serp_sniffer.py
+
+      - name: Article 1 - Social Radar (last30days)
+        run: node scripts/auto_draft.js || echo "[-] Social Radar failed, skipping"
 
       - name: Article 1 - AI Content Generation (DeepSeek)
         env:
@@ -62,6 +75,9 @@ jobs:
 
       - name: Article 2 - Serp Sniffer
         run: python scripts/serp_sniffer.py
+
+      - name: Article 2 - Social Radar (last30days)
+        run: node scripts/auto_draft.js || echo "[-] Social Radar failed, skipping"
 
       - name: Article 2 - AI Content Generation (DeepSeek)
         env:
