@@ -1,48 +1,48 @@
 {{ define "main" }}
-<main class="ops-shell py-12 sm:py-16">
-  <article class="mx-auto max-w-5xl px-6 lg:px-8">
-    <header class="mx-auto max-w-3xl text-left">
+<main class="post-page">
+  <article class="post-article">
+    <header class="post-header">
       <a href="{{ if eq .Lang "zh" }}/posts/{{ else }}/en/posts/{{ end }}" class="ops-chip">
-        <span class="h-2 w-2 rounded-full bg-emerald-500"></span>
+        <span class="ops-chip-dot"></span>
         {{ if eq .Lang "zh" }}运维笔记{{ else }}Ops Notes{{ end }}
       </a>
-      <h1 class="mt-6 text-4xl font-black leading-tight tracking-tight text-slate-950 sm:text-6xl dark:text-white">
+      <h1 class="post-title">
         {{ .Title }}
       </h1>
       {{ with .Description }}
-      <p class="mt-5 text-xl leading-relaxed text-slate-600 dark:text-zinc-300">{{ . }}</p>
+      <p class="post-description">{{ . }}</p>
       {{ end }}
-      <div class="mt-8 flex flex-wrap items-center gap-3 text-sm font-semibold text-slate-500 dark:text-zinc-400">
-        <time datetime="{{ .Date.Format "2006-01-02" }}" class="font-mono">{{ .Date.Format "Jan 2, 2006" }}</time>
+      <div class="post-meta">
+        <time datetime="{{ .Date.Format "2006-01-02" }}" class="post-meta-date">{{ .Date.Format "Jan 2, 2006" }}</time>
         <span>·</span>
-        <span class="font-bold text-slate-700 dark:text-zinc-300">InfraOps Router</span>
+        <span class="post-meta-author">InfraOps Router</span>
         {{ with .Params.categories }}
         <span>·</span>
-        <span class="rounded-full bg-teal-50 px-3 py-1 text-emerald-700 dark:bg-emerald-500/10 dark:text-emerald-300">{{ index . 0 }}</span>
+        <span class="post-meta-category">{{ index . 0 }}</span>
         {{ end }}
       </div>
     </header>
 
     {{ with .Params.cover.image }}
-    <div class="ops-card mx-auto mt-12 max-w-5xl overflow-hidden p-2">
-      <div class="overflow-hidden rounded-[2rem]">
-        <img src="{{ . }}" alt="{{ $.Params.cover.alt | default $.Title }}" class="h-[300px] w-full object-cover sm:h-[480px] transition-transform duration-1000 hover:scale-[1.02]" />
+    <div class="post-cover">
+      <div class="post-cover-inner">
+        <img src="{{ . }}" alt="{{ $.Params.cover.alt | default $.Title }}" class="post-cover-img" />
       </div>
     </div>
     {{ end }}
 
-    <div class="ops-card mx-auto mt-10 max-w-3xl p-6 sm:p-10">
+    <div class="post-body">
       <div class="ops-article-content">
         {{ .Content }}
       </div>
     </div>
 
-    <footer class="mx-auto mt-8 max-w-3xl flex justify-between">
+    <footer class="post-nav">
       {{ with .PrevInSection }}
-      <a href="{{ .Permalink }}" class="ops-button-secondary text-sm">← {{ .Title }}</a>
+      <a href="{{ .Permalink }}" class="ops-button-secondary">← {{ .Title }}</a>
       {{ end }}
       {{ with .NextInSection }}
-      <a href="{{ .Permalink }}" class="ops-button-secondary text-sm ml-auto">{{ .Title }} →</a>
+      <a href="{{ .Permalink }}" class="ops-button-secondary" style="margin-left:auto;">{{ .Title }} →</a>
       {{ end }}
     </footer>
   </article>

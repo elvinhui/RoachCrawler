@@ -1,67 +1,67 @@
 {{ define "main" }}
-<div class="ops-shell py-16 sm:py-24">
-  <div class="mx-auto max-w-7xl px-6 lg:px-8">
-    <div class="flex flex-col gap-8 lg:flex-row lg:items-end lg:justify-between">
-      <div class="max-w-3xl">
+<main class="post-page">
+  <div class="posts-container">
+    <div class="posts-header">
+      <div class="posts-header-text">
         <span class="ops-chip">
-          <span class="h-2 w-2 rounded-full bg-emerald-500"></span>
+          <span class="ops-chip-dot"></span>
           {{ if eq .Lang "zh" }}知识库{{ else }}Knowledge Base{{ end }}
         </span>
-        <h1 class="mt-5 text-4xl font-black leading-tight tracking-normal text-slate-950 sm:text-6xl dark:text-white">
+        <h1 class="posts-title" style="margin-top:1.25rem;">
           {{ .Title }}
         </h1>
-        <p class="mt-4 max-w-2xl text-lg leading-8 text-slate-600 dark:text-zinc-300">
+        <p class="posts-subtitle">
           {{ if eq .Lang "zh" }}聚焦数据中心自动化、Python 探针、DCIM 和 AI 内容流水线。{{ else }}Automated insights on infrastructure ops, Python probes, DCIM, and data center systems.{{ end }}
         </p>
       </div>
       <a class="ops-button-secondary" href="{{ if eq .Lang "zh" }}/{{ else }}/en/{{ end }}">{{ if eq .Lang "zh" }}返回首页{{ else }}Back Home{{ end }}</a>
     </div>
 
-    <div class="mt-10 grid grid-cols-1 gap-8 sm:mt-14 lg:grid-cols-2 lg:gap-12">
+    <div class="posts-grid">
       {{ range .Pages }}
-      <article class="ops-card group relative flex min-h-[340px] flex-col overflow-hidden transition-all duration-400 hover:-translate-y-2">
+      <article class="post-card">
         {{ with .Params.cover.image }}
-        <div class="relative h-56 w-full overflow-hidden">
-          <img src="{{ . }}" alt="" class="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105" loading="lazy" />
-          <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-60"></div>
+        <div class="post-card-image">
+          <img src="{{ . }}" alt="" loading="lazy" />
+          <div class="post-card-overlay"></div>
         </div>
         {{ end }}
-        <div class="flex grow flex-col p-6">
-          <div class="flex flex-wrap items-center gap-3 text-xs">
-            <time datetime="{{ .Date.Format "2006-01-02" }}" class="font-semibold uppercase tracking-[0.16em] text-slate-500 dark:text-zinc-400">
+        <div class="post-card-content">
+          <div class="post-card-meta">
+            <time datetime="{{ .Date.Format "2006-01-02" }}" class="post-card-meta-time">
               {{ .Date.Format "Jan 2, 2006" }}
             </time>
             {{ with .Params.categories }}
-            <span class="rounded-full bg-teal-50 px-3 py-1 font-bold text-teal-700 dark:bg-teal-400/10 dark:text-teal-200">
+            <span class="post-card-meta-tag">
               {{ index . 0 }}
             </span>
             {{ end }}
           </div>
 
-          <h2 class="mt-4 text-2xl font-black leading-snug tracking-tight text-slate-950 transition-colors group-hover:text-emerald-500 dark:text-white dark:group-hover:text-emerald-400">
+          <h2 class="post-card-title">
             <a href="{{ .Permalink }}">
-              <span class="absolute inset-0"></span>
+              <span class="post-card-link-cover"></span>
               {{ .Title }}
             </a>
           </h2>
-          <p class="mt-4 text-base leading-relaxed text-slate-600 dark:text-zinc-400" style="display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;">
+          <p class="post-card-summary">
             {{ .Summary | plainify | truncate 140 }}
           </p>
 
-          <div class="mt-auto flex items-center justify-between pt-8 border-t border-slate-100 dark:border-white/5 mt-6">
-            <div class="flex items-center gap-3">
-              <img src="/avatar.png" alt="Tan Jia Hui" class="h-10 w-10 rounded-full bg-slate-100 ring-1 ring-slate-200 dark:bg-zinc-800 dark:ring-white/10" />
-              <div class="text-sm leading-5">
-                <p class="font-bold text-slate-950 dark:text-white">Tan Jia Hui</p>
-                <p class="text-slate-500 dark:text-zinc-500 font-mono text-xs mt-0.5 tracking-wider">DCIM ENG</p>
+          <div class="post-card-footer">
+            <div class="post-card-author">
+              <img src="/avatar.png" alt="Tan Jia Hui" class="post-card-avatar" />
+              <div>
+                <p class="post-card-author-name">Tan Jia Hui</p>
+                <p class="post-card-author-role">DCIM ENG</p>
               </div>
             </div>
-            <span class="rounded-full bg-slate-100 p-2 text-slate-500 transition-all group-hover:bg-emerald-500 group-hover:text-white dark:bg-zinc-800 dark:text-zinc-400 dark:group-hover:bg-emerald-500 dark:group-hover:text-white">&nearr;</span>
+            <span class="post-card-arrow">&nearr;</span>
           </div>
         </div>
       </article>
       {{ end }}
     </div>
   </div>
-</div>
+</main>
 {{ end }}
