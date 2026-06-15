@@ -5,31 +5,30 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>{{ if .IsHome }}{{ .Site.Title }}{{ else }}{{ .Title }} · {{ .Site.Title }}{{ end }}</title>
   <meta name="description" content="{{ if .Description }}{{ .Description }}{{ else }}{{ .Site.Title }} - IT Infrastructure Automation & SEO Platform{{ end }}">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/geist-sans@5.0.1/index.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/geist-mono@5.0.1/index.min.css">
   {{ partial "extend_head.html" . }}
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
       --bg: #09090b;
-      --bg2: #111827;
+      --bg2: #18181b;
       --surface: rgba(24, 24, 27, 0.72);
       --border: rgba(255, 255, 255, 0.10);
       --text: #f4f4f5;
       --muted: #a1a1aa;
-      --teal: #14b8a6;
-      --teal-glow: rgba(20, 184, 166, 0.85);
-      --indigo: #818cf8;
+      --teal: #10b981;
+      --teal-glow: rgba(16, 185, 129, 0.3);
+      --indigo: #6366f1;
     }
 
-    html { font-family: 'Inter', sans-serif; scroll-behavior: smooth; }
+    html { font-family: 'Geist Sans', ui-sans-serif, system-ui, sans-serif; scroll-behavior: smooth; }
 
     body {
       background: var(--bg);
       color: var(--text);
-      min-height: 100vh;
+      min-height: 100dvh;
     }
 
     /* ── NAV ── */
@@ -56,21 +55,15 @@
       font-weight: 800;
       color: var(--text);
       text-decoration: none;
-      letter-spacing: -0.01em;
+      letter-spacing: -0.02em;
     }
 
     .site-logo-dot {
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
+      width: 10px;
+      height: 10px;
+      border-radius: 999px;
       background: var(--teal);
-      box-shadow: 0 0 0 5px rgba(20, 184, 166, 0.18);
-      animation: pulse 2.4s ease-in-out infinite;
-    }
-
-    @keyframes pulse {
-      0%, 100% { box-shadow: 0 0 0 5px rgba(20, 184, 166, 0.18); }
-      50% { box-shadow: 0 0 0 10px rgba(20, 184, 166, 0.05); }
+      box-shadow: 0 0 12px var(--teal-glow);
     }
 
     .site-nav-links {
@@ -86,12 +79,15 @@
       font-size: 13px;
       font-weight: 600;
       text-decoration: none;
-      transition: color 180ms, background 180ms;
+      transition: color 180ms, transform 180ms;
     }
 
     .site-nav-links a:hover {
       color: var(--text);
-      background: rgba(255, 255, 255, 0.06);
+    }
+    
+    .site-nav-links a:active {
+      transform: scale(0.96);
     }
 
     /* ── MAIN CONTENT ── */
