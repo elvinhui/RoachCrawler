@@ -18,7 +18,7 @@
     </div>
 
     <div class="posts-grid">
-      {{ range .Pages }}
+      {{ range .Paginator.Pages }}
       <article class="post-card">
         {{ with .Params.cover.image }}
         <div class="post-card-image">
@@ -62,6 +62,42 @@
       </article>
       {{ end }}
     </div>
+
+    {{ $paginator := .Paginator }}
+    {{ if gt $paginator.TotalPages 1 }}
+    <nav class="pagination">
+      {{ if $paginator.HasPrev }}
+      <a href="{{ $paginator.Prev.URL }}" class="pagination-btn">
+        ← {{ if eq .Lang "zh" }}上一页{{ else }}Prev{{ end }}
+      </a>
+      {{ else }}
+      <span class="pagination-btn pagination-disabled">
+        ← {{ if eq .Lang "zh" }}上一页{{ else }}Prev{{ end }}
+      </span>
+      {{ end }}
+
+      <div class="pagination-pages">
+        {{ range $paginator.Pagers }}
+        {{ if eq . $paginator }}
+        <span class="pagination-page pagination-current">{{ .PageNumber }}</span>
+        {{ else }}
+        <a href="{{ .URL }}" class="pagination-page">{{ .PageNumber }}</a>
+        {{ end }}
+        {{ end }}
+      </div>
+
+      {{ if $paginator.HasNext }}
+      <a href="{{ $paginator.Next.URL }}" class="pagination-btn">
+        {{ if eq .Lang "zh" }}下一页{{ else }}Next{{ end }} →
+      </a>
+      {{ else }}
+      <span class="pagination-btn pagination-disabled">
+        {{ if eq .Lang "zh" }}下一页{{ else }}Next{{ end }} →
+      </span>
+      {{ end }}
+    </nav>
+    {{ end }}
+
   </div>
 </main>
 {{ end }}
