@@ -210,86 +210,59 @@ def fetch_from_hacker_news(cursor):
     return count
 
 
-# ── Layer 2: Reddit API (PRAW) ────────────────────────────────────────────────
-def fetch_from_reddit_api(cursor):
+# ── Layer 2: Reddit via Google Search (SERP API Bypass) ────────────────────────
+def fetch_from_reddit_via_serp(cursor):
+    """
+    Bypasses Reddit's strict 403 API block by using Google Search via SerpAPI 
+    to find trending Reddit posts in the past week.
+    """
     count = 0
-    print("[*] Layer 2: Reddit Official API (PRAW)")
+    print("[*] Layer 2: Reddit Trends (via SerpAPI Bypass)")
 
-    client_id = os.getenv("REDDIT_CLIENT_ID")
-    client_secret = os.getenv("REDDIT_CLIENT_SECRET")
-    
-    if not client_id or not client_secret:
-        print("    [-] REDDIT_CLIENT_ID or REDDIT_CLIENT_SECRET not found in environment. Skipping Layer 2.")
+    api_key = os.getenv("SERP_API_KEY")
+    if not api_key:
+        print("    [-] SERP_API_KEY not found in environment. Skipping Layer 2.")
         return 0
 
-    try:
-        import praw
-        reddit = praw.Reddit(
-            client_id=client_id,
-            client_secret=client_secret,
-            user_agent="script:roachcrawler:v1.0 (by /u/elvinhui)"
-        )
-    except Exception as e:
-        print(f"    [-] Failed to initialize PRAW: {e}")
-        return 0
-
-    # Extract subreddit names from the old feed URLs
     subreddits = [url.split('/r/')[1].split('/')[0] for url in REDDIT_FEEDS]
-    
-    # To prevent any edge case rate limiting, sample 2 subreddits
     sampled_feeds = random.sample(subreddits, min(2, len(subreddits)))
     
     for sub_name in sampled_feeds:
         try:
-            print(f"    [~] Fetching top weekly posts from r/{sub_name}...")
-            subreddit = reddit.subreddit(sub_name)
+            print(f"    [~] Searching Google for recent hot topics in r/{sub_name}...")
+            # Search Google for recent posts in this subreddit (past week)
+            endpoint = "https://serpapi.com/search"
+            # We add keywords that indicate a problem or tutorial to get good topics
+            query = f"site:reddit.com/r/{sub_name} intitle:\"how to\" OR intitle:\"fix\" OR intitle:\"issue\" OR intitle:\"guide\""
+            params = {
+                "engine": "google",
+                "q": query,
+                "api_key": api_key,
+                "tbs": "qdr:w", # Past week
+                "num": 10
+            }
+            
+            res = requests.get(endpoint, params=params, timeout=30)
+            if res.status_code != 200:
+                print(f"    [-] SerpAPI failed: {res.status_code}")
+                continue
+                
+            response_data = res.json()
+            organic_data = response_data.get("organic_results", [])
             
             injected_this_feed = 0
-            for submission in subreddit.top(time_filter="week", limit=20):
-                title = submission.title.strip()
+            for item in organic_data:
+                title = item.get("title", "")
+                
+                # Clean up title (remove ' - Reddit' suffix)
+                title = title.replace(" - Reddit", "").strip()
                 
                 if len(title) < 10 or len(title) > 120:
                     continue
 
-                # Only keep posts with intent signals
-                if not any(mod in title.lower() for mod in INTENT_MODIFIERS):
-                    continue
-
-                # Only keep if it relates to our IT niche (expanded for all verticals)
-                it_keywords = [
-                    # Data Center & Hardware
-                    'server', 'rack', 'pdu', 'ups', 'nas', 'data center',
-                    'dell', 'hp', 'hpe', 'idrac', 'ilo', 'bmc', 'ipmi', 'redfish',
-                    # Networking
-                    'switch', 'router', 'vlan', 'cisco', 'unifi', 'pfsense',
-                    'firewall', 'fiber', 'sfp', 'ccna', 'ospf', 'bgp',
-                    'spanning tree', 'lag', 'lacp',
-                    # Cloud & DevOps
-                    'kubernetes', 'docker', 'ansible', 'terraform', 'helm',
-                    'aws', 'azure', 'gcp', 'ci/cd', 'argocd', 'jenkins',
-                    'github actions', 'pulumi', 'cloudformation',
-                    # Virtualization
-                    'esxi', 'vmware', 'proxmox', 'hyper-v',
-                    # Cybersecurity
-                    'siem', 'edr', 'zero trust', 'vulnerability', 'cve',
-                    'pentest', 'ransomware', 'crowdstrike', 'palo alto',
-                    # Developer Tools
-                    'postgres', 'mysql', 'redis', 'mongodb', 'sqlite',
-                    'git', 'vscode', 'neovim',
-                    # AI/ML
-                    'gpu', 'nvidia', 'cuda', 'pytorch', 'tensorflow',
-                    'llm', 'training', 'inference', 'mlflow',
-                    # SRE & Observability
-                    'prometheus', 'grafana', 'datadog', 'elk', 'splunk',
-                    'opentelemetry', 'pagerduty', 'slo', 'sre',
-                    'linux', 'windows server', 'active directory', 'dns', 'dhcp', 'vpn',
-                ]
-                if not any(kw in title.lower() for kw in it_keywords):
-                    continue
-
                 structure = build_expected_structure(title)
                 niche = _detect_niche(title)
-                if inject_keyword(cursor, title, 'reddit_trending', niche, structure):
+                if inject_keyword(cursor, title, 'reddit_trending_serp', niche, structure):
                     print(f"    [+] Injected (Reddit r/{sub_name}, {niche}): {title[:70]}...")
                     count += 1
                     injected_this_feed += 1
@@ -297,7 +270,7 @@ def fetch_from_reddit_api(cursor):
             print(f"    [~] r/{sub_name}: {injected_this_feed} new keywords")
 
         except Exception as e:
-            print(f"    [-] PRAW fetch error for r/{sub_name}: {e}")
+            print(f"    [-] SERP fetch error for r/{sub_name}: {e}")
 
     return count
 
