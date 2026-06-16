@@ -15,6 +15,9 @@ import hashlib
 import requests
 import itertools
 import xml.etree.ElementTree as ET
+from dotenv import load_dotenv
+
+load_dotenv(os.path.join(os.path.dirname(__file__), '..', '.env'))
 
 # Force UTF-8 output
 if hasattr(sys.stdout, 'reconfigure'):
