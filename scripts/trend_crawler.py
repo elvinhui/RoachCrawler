@@ -210,41 +210,44 @@ def fetch_from_hacker_news(cursor):
     return count
 
 
-# ── Layer 2: Reddit RSS ───────────────────────────────────────────────────────
-def fetch_from_reddit_rss(cursor):
+# ── Layer 2: Reddit API (PRAW) ────────────────────────────────────────────────
+def fetch_from_reddit_api(cursor):
     count = 0
-    print("[*] Layer 2: Reddit RSS Top Posts (week)")
+    print("[*] Layer 2: Reddit Official API (PRAW)")
 
-    # To prevent rate limiting from Reddit on GitHub Action IPs,
-    # we only sample 2 subreddits per run.
-    sampled_feeds = random.sample(REDDIT_FEEDS, min(2, len(REDDIT_FEEDS)))
-    for feed_url in sampled_feeds:
+    client_id = os.getenv("REDDIT_CLIENT_ID")
+    client_secret = os.getenv("REDDIT_CLIENT_SECRET")
+    
+    if not client_id or not client_secret:
+        print("    [-] REDDIT_CLIENT_ID or REDDIT_CLIENT_SECRET not found in environment. Skipping Layer 2.")
+        return 0
+
+    try:
+        import praw
+        reddit = praw.Reddit(
+            client_id=client_id,
+            client_secret=client_secret,
+            user_agent="script:roachcrawler:v1.0 (by /u/elvinhui)"
+        )
+    except Exception as e:
+        print(f"    [-] Failed to initialize PRAW: {e}")
+        return 0
+
+    # Extract subreddit names from the old feed URLs
+    subreddits = [url.split('/r/')[1].split('/')[0] for url in REDDIT_FEEDS]
+    
+    # To prevent any edge case rate limiting, sample 2 subreddits
+    sampled_feeds = random.sample(subreddits, min(2, len(subreddits)))
+    
+    for sub_name in sampled_feeds:
         try:
-            import urllib.parse
-            proxy_url = f"https://api.rss2json.com/v1/api.json?rss_url={urllib.parse.quote(feed_url)}"
+            print(f"    [~] Fetching top weekly posts from r/{sub_name}...")
+            subreddit = reddit.subreddit(sub_name)
             
-            # Using standard headers since rss2json API has no such block
-            headers = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) Chrome/122.0.0.0 Safari/537.36"}
-            resp = requests.get(proxy_url, headers=headers, timeout=15)
-            if resp.status_code != 200:
-                print(f"    [-] Proxy fetch failed ({resp.status_code}): {feed_url}")
-                continue
-
-            data = resp.json()
-            if data.get("status") != "ok" or "items" not in data:
-                print(f"    [-] Invalid proxy response from {feed_url}")
-                continue
-
-            entries = data["items"]
-
-            subreddit = feed_url.split('/r/')[1].split('/')[0]
             injected_this_feed = 0
-
-            for entry in entries[:20]:  # Top 20 posts per subreddit
-                title = entry.get("title", "")
+            for submission in subreddit.top(time_filter="week", limit=20):
+                title = submission.title.strip()
                 
-                # Clean up title
-                title = re.sub(r'<[^>]+>', '', title).strip()
                 if len(title) < 10 or len(title) > 120:
                     continue
 
@@ -287,16 +290,14 @@ def fetch_from_reddit_rss(cursor):
                 structure = build_expected_structure(title)
                 niche = _detect_niche(title)
                 if inject_keyword(cursor, title, 'reddit_trending', niche, structure):
-                    print(f"    [+] Injected (Reddit r/{subreddit}, {niche}): {title[:70]}...")
+                    print(f"    [+] Injected (Reddit r/{sub_name}, {niche}): {title[:70]}...")
                     count += 1
                     injected_this_feed += 1
 
-            print(f"    [~] r/{subreddit}: {injected_this_feed} new keywords")
+            print(f"    [~] r/{sub_name}: {injected_this_feed} new keywords")
 
-        except ET.ParseError:
-            print(f"    [-] XML parse error for {feed_url}")
         except Exception as e:
-            print(f"    [-] Error fetching {feed_url}: {e}")
+            print(f"    [-] PRAW fetch error for r/{sub_name}: {e}")
 
     return count
 
@@ -437,8 +438,8 @@ def run_crawler():
     total += t1
     print(f"[~] Layer 1 result: {t1} keywords\n")
 
-    # Layer 2: Reddit RSS (Via rss2json proxy to bypass 403)
-    t2 = fetch_from_reddit_rss(cursor)
+    # Layer 2: Reddit API (PRAW)
+    t2 = fetch_from_reddit_api(cursor)
     conn.commit()
     total += t2
     print(f"[~] Layer 2 result: {t2} keywords\n")

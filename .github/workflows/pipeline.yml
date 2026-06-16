@@ -44,6 +44,8 @@ jobs:
         run: |
           echo "SERP_API_KEY=${{ secrets.SERP_API_KEY }}" >> .env
           echo "DEEPSEEK_API_KEY=${{ secrets.DEEPSEEK_API_KEY }}" >> .env
+          echo "REDDIT_CLIENT_ID=${{ secrets.REDDIT_CLIENT_ID }}" >> .env
+          echo "REDDIT_CLIENT_SECRET=${{ secrets.REDDIT_CLIENT_SECRET }}" >> .env
           echo "[*] .env 金库重建完毕"
 
       # ── Step 5: 配置 Git 身份（用于后续 commit & push）──────────
