@@ -412,7 +412,7 @@ def run_crawler():
     print(f"[~] Layer 1 result: {t1} keywords\n")
 
     # Layer 2: Reddit API (PRAW)
-    t2 = fetch_from_reddit_api(cursor)
+    t2 = fetch_from_reddit_via_serp(cursor)
     conn.commit()
     total += t2
     print(f"[~] Layer 2 result: {t2} keywords\n")
