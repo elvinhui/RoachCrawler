@@ -67,17 +67,17 @@ INTENT_MODIFIERS = [
 
 # ── Reddit RSS subreddits ────────────────────────────────────────────────────
 REDDIT_FEEDS = [
-    "https://www.reddit.com/r/homelab/top/.rss?t=week",
-    "https://www.reddit.com/r/sysadmin/top/.rss?t=week",
-    "https://www.reddit.com/r/ccna/top/.rss?t=week",
-    "https://www.reddit.com/r/networking/top/.rss?t=week",
-    "https://www.reddit.com/r/DataCenter/top/.rss?t=week",
-    "https://www.reddit.com/r/devops/top/.rss?t=week",
-    "https://www.reddit.com/r/kubernetes/top/.rss?t=week",
-    "https://www.reddit.com/r/netsec/top/.rss?t=week",
-    "https://www.reddit.com/r/aws/top/.rss?t=week",
-    "https://www.reddit.com/r/selfhosted/top/.rss?t=week",
-    "https://www.reddit.com/r/MachineLearning/top/.rss?t=week",
+    "https://www.reddit.com/r/homelab/top.json?t=week",
+    "https://www.reddit.com/r/sysadmin/top.json?t=week",
+    "https://www.reddit.com/r/ccna/top.json?t=week",
+    "https://www.reddit.com/r/networking/top.json?t=week",
+    "https://www.reddit.com/r/DataCenter/top.json?t=week",
+    "https://www.reddit.com/r/devops/top.json?t=week",
+    "https://www.reddit.com/r/kubernetes/top.json?t=week",
+    "https://www.reddit.com/r/netsec/top.json?t=week",
+    "https://www.reddit.com/r/aws/top.json?t=week",
+    "https://www.reddit.com/r/selfhosted/top.json?t=week",
+    "https://www.reddit.com/r/MachineLearning/top.json?t=week",
 ]
 
 REDDIT_HEADERS = {
@@ -223,28 +223,26 @@ def fetch_from_reddit_rss(cursor):
             time.sleep(random.uniform(5, 8))
             resp = requests.get(feed_url, headers=REDDIT_HEADERS, timeout=15)
             if resp.status_code != 200:
-                print(f"    [-] RSS fetch failed ({resp.status_code}): {feed_url}")
+                print(f"    [-] JSON fetch failed ({resp.status_code}): {feed_url}")
                 continue
 
-            root = ET.fromstring(resp.content)
-            # RSS 2.0 namespace
-            ns = {'atom': 'http://www.w3.org/2005/Atom'}
+            data = resp.json()
+            if "data" not in data or "children" not in data["data"]:
+                print(f"    [-] Invalid JSON response from {feed_url}")
+                continue
 
-            # Try both Atom and RSS formats
-            entries = root.findall('.//item') or root.findall('.//atom:entry', ns)
+            entries = data["data"]["children"]
 
             subreddit = feed_url.split('/r/')[1].split('/')[0]
             injected_this_feed = 0
 
             for entry in entries[:20]:  # Top 20 posts per subreddit
                 # Get title
-                title_el = entry.find('title')
-                if title_el is None:
-                    continue
-                title = title_el.text or ''
-
-                # Clean up title (Reddit RSS often includes HTML)
-                title = re.sub(r'<[^>]+>', '', title).strip()
+                post_data = entry.get("data", {})
+                title = post_data.get("title", "")
+                
+                # Clean up title
+                title = title.strip()
                 if len(title) < 10 or len(title) > 120:
                     continue
 
