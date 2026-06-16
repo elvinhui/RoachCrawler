@@ -67,17 +67,17 @@ INTENT_MODIFIERS = [
 
 # ── Reddit RSS subreddits ────────────────────────────────────────────────────
 REDDIT_FEEDS = [
-    "https://www.reddit.com/r/homelab/top.json?t=week",
-    "https://www.reddit.com/r/sysadmin/top.json?t=week",
-    "https://www.reddit.com/r/ccna/top.json?t=week",
-    "https://www.reddit.com/r/networking/top.json?t=week",
-    "https://www.reddit.com/r/DataCenter/top.json?t=week",
-    "https://www.reddit.com/r/devops/top.json?t=week",
-    "https://www.reddit.com/r/kubernetes/top.json?t=week",
-    "https://www.reddit.com/r/netsec/top.json?t=week",
-    "https://www.reddit.com/r/aws/top.json?t=week",
-    "https://www.reddit.com/r/selfhosted/top.json?t=week",
-    "https://www.reddit.com/r/MachineLearning/top.json?t=week",
+    "https://www.reddit.com/r/homelab/top/.rss?t=week",
+    "https://www.reddit.com/r/sysadmin/top/.rss?t=week",
+    "https://www.reddit.com/r/ccna/top/.rss?t=week",
+    "https://www.reddit.com/r/networking/top/.rss?t=week",
+    "https://www.reddit.com/r/DataCenter/top/.rss?t=week",
+    "https://www.reddit.com/r/devops/top/.rss?t=week",
+    "https://www.reddit.com/r/kubernetes/top/.rss?t=week",
+    "https://www.reddit.com/r/netsec/top/.rss?t=week",
+    "https://www.reddit.com/r/aws/top/.rss?t=week",
+    "https://www.reddit.com/r/selfhosted/top/.rss?t=week",
+    "https://www.reddit.com/r/MachineLearning/top/.rss?t=week",
 ]
 
 REDDIT_HEADERS = {
@@ -220,29 +220,31 @@ def fetch_from_reddit_rss(cursor):
     sampled_feeds = random.sample(REDDIT_FEEDS, min(2, len(REDDIT_FEEDS)))
     for feed_url in sampled_feeds:
         try:
-            time.sleep(random.uniform(5, 8))
-            resp = requests.get(feed_url, headers=REDDIT_HEADERS, timeout=15)
+            import urllib.parse
+            proxy_url = f"https://api.rss2json.com/v1/api.json?rss_url={urllib.parse.quote(feed_url)}"
+            
+            # Using standard headers since rss2json API has no such block
+            headers = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) Chrome/122.0.0.0 Safari/537.36"}
+            resp = requests.get(proxy_url, headers=headers, timeout=15)
             if resp.status_code != 200:
-                print(f"    [-] JSON fetch failed ({resp.status_code}): {feed_url}")
+                print(f"    [-] Proxy fetch failed ({resp.status_code}): {feed_url}")
                 continue
 
             data = resp.json()
-            if "data" not in data or "children" not in data["data"]:
-                print(f"    [-] Invalid JSON response from {feed_url}")
+            if data.get("status") != "ok" or "items" not in data:
+                print(f"    [-] Invalid proxy response from {feed_url}")
                 continue
 
-            entries = data["data"]["children"]
+            entries = data["items"]
 
             subreddit = feed_url.split('/r/')[1].split('/')[0]
             injected_this_feed = 0
 
             for entry in entries[:20]:  # Top 20 posts per subreddit
-                # Get title
-                post_data = entry.get("data", {})
-                title = post_data.get("title", "")
+                title = entry.get("title", "")
                 
                 # Clean up title
-                title = title.strip()
+                title = re.sub(r'<[^>]+>', '', title).strip()
                 if len(title) < 10 or len(title) > 120:
                     continue
 
@@ -435,12 +437,11 @@ def run_crawler():
     total += t1
     print(f"[~] Layer 1 result: {t1} keywords\n")
 
-    # Layer 2: Reddit RSS (Currently blocked by Reddit API 403 Forbidden without OAuth)
-    # Disabled to prevent pipeline noise. Layer 1 and 3 provide sufficient keyword volume.
-    # t2 = fetch_from_reddit_rss(cursor)
-    # conn.commit()
-    # total += t2
-    # print(f"[~] Layer 2 result: {t2} keywords\n")
+    # Layer 2: Reddit RSS (Via rss2json proxy to bypass 403)
+    t2 = fetch_from_reddit_rss(cursor)
+    conn.commit()
+    total += t2
+    print(f"[~] Layer 2 result: {t2} keywords\n")
 
     # Layer 3: Programmatic (always runs, fills the queue)
     t3 = fetch_from_programmatic(cursor)
