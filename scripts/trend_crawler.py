@@ -435,11 +435,12 @@ def run_crawler():
     total += t1
     print(f"[~] Layer 1 result: {t1} keywords\n")
 
-    # Layer 2: Reddit RSS (reliable, no API key needed)
-    t2 = fetch_from_reddit_rss(cursor)
-    conn.commit()
-    total += t2
-    print(f"[~] Layer 2 result: {t2} keywords\n")
+    # Layer 2: Reddit RSS (Currently blocked by Reddit API 403 Forbidden without OAuth)
+    # Disabled to prevent pipeline noise. Layer 1 and 3 provide sufficient keyword volume.
+    # t2 = fetch_from_reddit_rss(cursor)
+    # conn.commit()
+    # total += t2
+    # print(f"[~] Layer 2 result: {t2} keywords\n")
 
     # Layer 3: Programmatic (always runs, fills the queue)
     t3 = fetch_from_programmatic(cursor)
