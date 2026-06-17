@@ -41,6 +41,6 @@ That's why we built the **Six Jars FIRE App**.
 
 To ensure continuous maintenance and an ad-free experience, we've listed the tool on Gumroad. Pay once, use forever!
 
-👉 **[Click here to get it on Gumroad and unlock your access](#Replace-With-Your-Gumroad-Link)**
+👉 **[Click here to get it on Gumroad and unlock your access](https://elvinspire5.gumroad.com/l/six-jars-fire)**
 
 *After purchase, you will receive a secure document containing the exclusive app link (`six-jars-app.smartinfralog.com`) and your secret access password.*

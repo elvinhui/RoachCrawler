@@ -41,6 +41,6 @@ categories: ["理财工具"]
 
 为了保证工具的持续维护和纯净体验，我们将该工具上架到了 Gumroad。一次购买，终身使用！
 
-👉 **[点击这里前往 Gumroad 获取专属访问链接与密码 (Get it on Gumroad)](#替换为您的Gumroad链接)**
+👉 **[点击这里前往 Gumroad 获取专属访问链接与密码 (Get it on Gumroad)](https://elvinspire5.gumroad.com/l/six-jars-fire)**
 
 *购买后，您将收到一份说明文档，内含工具的专属域名 (`six-jars-app.smartinfralog.com`) 以及解锁 App 的专属通行密码。*
