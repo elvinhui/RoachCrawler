@@ -1,6 +1,6 @@
 ---
 title: "How to Achieve FIRE with the Six Jars System (Plus Our New Smart Tool)"
-date: 2026-06-18T10:00:00+08:00
+date: 2026-06-17T21:00:00+08:00
 draft: false
 tags: ["FIRE", "Personal Finance", "Investing", "Six Jars"]
 categories: ["Tools"]
