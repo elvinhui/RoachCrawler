@@ -1,218 +1,253 @@
 ---
-title: "40年前的Windows 1.0 WinAPI，放到今天还能跑？我写了个Xonix游戏实测"
-date: 2026-06-16T16:23:03.193716+00:00
+title: "用 ORCA 硬改 MSI 塞客户 ID？我踩了 3 天坑才搞定的骚操作"
+date: 2026-06-18T02:38:56.852854+00:00
 draft: false
-categories: ["Developer Tools"]
+categories: ["Infrastructure"]
 tags: ["Tech", "Analysis"]
 cover:
-  image: "https://picsum.photos/seed/6704/1200/600"
-  alt: "Developer Tools 技术可视化"
+  image: "https://picsum.photos/seed/4667/1200/600"
+  alt: "Infrastructure 技术可视化"
   hiddenInList: false
   hiddenInSingle: false
 ---
 
-## 写在前面：这玩意儿居然还能跑？
+## 这玩意儿到底有多坑？
 
-老实说，我一开始是抱着“看笑话”的心态去搞这个实验的。Windows 1.0？1985年的东西，16位处理器，MS-DOS，协作式多任务——这玩意儿放到2026年，能开机就不错了。
+说实话，我本来以为这事儿很简单。不就是改个 MSI 嘛，用 ORCA 打开，找到 Property 表，把 CustomerID 字段填上，保存，收工。
 
-结果我被打脸了。
+结果呢？翻车了整整三天。
 
-事情是这样的：我在Hacker News上看到有个老哥（Jonathan W.）写了一篇帖子，说他用Microsoft C 4.0给Windows 1.0写了个Xonix游戏，编译出来的16位EXE居然能从Windows 1.x一路跑到32位的Windows 10。我第一反应是：“吹牛吧？”
+我们团队在推一个 Win32 应用时，客户要求必须把他们的客户 ID 硬编码进 MSI 里，不能靠命令行传参——因为他们的 SCCM 部署脚本写得跟屎一样，没法处理复杂参数。我一开始也试过用 PSADT 封装，结果每次跑都报 fatal error，查了半天日志，发现是 MSI 本身的 CustomAction 顺序跟 PSADT 的 wrapper 冲突了。
 
-然后我自己试了试。**真香。**
+好吧，那就直接用 ORCA 改原始 MSI。
 
-更让我震惊的是，这40年前的API，核心设计理念居然和今天没什么两样。消息循环、窗口过程、设备上下文——这些我们天天打交道的玩意儿，1985年就已经定型了。
+## ORCA 到底怎么用？别信那些垃圾教程
 
-## 实验配置：我用什么跑Windows 1.0？
+网上搜出来的教程，十个有八个是教你改个 Property 值就完事了。但客户 ID 这东西，有时候藏在 Property 表里，有时候藏在 Registry 表里，甚至可能是个硬编码在 CustomAction 里的 DLL 参数。
 
-别想着拿你手头的M4 MacBook Pro或者AMD Ryzen 9去跑Windows 1.0——行不通，也没必要。我用的是这套配置：
+我翻了微软官方的 Orca.exe 文档，说实话，写得跟天书一样。它就是个数据库表编辑器，你得知道自己在改什么。
 
-| 组件 | 具体方案 |
-|------|----------|
-| 虚拟机 | 86Box（模拟286/386最佳选择，别用VirtualBox，踩坑无数） |
-| CPU模拟 | Intel 80286 @ 12MHz |
-| 内存 | 2MB（Windows 1.0推荐配置是640KB，但2MB更稳） |
-| 显卡 | Hercules Graphics Card（单色）或CGA（彩色） |
-| 操作系统 | MS-DOS 3.3 |
-| 编译器 | Microsoft C 4.0 + Windows 1.0 SDK |
-| 目标平台 | Windows 1.01（1985年11月发布） |
+### 第一步：打开 MSI 并找到目标
 
-**血的教训：** 别用VPC2007或者VirtualBox的DOS模式。那玩意儿对16位实模式的支持就是一坨屎。86Box是目前唯一能精确模拟到硬件级别的方案。我在这上面浪费了整整一个下午。
+装好 ORCA 之后，右键点击 MSI 文件 -> "Edit with Orca"。别直接双击，那只会跑安装程序。
 
-## 核心代码解剖：40年前的WinAPI长什么样？
+进去之后，左边那排表才是关键。别被吓到，你只需要关注这几个表：
 
-这是我写的Xonix游戏核心代码片段。说实话，看到这些代码的时候我鸡皮疙瘩都起来了——**太熟悉了**。
+| 表名 | 用途 | 常见坑 |
+|------|------|--------|
+| Property | 存储 MSI 全局属性 | 客户 ID 可能不叫 CustomerID，可能叫 LICENSEKEY 或 ACC_ID |
+| Registry | 注册表写入规则 | 有些软件靠这个在安装时写注册表 |
+| CustomAction | 自定义动作 | 这里可能藏了个 DLL 调用，参数是硬编码的 |
+| InstallExecuteSequence | 执行顺序 | 改错了可能导致安装顺序崩掉 |
 
-```c
-/* XONIX for Windows 1.0 - Main Window Procedure */
-#include <windows.h>
+我这次要找的客户 ID，藏在了 **Property 表**里，键名叫 `CUSTOMER_KEY`。但问题是——这个键的值是空的，得靠外部传入。
 
-#define ID_TIMER 1
+### 第二步：直接改 Property 值
 
-/* 全局变量 */
-HANDLE hInst;
-int xPlayer = 1, yPlayer = 1;
-int xDir = 1, yDir = 0;
-BOOL bPlaying = FALSE;
+选中 Property 表，找到 `CUSTOMER_KEY` 那一行，把 Value 字段改成你的客户 ID，比如 `ABC-123-XYZ`。
 
-/* 窗口过程 */
-long FAR PASCAL WndProc(HWND hWnd, WORD message, WORD wParam, LONG lParam)
-{
-    HDC hDC;
-    PAINTSTRUCT ps;
-    RECT rect;
-    
-    switch (message)
-    {
-        case WM_CREATE:
-            /* 设置定时器，100ms刷新 */
-            SetTimer(hWnd, ID_TIMER, 100, NULL);
-            return 0;
-            
-        case WM_TIMER:
-            /* 每100ms移动一次玩家 */
-            UpdatePlayer(hWnd);
-            InvalidateRect(hWnd, NULL, FALSE);
-            return 0;
-            
-        case WM_KEYDOWN:
-            /* 方向键控制 */
-            switch (wParam)
-            {
-                case VK_LEFT:  xDir = -1; yDir = 0; break;
-                case VK_RIGHT: xDir = 1;  yDir = 0; break;
-                case VK_UP:    xDir = 0;  yDir = -1; break;
-                case VK_DOWN:  xDir = 0;  yDir = 1; break;
-            }
-            return 0;
-            
-        case WM_PAINT:
-            hDC = BeginPaint(hWnd, &ps);
-            GetClientRect(hWnd, &rect);
-            DrawGameBoard(hDC, &rect);
-            EndPaint(hWnd, &ps);
-            return 0;
-            
-        case WM_DESTROY:
-            KillTimer(hWnd, ID_TIMER);
-            PostQuitMessage(0);
-            return 0;
-    }
-    
-    return DefWindowProc(hWnd, message, wParam, lParam);
-}
+**等等，别急着保存。**
 
-/* 入口点 */
-int PASCAL WinMain(HANDLE hInstance, HANDLE hPrevInstance,
-                   LPSTR lpCmdLine, int nCmdShow)
-{
-    MSG msg;
-    HWND hWnd;
-    WNDCLASS wc;
-    
-    /* 注册窗口类 */
-    wc.style = CS_HREDRAW | CS_VREDRAW;
-    wc.lpfnWndProc = WndProc;
-    wc.cbClsExtra = 0;
-    wc.cbWndExtra = 0;
-    wc.hInstance = hInstance;
-    wc.hIcon = LoadIcon(NULL, IDI_APPLICATION);
-    wc.hCursor = LoadCursor(NULL, IDC_ARROW);
-    wc.hbrBackground = GetStockObject(WHITE_BRUSH);
-    wc.lpszMenuName = NULL;
-    wc.lpszClassName = "XonixClass";
-    
-    if (!RegisterClass(&wc))
-        return FALSE;
-    
-    /* 创建窗口 */
-    hWnd = CreateWindow("XonixClass", "Xonix for Windows 1.0",
-                        WS_OVERLAPPEDWINDOW,
-                        CW_USEDEFAULT, CW_USEDEFAULT,
-                        640, 480,
-                        NULL, NULL, hInstance, NULL);
-    
-    ShowWindow(hWnd, nCmdShow);
-    UpdateWindow(hWnd);
-    
-    /* 消息循环 */
-    while (GetMessage(&msg, NULL, 0, 0))
-    {
-        TranslateMessage(&msg);
-        DispatchMessage(&msg);
-    }
-    
-    return msg.wParam;
-}
-```
+如果你直接保存 MSI，下次再打开，这玩意儿就变成只读的了。而且更坑的是——如果你在 ORCA 里改了 MSI 并保存，ORCA 默认会**不保留嵌入的流文件**（比如 CAB 包里的压缩文件），导致 MSI 损坏。
 
-**看到什么了？** WM_CREATE, WM_PAINT, WM_DESTROY, GetMessage循环, WNDCLASS注册——这些东西任何一个写过Win32/MFC/C# Windows Forms的开发者都认识。40年了，骨子里的东西没变过。
+所以你必须先做这个操作：
+1. 点击 Tools -> Options
+2. 选 Database 标签
+3. 勾上 **"Copy Embedded Streams During Save As"**
+4. 点 OK
 
-## 兼容性测试：从Windows 1.0到Windows 11
+这一步不做，你改完的 MSI 直接废掉。
 
-我把编译好的Xonix.exe（16位NE格式）扔到了不同版本的Windows上。结果如下：
+### 第三步：用 Transform 而不是直接改 MSI
 
-| Windows版本 | 能否运行 | 备注 |
-|-------------|----------|------|
-| Windows 1.01 | ✅ 完美 | 原生16位，流畅 |
-| Windows 3.1 | ✅ 完美 | 兼容模式自动识别 |
-| Windows 95 | ✅ 完美 | WoW（Windows on Windows）16位子系统 |
-| Windows 98 SE | ✅ 完美 | 同上 |
-| Windows XP (32-bit) | ✅ 完美 | 最后一个原生支持16位应用的消费级系统 |
-| Windows Vista (32-bit) | ✅ 完美 | WoW64模拟16位 |
-| Windows 7 (32-bit) | ✅ 完美 | 同上 |
-| Windows 10 (32-bit) | ✅ 完美 | 微软直到2018年才砍掉32位版本的16位支持 |
-| Windows 10 (64-bit) | ❌ 失败 | 64位WoW64不支持16位应用 |
-| Windows 11 (64-bit) | ❌ 失败 | 同上 |
+这里有个更好的做法——**生成一个 MST 转换文件**，而不是直接改 MSI。
 
-**关键发现：** 同一个二进制文件，1985年编译的，在32位Windows 10上跑得稳稳的。跨了30多年、10个操作系统版本。**这他妈是工程奇迹。**
+为什么？因为直接改 MSI 会破坏数字签名，而且如果你要部署到多个客户，每个客户的 ID 不同，你得维护 N 个 MSI 版本，太蠢了。
 
-Reddit上r/ObsoleteCooding的帖子下面有人评论说："The same compiled 16-bit EXE runs from Windows 1.x all the way to 32-bit Windows 10." 没错，这就是微软被骂了几十年后，唯一值得竖大拇指的地方——**向后兼容性，没人做得比微软好。**
+操作流程：
+1. 打开原始 MSI
+2. 点击 Transform -> New Transform
+3. 在 Property 表里把 `CUSTOMER_KEY` 改成目标值
+4. 点击 Transform -> Generate Transform
+5. 保存为 `.mst` 文件
 
-## WinAPI的演化：40年不变的底层哲学
+部署的时候，用 `msiexec /i "your.msi" TRANSFORMS="your.mst"` 就行了。
 
-说真的，这次实验让我重新审视了WinAPI的设计哲学。很多人（包括我）平时骂WinAPI骂得狗血淋头——类型定义混乱、命名规则不统一、文档垃圾。但这次回头看1.0版本的API，我意识到一件事：
+### 第四步：如果客户 ID 藏在 Registry 里
 
-**WinAPI从一开始就设计对了。**
+有些傻逼软件厂商，把客户 ID 写死在注册表里。这时候你得在 ORCA 里操作 **Registry 表**。
 
-看看1985年的核心API结构：
-- **消息泵**（GetMessage/DispatchMessage）→ 今天Windows Forms和WPF的底层还是这个
-- **窗口过程**（WindowProc）→ 所有UI框架的事件处理模型都源自这里
-- **设备上下文**（HDC/BeginPaint）→ Direct2D和GDI+的祖宗
-- **资源管理**（LoadIcon/LoadCursor）→ 现代UI框架的资源系统原型
+我遇到过一个案例：某款监控软件安装完后，需要在 `HKLM\SOFTWARE\Vendor\Product` 下写一个 `CustomerID` 字符串值。
 
-Hacker News上那篇帖子的评论区里有人说："What surprised me most is how familiar the WinAPI already looks in Windows 1.0. Even back then, the core ideas were already there." 我完全同意。
+操作：
+1. 在 Registry 表里新增一行
+2. Root 填 `-1`（代表 HKLM）
+3. Key 填 `Software\Vendor\Product`
+4. Name 填 `CustomerID`
+5. Value 填你的客户 ID
+6. Component_ 字段要关联到一个已有的 Component，不然这个注册表项不会被写入
 
-但也不是没槽点。**类型系统就是一坨屎。** WORD, DWORD, LONG, HANDLE——这些typedef从来就没遵循过任何C标准。你以为是int？其实是unsigned short。你以为是long？其实是int。40年了，没人敢动这个屎山，因为一动整个Windows就炸了。
+这个关联 Component 的步骤，是大多数人翻车的地方。你必须去 **Component 表** 里找个现成的组件，或者自己新建一个，然后在 **FeatureComponents 表** 里把它关联到一个 Feature。
 
-## 为什么这很重要？
+## 真实踩坑记录
 
-2026年的今天，我们在讨论AI、云原生、WebAssembly、Rust重写一切。但看看我们每天用的操作系统底层——那套1985年设计出来的消息传递机制，还在跑。
+我们团队在推一个叫 "SecureAgent" 的软件时，遇到了更恶心的坑。它的客户 ID 不是存在 Property 表，而是通过一个 CustomAction 调用的 DLL 传入的。
 
-这告诉我们两件事：
-1. **好的架构设计可以活40年。** 消息循环模式解决的是"操作系统如何与应用通信"这个根本问题，这个问题没变过，所以解决方案也没变。
-2. **技术债务是可以传承的。** 微软为了不破坏兼容性，硬是扛着16位兼容层走了30多年。2018年才在32位系统上砍掉16位支持——距离Windows 1.0发布已经33年了。
+我打开 ORCA 看了一下 CustomAction 表，发现 Source 字段指向了一个 DLL，Target 字段里写的是 `SetCustomerID`。这玩意儿根本没法在 ORCA 里直接改参数——你得反编译那个 DLL。
 
-## 常见问题 (FAQ)
+最后怎么解决的？我们写了个 PowerShell 脚本，在 MSI 安装完成后，直接修改注册表。虽然不优雅，但能用。
 
-**Q: Windows 1.0现在还能用吗？**
-A: 能用，但仅限于模拟器或古董硬件。86Box模拟器可以完美运行，但别指望它做任何实际工作。没有多任务、没有网络、连重叠窗口都不支持（只能平铺）。**它是博物馆展品，不是生产工具。**
+## FAQ
 
-**Q: 为什么Windows 1.0失败了？**
-A: 技术上太超前，硬件跟不上。Windows 1.0需要至少256KB内存和图形显示器，而1985年大多数PC只有128KB内存和单色文本显示器。加上IBM PC/XT的8088处理器跑图形界面慢得像蜗牛。**不是产品不好，是硬件没准备好。**
+### 如何用 ORCA 编辑 MSI 文件？
 
-**Q: Windows 1.0有什么革命性？**
-A: 它证明了"在DOS上跑图形界面"这件事是可行的。与Visi On和Apple Lisa相比，Windows 1.0支持协作式多任务（虽然只是平铺窗口），而且不要求应用程序必须是"特供版"——任何DOS应用都可以在全屏模式下运行。**这是第一个"实用"的PC图形界面，尽管实用性存疑。**
+打开 ORCA，File -> Open 选择 MSI，在左侧表列表中找到目标表（通常是 Property），修改 Value 字段，然后保存。记得先勾选 "Copy Embedded Streams During Save As"。
 
-**Q: WinAPI到底多老了？**
-A: 1985年11月20日，Windows 1.0发布时WinAPI就存在了。到今天（2026年6月）是40年7个月。**比Linux内核（1991）老6年，比Java（1995）老10年，比Web（1989）老4年。**
+### 如何用 ORCA 打开 MSI？
 
-## 写在最后
+安装 ORCA 后，右键 MSI 文件选择 "Edit with Orca"，或者先打开 ORCA 再 File -> Open。
 
-这次实验让我对微软产生了一种奇怪的敬意。他们做错了很多事——Vista的驱动模型、Windows 8的Metro界面、Windows 11的硬件要求——但有一件事他们做对了：**让1985年的代码在2026年还能跑。**
+### 如何用 ORCA 创建 MST 文件？
 
-这不是技术问题，这是哲学问题。在"move fast and break things"成为主流的今天，微软用40年证明了另一种可能性：**慢一点，稳一点，让用户的投资保值。**
+打开 MSI -> Transform -> New Transform -> 修改需要的表 -> Transform -> Generate Transform -> 保存为 .mst 文件。
 
-当然，64位系统砍掉16位支持这件事，我理解但心疼。那意味着Windows 1.0时代的最后一个二进制文件，在2018年正式成为了历史。
+### 如何用 ORCA 创建转换文件？
 
-不过话说回来——谁会真的想在Windows 11上跑1985年的游戏呢？除了我们这种闲得蛋疼的技术考古学家。
+同上。MST 文件本质就是记录你对 MSI 做的所有修改的差量文件。
+
+## 总结
+
+| 场景 | 推荐做法 | 风险等级 |
+|------|----------|----------|
+| 客户 ID 在 Property 表 | 直接改 Value 或生成 MST | 低 |
+| 客户 ID 需写入注册表 | 在 Registry 表新增条目并关联 Component | 中 |
+| 客户 ID 藏在 CustomAction DLL 里 | 别用 ORCA 硬改，考虑 post-install 脚本 | 高 |
+| 需要部署到多个客户 | 必须用 MST 转换文件 | 低 |
+| MSI 有数字签名 | 直接改 MSI 会破坏签名，用 MST | 中 |
+
+最后说一句：ORCA 是个好工具，但也是个危险工具。改之前一定备份原始 MSI，不然你哭都来不及。
+
+---
+title: "Hardcoding a Customer ID into an MSI with ORCA? Here's What Nobody Tells You"
+date: 2026-06-18T02:38:56.852854+00:00
+draft: false
+categories: ["Infrastructure"]
+tags: ["Tech", "Analysis"]
+cover:
+  image: "https://picsum.photos/seed/4667en/1200/600"
+  alt: "Infrastructure Visualization"
+  hiddenInList: false
+  hiddenInSingle: false
+---
+
+## The Pain Point
+
+Last month I spent three days fighting an MSI that refused to accept a customer ID via command-line arguments. The SCCM team's deployment scripts were—how do I put this gently—a dumpster fire. They couldn't handle complex parameters, so the request came down: "Just hardcode the customer ID into the MSI."
+
+I tried PSADT first. Wrapper kept throwing fatal errors. Turns out the MSI's CustomAction sequence was conflicting with the wrapper. Classic.
+
+So I went straight to the source: ORCA.
+
+## What ORCA Actually Is (And Isn't)
+
+Orca.exe is Microsoft's database table editor for Windows Installer packages. It's not a friendly GUI tool. It's a raw table editor. You need to know what you're doing.
+
+Most tutorials online are garbage. They show you how to change a Property value and call it a day. But customer IDs can hide anywhere—Property table, Registry table, or buried inside a CustomAction DLL.
+
+### Step 1: Open the MSI and Find Your Target
+
+Install ORCA, right-click the MSI → "Edit with Orca". Don't double-click it—that runs the installer.
+
+The left panel shows all the database tables. You only care about these:
+
+| Table | Purpose | Common Gotcha |
+|-------|---------|---------------|
+| Property | Stores MSI global properties | Customer ID might not be called CustomerID—could be LICENSEKEY or ACC_ID |
+| Registry | Registry write rules | Some apps write customer ID here during install |
+| CustomAction | Custom actions | Could contain a DLL call with hardcoded params |
+| InstallExecuteSequence | Execution order | Mess this up and your install breaks |
+
+In my case, the customer ID was in the **Property** table, key named `CUSTOMER_KEY`. Value was empty—meant to be passed externally.
+
+### Step 2: Edit the Property Value
+
+Select the Property table, find `CUSTOMER_KEY`, change Value to `ABC-123-XYZ`.
+
+**Don't save yet.**
+
+If you save directly, ORCA by default **does not copy embedded streams** (like CAB files). Your MSI will be corrupted.
+
+Do this first:
+1. Tools → Options
+2. Database tab
+3. Check **"Copy Embedded Streams During Save As"**
+4. OK
+
+Skip this step and your modified MSI is trash.
+
+### Step 3: Use Transforms Instead of Direct Editing
+
+Here's the pro move: **generate an MST transform file** instead of modifying the MSI directly.
+
+Why? Direct editing breaks digital signatures. Plus if you have multiple customers with different IDs, you'd need N versions of the MSI. That's stupid.
+
+Workflow:
+1. Open the original MSI
+2. Transform → New Transform
+3. Modify the Property table
+4. Transform → Generate Transform
+5. Save as `.mst`
+
+Deploy with: `msiexec /i "your.msi" TRANSFORMS="your.mst"`
+
+### Step 4: If the Customer ID Lives in the Registry
+
+Some vendors hardcode customer IDs into registry keys during installation. I had one case where a monitoring agent needed `HKLM\SOFTWARE\Vendor\Product\CustomerID`.
+
+In ORCA:
+1. Add a new row to the Registry table
+2. Root = `-1` (HKLM)
+3. Key = `Software\Vendor\Product`
+4. Name = `CustomerID`
+5. Value = your customer ID
+6. Component_ field must reference an existing Component
+
+Step 6 is where everyone fails. You need to find a Component in the **Component table**, or create one, then link it in **FeatureComponents table** to a Feature. Otherwise the registry entry never gets written.
+
+## Real-World Horror Story
+
+We were deploying "SecureAgent" (name changed to protect the guilty). The customer ID wasn't in Property or Registry. It was passed to a CustomAction that called a DLL.
+
+I opened CustomAction table. Source pointed to a DLL. Target was `SetCustomerID`. No way to change the parameter in ORCA—you'd need to decompile the DLL.
+
+Solution? A PowerShell script that runs post-install to write the registry key directly. Ugly, but it works.
+
+## FAQ
+
+### How to edit an MSI file using ORCA?
+
+Open ORCA, File → Open, select the MSI. Find the target table (usually Property), modify the Value field, save. Always enable "Copy Embedded Streams During Save As" first.
+
+### How to open an MSI with ORCA?
+
+Right-click the MSI in Windows Explorer → "Edit with Orca", or open ORCA first then File → Open.
+
+### How to create an MST file for an MSI using ORCA?
+
+Open MSI → Transform → New Transform → make changes → Transform → Generate Transform → save as .mst.
+
+### How to use ORCA to create a transform?
+
+Same as above. An MST is a delta file recording all changes made to the original MSI.
+
+## Summary Table
+
+| Scenario | Recommended Approach | Risk Level |
+|----------|---------------------|------------|
+| Customer ID in Property table | Direct edit or MST transform | Low |
+| Customer ID needs registry write | Add Registry entry + link Component | Medium |
+| Customer ID in CustomAction DLL | Don't use ORCA—use post-install script | High |
+| Multiple customer deployments | Must use MST transform | Low |
+| Signed MSI | Direct edit breaks signature—use MST | Medium |
+
+Bottom line: ORCA is powerful but dangerous. Always back up the original MSI before touching it. I learned that the hard way.
