@@ -1,5 +1,5 @@
 baseURL = '/'
-defaultContentLanguage = 'zh'
+defaultContentLanguage = 'en'
 paginate = 6
 
 [outputs]
@@ -12,17 +12,17 @@ paginate = 6
   ShowPostNavLinks = true
 
 # ================================
-# 中文网段配置 (默认路由 /)
+# 英文网段配置 (默认路由 /)
 # ================================
-[languages.zh]
-  label = "中文"
+[languages.en]
+  label = "English"
   title = "SmartInfraLog"
   weight = 1
 
 # ================================
-# 英文网段配置 (路由 /en/)
+# 中文网段配置 (路由 /zh/)
 # ================================
-[languages.en]
-  label = "English"
+[languages.zh]
+  label = "中文"
   title = "SmartInfraLog"
   weight = 2

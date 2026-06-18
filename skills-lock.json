@@ -6,6 +6,12 @@
       "sourceType": "github",
       "skillPath": "skills/taste-skill-v1/SKILL.md",
       "computedHash": "0a226c13d69639553cf8a7c40aa5527b026820f8ddaf7a6b263988e32ab44a27"
+    },
+    "last30days": {
+      "source": "mvanhorn/last30days-skill",
+      "sourceType": "github",
+      "skillPath": "skills/last30days/SKILL.md",
+      "computedHash": "7c9cabd73b72d97e463e4718fbaea7f6ed6090d8ae852164e6337861866899a7"
     }
   }
 }
