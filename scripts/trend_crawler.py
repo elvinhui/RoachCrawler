@@ -397,6 +397,81 @@ def fetch_from_programmatic(cursor):
     return count
 
 
+# ── Layer 4: StackOverflow Unanswered Questions ────────────────────────────────
+def fetch_from_stackoverflow(cursor):
+    """
+    Fetches high-voted questions with 0 answers from StackOverflow.
+    These represent highly-demanded problems without solutions.
+    """
+    count = 0
+    print("[*] Layer 4: StackOverflow Unanswered Questions")
+    
+    tags_niche_map = {
+        "docker": "cloud_devops",
+        "kubernetes": "cloud_devops",
+        "aws": "cloud_devops",
+        "azure": "cloud_devops",
+        "terraform": "cloud_devops",
+        "linux": "data_center",
+        "python": "developer_tools",
+        "postgresql": "developer_tools",
+        "nginx": "sre_observability",
+        "networking": "networking"
+    }
+
+    endpoint = "https://api.stackexchange.com/2.3/questions/no-answers"
+    
+    # Sample a few tags to avoid hitting the 300/day IP limit too fast
+    sampled_tags = random.sample(list(tags_niche_map.keys()), min(3, len(tags_niche_map)))
+    
+    for tag in sampled_tags:
+        try:
+            print(f"    [~] Fetching unanswered questions for tag: {tag}...")
+            params = {
+                "order": "desc",
+                "sort": "votes",
+                "site": "stackoverflow",
+                "tagged": tag,
+                "pagesize": 10
+            }
+            res = requests.get(endpoint, params=params, timeout=15)
+            if res.status_code != 200:
+                print(f"    [-] StackOverflow API failed ({res.status_code}) for tag: {tag}")
+                continue
+                
+            data = res.json()
+            items = data.get("items", [])
+            
+            injected_this_tag = 0
+            for item in items:
+                title = item.get("title", "")
+                title = title.replace("&quot;", '"').replace("&#39;", "'").replace("&lt;", "<").replace("&gt;", ">").strip()
+                
+                # Append "fix" or "how to" conceptually so the content engine treats it as a guide
+                keyword = f"{title} fix"
+                
+                if len(keyword) < 10 or len(keyword) > 150:
+                    continue
+
+                structure = build_expected_structure(keyword)
+                niche = tags_niche_map.get(tag, "developer_tools")
+                
+                if inject_keyword(cursor, keyword, 'stackoverflow_unanswered', niche, structure):
+                    print(f"    [+] Injected (StackOverflow '{tag}', {niche}): {title[:70]}...")
+                    count += 1
+                    injected_this_tag += 1
+
+            print(f"    [~] tag '{tag}': {injected_this_tag} new keywords")
+            
+            # Respect StackOverflow's rate limit guidelines
+            time.sleep(1)
+            
+        except Exception as e:
+            print(f"    [-] StackOverflow fetch error for tag '{tag}': {e}")
+
+    return count
+
+
 # ── Main ──────────────────────────────────────────────────────────────────────
 def run_crawler():
     conn = init_db()
@@ -414,7 +489,7 @@ def run_crawler():
     total += t1
     print(f"[~] Layer 1 result: {t1} keywords\n")
 
-    # Layer 2: Reddit API (PRAW)
+    # Layer 2: Reddit via SERP Bypass
     t2 = fetch_from_reddit_via_serp(cursor)
     conn.commit()
     total += t2
@@ -425,6 +500,12 @@ def run_crawler():
     conn.commit()
     total += t3
     print(f"[~] Layer 3 result: {t3} keywords\n")
+
+    # Layer 4: StackOverflow Unanswered
+    t4 = fetch_from_stackoverflow(cursor)
+    conn.commit()
+    total += t4
+    print(f"[~] Layer 4 result: {t4} keywords\n")
 
     conn.close()
     print(f"[+] Discovery complete. Total new keywords injected: {total}")
