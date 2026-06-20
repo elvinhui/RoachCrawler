@@ -185,15 +185,19 @@ cover:
 
             base_name = f"post-{int(datetime.now().timestamp())}"
 
+            # 追加广告 shortcode
+            chinese_content = chinese_content.strip() + "\n\n{{< ad300 >}}\n"
+            english_content = english_content.strip() + "\n\n{{< ad300 >}}\n"
+
             # 1. 写入中文版
             zh_path = os.path.join(output_dir, f"{base_name}.zh.md")
             with open(zh_path, "w", encoding="utf-8") as f:
-                f.write(chinese_content.strip())
+                f.write(chinese_content)
 
             # 2. 写入英文版
             en_path = os.path.join(output_dir, f"{base_name}.en.md")
             with open(en_path, "w", encoding="utf-8") as f:
-                f.write(english_content.strip())
+                f.write(english_content)
 
             print(f"[+] 自动化双语矩阵对齐成功！")
             print(f"    -> 中文节点: {zh_path}")
