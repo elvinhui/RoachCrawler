@@ -4,12 +4,116 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="14aaa17637971a6319fb0daf78763bf03c1208a1" content="14aaa17637971a6319fb0daf78763bf03c1208a1" />
-  <title>{{ if .IsHome }}{{ .Site.Title }}{{ else }}{{ .Title }} · {{ .Site.Title }}{{ end }}</title>
-  <meta name="description" content="{{ if .Description }}{{ .Description }}{{ else }}SmartInfraLog — 数据中心运维技术博客{{ end }}">
+
+  {{/* ── SEO: Title ── */}}
+  <title>{{ if .IsHome }}{{ .Site.Title }} — {{ if eq .Lang "zh" }}IT基础设施·Python自动化·网络技术·AI{{ else }}IT Infrastructure · Python Automation · Networking · AI{{ end }}{{ else }}{{ .Title }} · {{ .Site.Title }}{{ end }}</title>
+
+  {{/* ── SEO: Meta Description (language-aware, max 160 chars) ── */}}
+  {{ $defaultDesc := "Smart Infra Log is a digital garden documenting IT infrastructure, Python automation, networking, and AI. Built by a Data Center Engineer." }}
+  {{ $defaultDescZh := "Smart Infra Log 是一个记录 IT 基础设施、Python 自动化、网络技术和 AI 的数字花园。由数据中心工程师构建。" }}
+  {{ $desc := .Description | default (cond (eq .Lang "zh") $defaultDescZh $defaultDesc) }}
+  <meta name="description" content="{{ $desc }}">
+
+  {{/* ── SEO: Keywords ── */}}
+  {{ if eq .Lang "zh" }}
+  <meta name="keywords" content="数据中心, IT基础设施, Python自动化, 网络技术, AI, DCIM, DevOps, 运维, 云计算, 网络安全">
+  {{ else }}
+  <meta name="keywords" content="data center, IT infrastructure, Python automation, networking, AI, DCIM, DevOps, cloud computing, cybersecurity, SRE">
+  {{ end }}
+
+  {{/* ── SEO: Author & Robots ── */}}
+  <meta name="author" content="SmartInfraLog">
+  <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+
+  {{/* ── SEO: Canonical URL ── */}}
+  <link rel="canonical" href="{{ .Permalink }}">
+
+  {{/* ── SEO: Open Graph ── */}}
+  <meta property="og:type" content="{{ if .IsPage }}article{{ else }}website{{ end }}">
+  <meta property="og:title" content="{{ if .IsHome }}{{ .Site.Title }}{{ else }}{{ .Title }}{{ end }}">
+  <meta property="og:description" content="{{ $desc }}">
+  <meta property="og:url" content="{{ .Permalink }}">
+  <meta property="og:site_name" content="{{ .Site.Title }}">
+  <meta property="og:locale" content="{{ if eq .Lang "zh" }}zh_CN{{ else }}en_US{{ end }}">
+  {{ with .Params.cover }}{{ with .image }}
+  <meta property="og:image" content="{{ . }}">
+  {{ end }}{{ end }}
+  {{ if .IsPage }}
+  <meta property="article:published_time" content="{{ .Date.Format "2006-01-02T15:04:05Z07:00" }}">
+  {{ with .Params.categories }}{{ range . }}<meta property="article:tag" content="{{ . }}">{{ end }}{{ end }}
+  {{ end }}
+
+  {{/* ── SEO: Twitter Card ── */}}
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="{{ if .IsHome }}{{ .Site.Title }}{{ else }}{{ .Title }}{{ end }}">
+  <meta name="twitter:description" content="{{ $desc }}">
+  {{ with .Params.cover }}{{ with .image }}
+  <meta name="twitter:image" content="{{ . }}">
+  {{ end }}{{ end }}
+
+  {{/* ── SEO: Alternate language links ── */}}
+  {{ if eq .Lang "zh" }}
+  <link rel="alternate" hreflang="en" href="{{ replace .Permalink "/zh/" "/" }}">
+  <link rel="alternate" hreflang="zh" href="{{ .Permalink }}">
+  {{ else }}
+  <link rel="alternate" hreflang="zh" href="{{ replace .Permalink .Site.BaseURL (printf "%szh/" .Site.BaseURL) }}">
+  <link rel="alternate" hreflang="en" href="{{ .Permalink }}">
+  {{ end }}
+  <link rel="alternate" hreflang="x-default" href="{{ .Permalink }}">
+
+  {{/* ── Fonts & Favicon ── */}}
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/geist-sans@5.0.1/index.min.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/geist-mono@5.0.1/index.min.css">
   <link rel="icon" type="image/png" href="/avatar.png">
   {{ partial "extend_head.html" . }}
+
+  {{/* ── SEO: JSON-LD Structured Data ── */}}
+  {{ if .IsHome }}
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "{{ .Site.Title }}",
+    "url": "{{ .Site.BaseURL }}",
+    "description": "{{ $desc }}",
+    "inLanguage": ["en", "zh"],
+    "potentialAction": {
+      "@type": "SearchAction",
+      "target": "{{ .Site.BaseURL }}posts/?q={search_term_string}",
+      "query-input": "required name=search_term_string"
+    }
+  }
+  </script>
+  {{ else if .IsPage }}
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "{{ .Title }}",
+    "description": "{{ $desc }}",
+    "datePublished": "{{ .Date.Format "2006-01-02T15:04:05Z07:00" }}",
+    "dateModified": "{{ .Lastmod.Format "2006-01-02T15:04:05Z07:00" }}",
+    "author": {
+      "@type": "Person",
+      "name": "SmartInfraLog"
+    },
+    "publisher": {
+      "@type": "Organization",
+      "name": "SmartInfraLog",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "{{ .Site.BaseURL }}avatar.png"
+      }
+    },
+    "mainEntityOfPage": {
+      "@type": "WebPage",
+      "@id": "{{ .Permalink }}"
+    }{{ with .Params.cover }}{{ with .image }},
+    "image": "{{ . }}"{{ end }}{{ end }}
+  }
+  </script>
+  {{ end }}
+
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
