@@ -167,6 +167,7 @@ cover:
     }
 
     try:
+        # 5. 呼叫远端算力集群 (必须是纯净的 https 协议)
         r = httpx.post("https://api.deepseek.com/chat/completions", headers=headers, json=payload, timeout=60)
         r.raise_for_status()
         content = r.json()["choices"][0]["message"]["content"].strip()

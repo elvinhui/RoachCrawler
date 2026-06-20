@@ -4,3 +4,5 @@ site_payload/.hugo_build.lock
 __pycache__/
 .DS_Store
 .env
+RoachCrawler/
+site_payload/themes/
