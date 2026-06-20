@@ -214,16 +214,18 @@
 <body>
 
 <nav class="site-nav">
-  <a class="site-logo" href="{{ if eq .Lang "zh" }}/{{ else }}/en/{{ end }}">
+  <a class="site-logo" href="{{ if eq .Lang "zh" }}/zh/{{ else }}/{{ end }}">
     <span class="site-logo-dot"></span>
     SmartInfraLog
   </a>
   <div class="site-nav-links">
-    <a href="{{ if eq .Lang "zh" }}/posts/{{ else }}/en/posts/{{ end }}">{{ if eq .Lang "zh" }}文章{{ else }}Posts{{ end }}</a>
+    {{ range .Site.Menus.main }}
+    <a href="{{ .URL }}">{{ .Name }}</a>
+    {{ end }}
     {{ if eq .Lang "zh" }}
-    <a href="/en/">English</a>
+    <a href="/">English</a>
     {{ else }}
-    <a href="/">中文</a>
+    <a href="/zh/">中文</a>
     {{ end }}
     <div class="search-container">
       <input type="text" id="searchInput" class="search-input" placeholder="{{ if eq .Lang "zh" }}搜索... (Ctrl+K){{ else }}Search... (Ctrl+K){{ end }}" autocomplete="off">
@@ -250,7 +252,7 @@
     searchInput.addEventListener('focus', async () => {
       if (!searchIndex) {
         try {
-          const langPrefix = '{{ if eq .Lang "zh" }}{{ else }}/en{{ end }}';
+          const langPrefix = '{{ if eq .Lang "zh" }}/zh{{ else }}{{ end }}';
           const res = await fetch(langPrefix + '/index.json');
           searchIndex = await res.json();
         } catch (e) {

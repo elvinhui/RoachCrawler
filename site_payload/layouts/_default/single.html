@@ -2,7 +2,7 @@
 <main class="post-page">
   <article class="post-article">
     <header class="post-header">
-      <a href="{{ if eq .Lang "zh" }}/posts/{{ else }}/en/posts/{{ end }}" class="ops-chip">
+      <a href="{{ if eq .Lang "zh" }}/zh/posts/{{ else }}/posts/{{ end }}" class="ops-chip">
         <span class="ops-chip-dot"></span>
         {{ if eq .Lang "zh" }}运维笔记{{ else }}Ops Notes{{ end }}
       </a>

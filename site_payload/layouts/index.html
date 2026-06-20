@@ -10,8 +10,8 @@
         {{ if eq .Lang "zh" }}把 Data Center 趋势、Python 探针、AI 洗稿流水线和 DCIM 观察统一汇入一个高信号内容路由。少一点杂乱，多一点可执行的工程判断。{{ else }}A high-signal route for data center trends, Python probes, AI-assisted publishing pipelines, and DCIM field notes.{{ end }}
       </p>
       <div class="ops-actions">
-        <a class="ops-action-primary" href="{{ if eq .Lang "zh" }}/posts/{{ else }}/en/posts/{{ end }}">{{ if eq .Lang "zh" }}进入知识库{{ else }}Open Knowledge Base{{ end }}</a>
-        <a class="ops-action-secondary" href="{{ if eq .Lang "zh" }}/en/{{ else }}/{{ end }}">{{ if eq .Lang "zh" }}English{{ else }}中文版本{{ end }}</a>
+        <a class="ops-action-primary" href="{{ if eq .Lang "zh" }}/zh/posts/{{ else }}/posts/{{ end }}">{{ if eq .Lang "zh" }}进入知识库{{ else }}Open Knowledge Base{{ end }}</a>
+        <a class="ops-action-secondary" href="{{ if eq .Lang "zh" }}/{{ else }}/zh/{{ end }}">{{ if eq .Lang "zh" }}English{{ else }}中文版本{{ end }}</a>
       </div>
       <div class="ops-stat-grid">
         <div class="ops-stat">
@@ -85,7 +85,7 @@
         <span class="ops-badge">{{ if eq .Lang "zh" }}最新文章{{ else }}Latest Posts{{ end }}</span>
         <h2>{{ if eq .Lang "zh" }}最近更新的运维笔记{{ else }}Fresh Ops Notes{{ end }}</h2>
       </div>
-      <a class="ops-action-secondary" href="{{ if eq .Lang "zh" }}/posts/{{ else }}/en/posts/{{ end }}">{{ if eq .Lang "zh" }}查看全部{{ else }}View all{{ end }}</a>
+      <a class="ops-action-secondary" href="{{ if eq .Lang "zh" }}/zh/posts/{{ else }}/posts/{{ end }}">{{ if eq .Lang "zh" }}查看全部{{ else }}View all{{ end }}</a>
     </div>
 
     <div class="ops-post-grid">
