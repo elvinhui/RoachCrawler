@@ -186,7 +186,7 @@ cover:
             base_name = f"post-{int(datetime.now().timestamp())}"
 
             # 1. 写入中文版
-            zh_path = os.path.join(output_dir, f"{base_name}.md")
+            zh_path = os.path.join(output_dir, f"{base_name}.zh.md")
             with open(zh_path, "w", encoding="utf-8") as f:
                 f.write(chinese_content.strip())
 

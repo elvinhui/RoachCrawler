@@ -19,6 +19,21 @@ paginate = 6
   title = "SmartInfraLog"
   weight = 1
 
+[[languages.en.menu.main]]
+  name = "Home"
+  url = "/"
+  weight = 1
+
+[[languages.en.menu.main]]
+  name = "About"
+  url = "/about/"
+  weight = 2
+
+[[languages.en.menu.main]]
+  name = "Privacy"
+  url = "/privacy/"
+  weight = 3
+
 # ================================
 # 中文网段配置 (路由 /zh/)
 # ================================
@@ -26,3 +41,18 @@ paginate = 6
   label = "中文"
   title = "SmartInfraLog"
   weight = 2
+
+[[languages.zh.menu.main]]
+  name = "首页"
+  url = "/zh/"
+  weight = 1
+
+[[languages.zh.menu.main]]
+  name = "关于"
+  url = "/zh/about/"
+  weight = 2
+
+[[languages.zh.menu.main]]
+  name = "隐私协议"
+  url = "/zh/privacy/"
+  weight = 3
