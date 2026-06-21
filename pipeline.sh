@@ -56,3 +56,9 @@ git push origin main
 echo "[+] ========================================================"
 echo "[+]  流水线全部跑通！云端 Cloudflare Pages 已触发全球 CDN 编译！"
 echo "[+] ========================================================"
+
+# 7. 阶段四：提交网站地图 (Sitemap)
+# 这就好比给爬虫递交了一份你网站的架构图，告诉它这里有多少个房间（页面），别漏了。
+# 现代的建站工具通常会自动生成 Sitemap（通常是 https://www.smartinfralog.com/sitemap.xml）
+echo "[*] 阶段 4/4: 向搜索引擎主动推送 Sitemap..."
+python scripts/submit_sitemap.py || echo "[-] Sitemap 推送失败，请检查网络。"

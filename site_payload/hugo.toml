@@ -1,4 +1,4 @@
-baseURL = '/'
+baseURL = 'https://www.smartinfralog.com/'
 defaultContentLanguage = 'en'
 paginate = 6
 

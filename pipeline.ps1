@@ -58,6 +58,12 @@ if (git status --porcelain) {
     Write-Host "[+]  流水线全部跑通！新节点代码已推入仓库！" -ForegroundColor Green
     Write-Host "[+]  Cloudflare Pages 已经开始在全球边缘节点编译上线！" -ForegroundColor Green
     Write-Host "[+] ========================================================" -ForegroundColor Green
+
+    # 7. 阶段四：提交网站地图 (Sitemap)
+    # 这就好比给爬虫递交了一份你网站的架构图，告诉它这里有多少个房间（页面），别漏了。
+    Write-Host "`n[*] 阶段 4/4: 向搜索引擎主动推送 Sitemap..." -ForegroundColor Yellow
+    & $py_engine scripts/submit_sitemap.py
+    if ($LASTEXITCODE -ne 0) { Write-Host "[-] Sitemap 推送失败，请检查网络。" -ForegroundColor DarkGray }
 } else {
     Write-Host "`n[*] 暂无新资产生成 (可能是任务矩阵已清空)。跳过 Git 推送环节。流水线安全挂起。" -ForegroundColor DarkGray
 }
