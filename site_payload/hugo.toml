@@ -1,4 +1,6 @@
 baseURL = 'https://www.smartinfralog.com/'
+canonifyURLs = true
+enableRobotsTXT = true
 defaultContentLanguage = 'en'
 paginate = 6
 
