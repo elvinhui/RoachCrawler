@@ -117,10 +117,11 @@ def process_payload():
     9. For Chinese: write in a conversational technical blog tone (技术博客口语化), NOT in a formal report style. Use "我" and "我们" naturally. Mix in common developer slang where appropriate (比如"踩坑"、"翻车"、"真香"、"白嫖").
 
     [CONTENT QUALITY & SEO REQUIREMENTS (Applies to both versions)]
+    - TITLE AND HEADINGS: Titles and H2/H3 headings MUST use highly specific, long-tail technical keywords (e.g., "Self-hosted MLflow Postgres backend setup and infrastructure cost" instead of "MLflow Review").
     - NEVER just summarize. You must add professional insights, technical nuances, or pros/cons.
     - MANDATORY: You must include at least one Markdown TABLE comparing key metrics, tools, or concepts derived from the data.
     - MANDATORY: You must include an "FAQ" section using the provided [People Also Ask] questions, answering them with hard technical facts.
-    - Use H2 (##) and H3 (###) tags properly.
+    - MANDATORY: At the very end of the article, you MUST generate a valid JSON-LD `FAQPage` schema block containing the FAQs you answered. Output it as raw HTML `<script type="application/ld+json">...</script>`.
 
     [CHINESE VERSION REQUIREMENTS]
     Must start exactly with this YAML:
