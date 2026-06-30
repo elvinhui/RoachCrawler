@@ -134,6 +134,7 @@ def process_payload():
     - MANDATORY: You must include at least one Markdown TABLE comparing key metrics, tools, or concepts derived from the data.
     - MANDATORY: Include Mermaid.js diagrams (using ```mermaid code blocks) if explaining architectures, workflows, or data pipelines.
     - MANDATORY: You must include an "FAQ" section using the provided [People Also Ask] questions, answering them with hard technical facts.
+    - MANDATORY: You must include a "References & Community Insights" section at the end of the article (before the FAQ). Explicitly cite that the technical perspectives were synthesized from real-world engineering discussions on platforms like Hacker News, Reddit, and X.
     - MANDATORY: At the very end of the article, you MUST generate a valid JSON-LD `FAQPage` schema block containing the FAQs you answered. Output it as raw HTML `<script type="application/ld+json">...</script>`.
 
     [CHINESE VERSION REQUIREMENTS]
