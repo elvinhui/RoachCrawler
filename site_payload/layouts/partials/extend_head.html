@@ -20,6 +20,37 @@
   };
 </script>
 <script src="https://cdn.tailwindcss.com"></script>
+
+<!-- Mermaid.js integration for rendering architecture diagrams -->
+<script type="module">
+  import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+  mermaid.initialize({ startOnLoad: false, theme: 'dark' });
+  
+  document.addEventListener("DOMContentLoaded", async () => {
+    // Hugo renders ```mermaid as <code class="language-mermaid">
+    const elements = document.querySelectorAll('.language-mermaid');
+    if (elements.length > 0) {
+      for (const [index, element] of elements.entries()) {
+        const code = element.textContent;
+        const container = document.createElement('div');
+        container.className = 'mermaid';
+        container.style.display = 'flex';
+        container.style.justifyContent = 'center';
+        container.style.margin = '2rem 0';
+        container.textContent = code;
+        
+        // If it's wrapped in a <pre>, replace the <pre>. Otherwise just replace the element.
+        if (element.parentElement && element.parentElement.tagName.toLowerCase() === 'pre') {
+            element.parentElement.replaceWith(container);
+        } else {
+            element.replaceWith(container);
+        }
+      }
+      await mermaid.run({ querySelector: '.mermaid' });
+    }
+  });
+</script>
+
 <style>
   /* ── Antialiasing ── */
   body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
