@@ -26,7 +26,7 @@ Air has a low specific heat capacity. Once a rack hits the 20kW to 25kW mark, ai
 
 ```mermaid
 graph TD
-    subgraph Legacy Air Cooling (Up to 15kW/Rack)
+    subgraph Legacy [Legacy Air Cooling Up to 15kW/Rack]
         CRAC[CRAC Unit]
         RaisedFloor[Raised Floor Plenum]
         Rack_Air[Standard Rack]
@@ -35,7 +35,7 @@ graph TD
         Rack_Air -->|Hot Exhaust| CRAC
     end
 
-    subgraph Modern Liquid Cooling (60kW+/Rack)
+    subgraph Modern [Modern Liquid Cooling 60kW+/Rack]
         CDU[Coolant Distribution Unit]
         Manifold[In-Rack Manifold]
         ColdPlate[Direct-to-Chip Cold Plates]

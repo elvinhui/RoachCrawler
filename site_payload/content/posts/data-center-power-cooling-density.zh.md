@@ -26,7 +26,7 @@ cover:
 
 ```mermaid
 graph TD
-    subgraph 传统风冷架构 (单机柜上限 ~15kW)
+    subgraph Legacy [传统风冷架构 单机柜上限 15kW]
         CRAC[精密空调 CRAC]
         RaisedFloor[高架地板静压箱]
         Rack_Air[标准风冷机柜]
@@ -35,7 +35,7 @@ graph TD
         Rack_Air -->|排出热风| CRAC
     end
 
-    subgraph 现代液冷架构 (单机柜 60kW+)
+    subgraph Modern [现代液冷架构 单机柜 60kW+]
         CDU[冷却液分配单元 CDU]
         Manifold[机柜分水管 Manifold]
         ColdPlate[冷板直供 Direct-to-Chip]
