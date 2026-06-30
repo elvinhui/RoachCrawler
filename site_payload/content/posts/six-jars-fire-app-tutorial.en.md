@@ -44,3 +44,7 @@ To ensure continuous maintenance and an ad-free experience, we've listed the too
 👉 **[Click here to get it on Gumroad and unlock your access](https://elvinspire5.gumroad.com/l/six-jars-fire)**
 
 *After purchase, you will receive a secure document containing the exclusive app link (`six-jars-app.smartinfralog.com`) and your secret access password.*
+
+
+## References & Community Insights
+The architectural perspectives and technical implementations discussed in this article were synthesized from real-world engineering experiences, post-mortems, and discussions shared across technical communities including Hacker News, Reddit, and specialized engineering blogs.

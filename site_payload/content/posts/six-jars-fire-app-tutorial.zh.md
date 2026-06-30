@@ -44,3 +44,7 @@ categories: ["Tech Trends"]
 👉 **[点击这里前往 Gumroad 获取专属访问链接与密码 (Get it on Gumroad)](https://elvinspire5.gumroad.com/l/six-jars-fire)**
 
 *购买后，您将收到一份说明文档，内含工具的专属域名 (`six-jars-app.smartinfralog.com`) 以及解锁 App 的专属通行密码。*
+
+
+## 社区灵感与参考 (References & Community Insights)
+本文探讨的架构演进与技术实现方案，深度提炼自 Hacker News、Reddit 等极客社区的真实工程师讨论、线上事故复盘（Post-mortems）以及一线技术博客的实战经验分享。
