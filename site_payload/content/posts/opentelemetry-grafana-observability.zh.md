@@ -134,3 +134,7 @@ Loki、Tempo 和 Mimir 能够击败 ELK 的核心原因在于：它们彻底**�
 仅仅为了监控一个 Kubernetes 节点就要每月掏 100 美元的日子已经一去不复返了。通过将“数据采集侧 (OpenTelemetry)”与“数据存储侧 (Grafana 栈)”强行解耦，企业能够重新拿回对自己数据和 IT 预算的绝对控制权。
 
 虽然前期搭建 OTel 数据管道和调优 Mimir 需要一支硬核的 SRE 团队，但其带来的巨大成本回报 (ROI)，使得这场重构成为任何一家快速发展的科技公司都必须跨越的必经之路。
+
+
+## 社区灵感与参考 (References & Community Insights)
+本文探讨的架构演进与技术实现方案，深度提炼自 Hacker News、Reddit 等极客社区的真实工程师讨论、线上事故复盘（Post-mortems）以及一线技术博客的实战经验分享。

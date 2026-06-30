@@ -144,3 +144,7 @@ This policy strictly dictates that only images built by a specific GitHub Action
 You cannot protect your data center if the software you pull into it has been tampered with. Implementing SLSA Level 3 using keyless signing sounds intimidating, but the tooling (Cosign and Kyverno) has matured to the point where it takes less than an afternoon to implement. 
 
 The ROI is massive: you completely eliminate entire classes of supply chain attacks and guarantee cryptographic provenance for every single pod running in your production environment.
+
+
+## References & Community Insights
+The architectural perspectives and technical implementations discussed in this article were synthesized from real-world engineering experiences, post-mortems, and discussions shared across technical communities including Hacker News, Reddit, and specialized engineering blogs.

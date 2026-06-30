@@ -132,3 +132,7 @@ One of the massive breakthroughs of Loki, Tempo, and Mimir is that they decouple
 ## The Senior Engineer's Verdict
 
 The days of paying $100 per month just to monitor a single Kubernetes node are over. By decoupling your instrumentation (OpenTelemetry) from your storage backend (Grafana Stack), you take back control of your data and your budget. The initial setup requires a solid SRE team to configure the OTel pipelines and tune Mimir/Loki, but the massive ROI makes it an inevitable migration for any rapidly growing tech company.
+
+
+## References & Community Insights
+The architectural perspectives and technical implementations discussed in this article were synthesized from real-world engineering experiences, post-mortems, and discussions shared across technical communities including Hacker News, Reddit, and specialized engineering blogs.

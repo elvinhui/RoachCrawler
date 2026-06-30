@@ -99,3 +99,7 @@ PUE (Power Usage Effectiveness) is the ratio of total facility power vs IT equip
 You cannot bolt AI workloads onto 2015 infrastructure. Attempting to cool an NVIDIA DGX cluster with forced air is an exercise in futility that will result in thermal throttling and drastically reduced hardware lifespan. 
 
 Moving to liquid cooling and three-phase power distribution requires significant mechanical engineering collaboration. But as compute densities continue to double, mastering these DCIM fundamentals is the only path forward for serious infrastructure teams.
+
+
+## References & Community Insights
+The architectural perspectives and technical implementations discussed in this article were synthesized from real-world engineering experiences, post-mortems, and discussions shared across technical communities including Hacker News, Reddit, and specialized engineering blogs.
