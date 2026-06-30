@@ -4,6 +4,9 @@ enableRobotsTXT = true
 defaultContentLanguage = 'en'
 paginate = 6
 
+[taxonomies]
+  category = "categories"
+
 [outputs]
   home = ["HTML", "RSS", "JSON"]
 
