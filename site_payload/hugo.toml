@@ -58,3 +58,8 @@ paginate = 6
   name = "隐私协议"
   url = "/zh/privacy/"
   weight = 3
+
+[markup]
+  [markup.goldmark]
+    [markup.goldmark.renderer]
+      unsafe = true
