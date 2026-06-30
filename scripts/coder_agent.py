@@ -22,42 +22,6 @@ CATEGORY_MAP = {
 }
 DEFAULT_CATEGORY = ("Infrastructure", "infrastructure engineer and senior tech analyst")
 
-# Map categories to high-quality Unsplash tech images
-CATEGORY_COVERS = {
-    "Cloud & DevOps": [
-        "https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=1200&auto=format&fit=crop", # Cloud earth
-        "https://images.unsplash.com/photo-1614064641913-6b20a71f1fd5?q=80&w=1200&auto=format&fit=crop", # Code abstract
-    ],
-    "Cybersecurity": [
-        "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?q=80&w=1200&auto=format&fit=crop", # Matrix locks
-        "https://images.unsplash.com/photo-1563206767-5b18f218e8de?q=80&w=1200&auto=format&fit=crop", # Padlock
-    ],
-    "Data Center": [
-        "https://images.unsplash.com/photo-1518770660439-4636190af475?q=80&w=1200&auto=format&fit=crop", # Server cooling
-        "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?q=80&w=1200&auto=format&fit=crop", # Server racks
-    ],
-    "SRE & Observability": [
-        "https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=1200&auto=format&fit=crop", # Dashboards
-    ],
-    "AI & ML Infrastructure": [
-        "https://images.unsplash.com/photo-1620712943543-bcc4688e7485?q=80&w=1200&auto=format&fit=crop", # AI abstract
-        "https://images.unsplash.com/photo-1677442136019-21780ecad995?q=80&w=1200&auto=format&fit=crop", # AI generative
-    ],
-    "Networking": [
-        "https://images.unsplash.com/photo-1544197150-b99a580bb7a8?q=80&w=1200&auto=format&fit=crop", # Network cables
-        "https://images.unsplash.com/photo-1551721434-8b94ddff0e6d?q=80&w=1200&auto=format&fit=crop", # Switches
-    ],
-    "Developer Tools": [
-        "https://images.unsplash.com/photo-1555066931-4365d14bab8c?q=80&w=1200&auto=format&fit=crop", # Code screen
-    ],
-    "Infrastructure": [
-        "https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=1200&auto=format&fit=crop", # Cloud
-    ],
-    "Tech Trends": [
-        "https://images.unsplash.com/photo-1519389950473-47ba0277781c?q=80&w=1200&auto=format&fit=crop", # Workspace
-    ],
-}
-
 def resolve_category(niche):
     """Map niche tag to (category_name, role_description) tuple."""
     return CATEGORY_MAP.get(niche, DEFAULT_CATEGORY)
@@ -99,14 +63,17 @@ def process_payload():
         print("[-] 致命异常：未能从 .env 金库中读取到 DEEPSEEK_API_KEY")
         return
 
+    import urllib.parse
+    
     # 锁定核心参数
     random_seed = random.randint(1000, 9999)
     current_time = datetime.now().astimezone().isoformat()
     category_name, role_desc = resolve_category(niche)
     
-    # 动态选取高质量极客封面图
-    cover_image_pool = CATEGORY_COVERS.get(category_name, ["https://images.unsplash.com/photo-1504384308090-c894fdcc538d?q=80&w=1200&auto=format&fit=crop"])
-    cover_image_url = random.choice(cover_image_pool)
+    # 动态生成基于 Prompt 的无版权极客封面图 (非硬编码)
+    prompt_str = f"High quality technology photography representing {category_name} and {niche}, tech data center, 8k resolution"
+    encoded_prompt = urllib.parse.quote(prompt_str)
+    cover_image_url = f"https://image.pollinations.ai/prompt/{encoded_prompt}?width=1200&height=600&nologo=true&seed={random_seed}"
 
     # 核心指令重构：强加“信息增量”限制与双语隔离墙
     prompt = f"""
