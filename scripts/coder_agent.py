@@ -117,9 +117,16 @@ def process_payload():
     9. For Chinese: write in a conversational technical blog tone (技术博客口语化), NOT in a formal report style. Use "我" and "我们" naturally. Mix in common developer slang where appropriate (比如"踩坑"、"翻车"、"真香"、"白嫖").
 
     [CONTENT QUALITY & SEO REQUIREMENTS (Applies to both versions)]
+    - LENGTH & DEPTH (CRITICAL): The article MUST be extremely comprehensive, at least 1500 words per language. Do not write short fluff. Break down the topic into a highly logical flow:
+        1. The Core Problem / Background (Why does this matter?)
+        2. Architectural Deep Dive / Underlying Mechanisms (How does it work under the hood?)
+        3. Real-world Implementation / Step-by-Step Breakdown (Concrete code, configs, or CLI examples)
+        4. Performance, Cost, or Security Implications (The senior engineer's perspective)
+        5. Alternatives and Trade-offs (What else is out there and why not use it?)
     - TITLE AND HEADINGS: Titles and H2/H3 headings MUST use highly specific, long-tail technical keywords (e.g., "Self-hosted MLflow Postgres backend setup and infrastructure cost" instead of "MLflow Review").
     - NEVER just summarize. You must add professional insights, technical nuances, or pros/cons.
     - MANDATORY: You must include at least one Markdown TABLE comparing key metrics, tools, or concepts derived from the data.
+    - MANDATORY: Include Mermaid.js diagrams (using ```mermaid code blocks) if explaining architectures, workflows, or data pipelines.
     - MANDATORY: You must include an "FAQ" section using the provided [People Also Ask] questions, answering them with hard technical facts.
     - MANDATORY: At the very end of the article, you MUST generate a valid JSON-LD `FAQPage` schema block containing the FAQs you answered. Output it as raw HTML `<script type="application/ld+json">...</script>`.
 

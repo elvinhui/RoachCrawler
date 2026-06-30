@@ -37,6 +37,25 @@
       </div>
     </div>
 
+    <!-- Author Card for E-E-A-T (Trust & Value) -->
+    <div class="author-card" style="margin: 3rem 0; padding: 1.5rem; background: var(--card-bg, #f8f9fa); border-radius: 8px; display: flex; gap: 1.5rem; align-items: center; border: 1px solid var(--border-color, #eaeaea);">
+      <div style="flex-shrink: 0;">
+        <img src="/apple-touch-icon.png" alt="SmartInfraLog Team" style="width: 80px; height: 80px; border-radius: 50%; object-fit: cover; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
+      </div>
+      <div>
+        <h3 style="margin: 0 0 0.5rem 0; font-size: 1.2rem; color: var(--text-color, #333);">
+          {{ if eq .Lang "zh" }}关于作者：SmartInfraLog 团队{{ else }}About the Author: SmartInfraLog Team{{ end }}
+        </h3>
+        <p style="margin: 0; font-size: 0.95rem; line-height: 1.5; color: var(--text-muted, #666);">
+          {{ if eq .Lang "zh" }}
+          我们是一群热衷于底层基础设施、云原生架构与系统运维的资深工程师。致力于将碎片化的技术踩坑经验系统化，为您提供最硬核、最真实的实战指南。
+          {{ else }}
+          We are a group of senior engineers passionate about core infrastructure, cloud-native architecture, and system operations. We are dedicated to systematizing fragmented technical troubleshooting experiences to provide you with the most hardcore, real-world practical guides.
+          {{ end }}
+        </p>
+      </div>
+    </div>
+
     <!-- Ad300 insertion as requested by user -->
     <div style="margin: 2rem 0;">
       <script>
