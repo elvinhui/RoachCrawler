@@ -45,9 +45,9 @@
       <div class="ops-featured-list">
         {{ $featured := where $posts "Params.featured" true }}
         {{ if eq (len $featured) 0 }}
-          {{ $featured = first 3 $posts }}
+          {{ $featured = first 5 $posts }}
         {{ else }}
-          {{ $featured = first 3 $featured }}
+          {{ $featured = first 5 $featured }}
         {{ end }}
         {{ range $featured }}
         <a href="{{ .Permalink }}" class="ops-featured-item">
