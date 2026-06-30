@@ -3,7 +3,7 @@ title: "How to Achieve FIRE with the Six Jars System (Plus Our New Smart Tool)"
 date: 2026-06-17T21:00:00+08:00
 draft: false
 tags: ["FIRE", "Personal Finance", "Investing", "Six Jars"]
-categories: ["Tools"]
+categories: ["Tech Trends"]
 ---
 
 On the path to Financial Independence, Retire Early (FIRE), it's not just about how much you make, but **how much you keep and put to work**.

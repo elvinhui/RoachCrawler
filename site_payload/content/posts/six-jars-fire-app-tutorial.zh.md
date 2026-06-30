@@ -3,7 +3,7 @@ title: "如何用“六个罐子”理财法实现财务自由 (FIRE)？附智�
 date: 2026-06-17T21:00:00+08:00
 draft: false
 tags: ["FIRE", "理财", "定投", "六个罐子"]
-categories: ["理财工具"]
+categories: ["Tech Trends"]
 ---
 
 在追求财务自由（FIRE，Financial Independence, Retire Early）的道路上，最重要的不是你赚了多少钱，而是你**留下了多少钱，并让它们为你生钱**。

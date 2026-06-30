@@ -1,3 +1,6 @@
+{{ if .Params.noindex }}
+<meta name="robots" content="noindex, nofollow">
+{{ end }}
 <script>
   window.tailwind = window.tailwind || {};
   window.tailwind.config = {
