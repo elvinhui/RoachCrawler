@@ -195,6 +195,19 @@ cover:
         if "====LANG_SEPARATOR====" in content:
             chinese_content, english_content = content.split("====LANG_SEPARATOR====")
 
+            # 自动修复由于 max_tokens 截断导致的 JSON-LD 标签未闭合问题
+            def repair_json_ld(text):
+                start_idx = text.rfind('<script type="application/ld+json">')
+                if start_idx != -1:
+                    end_idx = text.rfind('</script>', start_idx)
+                    if end_idx == -1:
+                        # 被截断！直接移除损坏的 script 块，防止 Hugo 编译报错
+                        return text[:start_idx].rstrip()
+                return text
+
+            chinese_content = repair_json_ld(chinese_content)
+            english_content = repair_json_ld(english_content)
+
             output_dir = os.path.abspath(os.path.join(cwd, "../site_payload/content/posts"))
             os.makedirs(output_dir, exist_ok=True)
 
