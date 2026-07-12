@@ -30,5 +30,5 @@ summary: "关于 Elvin Hui 与 SmartInfraLog"
 ## 与我联系
 
 - 🐙 **GitHub**: [github.com/elvinhui](https://github.com/elvinhui)
-- 💼 **LinkedIn**: [linkedin.com/in/elvinhui](https://linkedin.com/in/elvinhui)
+- 💼 **LinkedIn**: [linkedin.com/in/tan-jia-hui-0a744979](https://www.linkedin.com/in/tan-jia-hui-0a744979/)
 - 📧 **邮箱**: [elvinhui0217@gmail.com](mailto:elvinhui0217@gmail.com)

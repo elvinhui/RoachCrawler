@@ -18,4 +18,4 @@ The best way to reach me is directly via email. I try to respond to all technica
 You can also find my code and professional history here:
 
 - 🐙 **GitHub**: [github.com/elvinhui](https://github.com/elvinhui)
-- 💼 **LinkedIn**: [linkedin.com/in/elvinhui](https://linkedin.com/in/elvinhui)
+- 💼 **LinkedIn**: [linkedin.com/in/tan-jia-hui-0a744979](https://www.linkedin.com/in/tan-jia-hui-0a744979/)
