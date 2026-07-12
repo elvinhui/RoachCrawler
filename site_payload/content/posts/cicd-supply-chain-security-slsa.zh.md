@@ -1,7 +1,7 @@
 ---
 title: "守住生命线：在 GitHub Actions 与 ArgoCD 中落地 SLSA 软件供应链安全"
 date: 2026-06-30T16:00:00+08:00
-draft: false
+draft: true
 featured: true
 categories: ["Cybersecurity"]
 tags: ["DevSecOps", "CI/CD", "Security", "GitHub Actions", "ArgoCD", "SLSA"]

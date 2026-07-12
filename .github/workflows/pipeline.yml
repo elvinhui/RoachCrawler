@@ -1,9 +1,9 @@
 name: 🪳 RoachCrawler Auto Pipeline
 
 on:
-  # 每12小时触发一次：北京时间 08:00 (UTC 0:00) 和 20:00 (UTC 12:00)
+  # 每天触发一次：北京时间 08:00 (UTC 0:00)
   schedule:
-    - cron: '0 0,12 * * *'
+    - cron: '0 0 * * *'
   # 手动触发入口
   workflow_dispatch:
 
@@ -69,17 +69,6 @@ jobs:
           HTTPS_PROXY: ""
         run: python scripts/coder_agent.py
 
-      - name: Article 2 - Serp Sniffer
-        run: python scripts/serp_sniffer.py
-
-      - name: Article 2 - Social Radar (last30days)
-        run: node scripts/auto_draft.js || echo "[-] Social Radar failed, skipping"
-
-      - name: Article 2 - AI Content Generation (DeepSeek)
-        env:
-          HTTP_PROXY: ""
-          HTTPS_PROXY: ""
-        run: python scripts/coder_agent.py
 
       # ── Step 9: 阶段 3 — 发布：推送触发 Vercel ──────────────────
       - name: Phase 3 - Commit & Push (trigger Vercel deploy)

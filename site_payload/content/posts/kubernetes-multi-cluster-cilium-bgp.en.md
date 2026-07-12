@@ -1,7 +1,7 @@
 ---
 title: "Kubernetes Multi-Cluster Networking: Zero Trust with Cilium and BGP"
 date: 2026-06-30T13:00:00+08:00
-draft: false
+draft: true
 featured: true
 categories: ["Cloud & DevOps"]
 tags: ["Kubernetes", "Cilium", "eBPF", "Networking", "Security"]

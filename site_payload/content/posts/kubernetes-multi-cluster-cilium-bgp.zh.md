@@ -1,7 +1,7 @@
 ---
 title: "Kubernetes 多集群网络架构指南：基于 Cilium 与 BGP 的零信任网络落地"
 date: 2026-06-30T13:00:00+08:00
-draft: false
+draft: true
 featured: true
 categories: ["Cloud & DevOps"]
 tags: ["Kubernetes", "Cilium", "eBPF", "Networking", "Security"]

@@ -2,16 +2,22 @@
 title: "About"
 layout: "single"
 url: "/about/"
-summary: "About SmartInfraLog"
+summary: "About Elvin Hui and SmartInfraLog"
 ---
 
-## About SmartInfraLog
+## About Elvin Hui
 
-SmartInfraLog is a technical blog focused on infrastructure engineering, networking, cloud & DevOps, cybersecurity, and AI/ML infrastructure. We deliver in-depth technical analysis, real-world insights, and practical guides for engineers and tech professionals.
+Hi, I'm Elvin Hui. I'm a Senior Infrastructure Engineer with over 10 years of hands-on experience in enterprise data centers, cloud-native architectures, and network security. I hold active certifications as a Cisco Certified Network Associate (CCNA) and an AWS Certified Solutions Architect.
 
-Our mission is to cut through the noise and provide actionable, battle-tested knowledge — the kind you won't find in official docs.
+Throughout my career, I've designed, deployed, and troubleshooted complex infrastructure environments — from racking servers in cold aisles to building zero-trust Kubernetes clusters across multi-cloud providers.
 
-## What We Cover
+## The Mission of SmartInfraLog
+
+SmartInfraLog was born out of frustration. Too often, official documentation only covers the "happy path," leaving engineers to fend for themselves when things inevitably break in production. 
+
+This blog is my digital garden where I systematize the fragmented "war stories" and hard-won lessons from the field. You won't find empty theory here — just actionable, battle-tested insights.
+
+## What I Cover
 
 - **Data Center & Infrastructure** — hardware, cooling, power, rack design
 - **Networking** — routing, switching, CCNA/CCNP, network automation
@@ -21,10 +27,8 @@ Our mission is to cut through the noise and provide actionable, battle-tested kn
 - **AI & ML Infrastructure** — GPU computing, model serving, MLOps
 - **SRE & Observability** — monitoring, alerting, incident response
 
-## Contact
+## Connect With Me
 
-Have questions, feedback, or collaboration ideas? Reach out to us:
-
-📧 **Email**: [elvinhui0217@gmail.com](mailto:elvinhui0217@gmail.com)
-
-We'd love to hear from you!
+- 🐙 **GitHub**: [github.com/elvinhui](https://github.com/elvinhui)
+- 💼 **LinkedIn**: [linkedin.com/in/elvinhui](https://linkedin.com/in/elvinhui)
+- 📧 **Email**: [elvinhui0217@gmail.com](mailto:elvinhui0217@gmail.com)

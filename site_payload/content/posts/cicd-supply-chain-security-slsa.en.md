@@ -1,7 +1,7 @@
 ---
 title: "Securing the Pipeline: Implementing SLSA in GitHub Actions and ArgoCD"
 date: 2026-06-30T16:00:00+08:00
-draft: false
+draft: true
 featured: true
 categories: ["Cybersecurity"]
 tags: ["DevSecOps", "CI/CD", "Security", "GitHub Actions", "ArgoCD", "SLSA"]

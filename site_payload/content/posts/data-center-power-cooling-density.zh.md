@@ -1,7 +1,7 @@
 ---
 title: "现代数据中心 (DCIM) 核心解密：机架密度、PDU 负载均衡与液冷架构的工程计算"
 date: 2026-06-30T15:00:00+08:00
-draft: false
+draft: true
 featured: true
 categories: ["Data Center"]
 tags: ["DCIM", "Power", "Cooling", "Hardware", "Infrastructure"]

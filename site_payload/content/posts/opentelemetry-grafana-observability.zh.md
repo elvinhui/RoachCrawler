@@ -1,7 +1,7 @@
 ---
 title: "逃离 Datadog 的天价账单：基于 OpenTelemetry 与 Grafana 的企业级可观测性实战"
 date: 2026-06-30T14:00:00+08:00
-draft: false
+draft: true
 featured: true
 categories: ["SRE & Observability"]
 tags: ["OpenTelemetry", "Grafana", "Datadog", "Monitoring", "SRE"]

@@ -1,7 +1,7 @@
 ---
 title: "Modern DCIM: Rack Density, PDU Balancing, and Liquid Cooling Strategies"
 date: 2026-06-30T15:00:00+08:00
-draft: false
+draft: true
 featured: true
 categories: ["Data Center"]
 tags: ["DCIM", "Power", "Cooling", "Hardware", "Infrastructure"]

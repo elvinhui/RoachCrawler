@@ -73,7 +73,22 @@ def process_payload():
     # 动态生成基于 Prompt 的无版权极客封面图 (非硬编码)
     prompt_str = f"High quality technology photography representing {category_name} and {niche}, tech data center, 8k resolution"
     encoded_prompt = urllib.parse.quote(prompt_str)
-    cover_image_url = f"https://image.pollinations.ai/prompt/{encoded_prompt}?width=1200&height=600&nologo=true&seed={random_seed}"
+    cover_image_url_remote = f"https://image.pollinations.ai/prompt/{encoded_prompt}?width=1200&height=600&nologo=true&seed={random_seed}"
+    image_filename = f"cover_{int(datetime.now().timestamp())}_{random_seed}.jpg"
+    image_dir = os.path.abspath(os.path.join(cwd, "../site_payload/static/images"))
+    os.makedirs(image_dir, exist_ok=True)
+    image_path = os.path.join(image_dir, image_filename)
+    try:
+        import httpx
+        print(f"[*] Downloading cover image to {image_path}...")
+        img_resp = httpx.get(cover_image_url_remote, timeout=30)
+        img_resp.raise_for_status()
+        with open(image_path, "wb") as f:
+            f.write(img_resp.content)
+        cover_image_url = f"/images/{image_filename}"
+    except Exception as e:
+        print(f"[-] Image download failed, using remote fallback: {e}")
+        cover_image_url = cover_image_url_remote
 
     # 核心指令重构：强加“信息增量”限制与双语隔离墙
     prompt = f"""
@@ -134,7 +149,7 @@ def process_payload():
     - MANDATORY: You must include at least one Markdown TABLE comparing key metrics, tools, or concepts derived from the data.
     - MANDATORY: Include Mermaid.js diagrams (using ```mermaid code blocks) if explaining architectures, workflows, or data pipelines.
     - MANDATORY: You must include an "FAQ" section using the provided [People Also Ask] questions, answering them with hard technical facts.
-    - MANDATORY: You must include a "References & Community Insights" section at the end of the article (before the FAQ). Explicitly cite that the technical perspectives were synthesized from real-world engineering discussions on platforms like Hacker News, Reddit, and X.
+    - MANDATORY: You must include a "References & Community Insights" section at the end of the article (before the FAQ). You MUST include at least 3 REAL, SPECIFIC external URLs (e.g., official documentation, GitHub repositories, RFCs, or specific Reddit/HN discussion links) that are highly relevant to the topic. Do not just use a generic statement, actually provide a markdown list of URLs.
     - MANDATORY: At the very end of the article, you MUST generate a valid JSON-LD `FAQPage` schema block containing the FAQs you answered. Output it as raw HTML `<script type="application/ld+json">...</script>`.
 
     [CHINESE VERSION REQUIREMENTS]
@@ -213,9 +228,9 @@ cover:
 
             base_name = f"post-{int(datetime.now().timestamp())}"
 
-            # 追加广告 shortcode
-            chinese_content = chinese_content.strip() + "\n\n{{< ad300 >}}\n"
-            english_content = english_content.strip() + "\n\n{{< ad300 >}}\n"
+            # 移除了 {{< ad300 >}} 短代码的追加，以满足 AdSense 质量合规要求
+            chinese_content = chinese_content.strip() + "\n"
+            english_content = english_content.strip() + "\n"
 
             # 1. 写入中文版
             zh_path = os.path.join(output_dir, f"{base_name}.zh.md")

@@ -1,7 +1,7 @@
 ---
 title: "Escaping Massive Datadog Bills: Enterprise Observability with OpenTelemetry and Grafana"
 date: 2026-06-30T14:00:00+08:00
-draft: false
+draft: true
 featured: true
 categories: ["SRE & Observability"]
 tags: ["OpenTelemetry", "Grafana", "Datadog", "Monitoring", "SRE"]
