@@ -4,6 +4,7 @@ import httpx
 import random
 import re
 import sqlite3  # [新增] 引入 SQLite 库用于任务核销
+import unicodedata
 from datetime import datetime
 from dotenv import load_dotenv
 
@@ -25,6 +26,22 @@ DEFAULT_CATEGORY = ("Infrastructure", "infrastructure engineer and senior tech a
 def resolve_category(niche):
     """Map niche tag to (category_name, role_description) tuple."""
     return CATEGORY_MAP.get(niche, DEFAULT_CATEGORY)
+
+
+def slugify(text, max_length=60):
+    """Convert text to a URL-safe slug for SEO-friendly filenames."""
+    # Normalize unicode
+    text = unicodedata.normalize('NFKD', text).encode('ascii', 'ignore').decode('ascii')
+    # Lowercase
+    text = text.lower()
+    # Remove non-alphanumeric characters (except hyphens and spaces)
+    text = re.sub(r'[^a-z0-9\s-]', '', text)
+    # Replace spaces and multiple hyphens with single hyphen
+    text = re.sub(r'[\s-]+', '-', text).strip('-')
+    # Truncate to max_length at word boundary
+    if len(text) > max_length:
+        text = text[:max_length].rsplit('-', 1)[0]
+    return text or 'post'
 
 
 def process_payload():
@@ -121,21 +138,24 @@ def process_payload():
       "Let's dive in", "without further ado", "In conclusion", "game-changer", "it's important to note",
       "comprehensive guide", "Whether you're a seasoned", "navigating the complexities",
       "unlock the power", "at the end of the day", "leverage", "harness the power",
-      "streamline", "empower", "delve into", "revolutionize", "robust solution"
+      "streamline", "empower", "delve into", "revolutionize", "robust solution",
+      "Furthermore", "Moreover", "Additionally", "Crucially", "Consequently", "As a result",
+      "picture this", "imagine if you will", "fast forward to", "the realm of", "meticulous"
     - Chinese: "在当今快速发展的", "值得注意的是", "总而言之", "让我们深入探讨", "不容忽视",
       "毋庸置疑", "综上所述", "赋能", "一站式", "保姆级", "助力", "深度赋能",
-      "全方位", "多维度", "颠覆性", "划时代"
+      "全方位", "多维度", "颠覆性", "划时代", "此外", "更重要的是", "毫无疑问",
+      "想象一下", "在这个领域", "精心设计"
 
-    MANDATORY WRITING TECHNIQUES:
-    1. SENTENCE RHYTHM: Mix short punchy sentences (5-10 words) with longer technical ones. Never write 3+ sentences of similar length in a row.
-    2. FIRST PERSON: Use "I", "we", "our team" naturally. Share specific scenarios like "Last month we hit this exact issue on our prod cluster" or "I personally tested this on a 3-node setup".
-    3. OPINIONS & EDGE: Take clear stances. Say "X is frankly overpriced for what you get" or "I'd pick A over B nine times out of ten". Don't hedge everything with "may" and "might".
-    4. IMPERFECTIONS: Occasionally use dashes, parenthetical asides (like this), rhetorical questions, and informal connectors ("honestly", "look", "here's the thing", "spoiler alert").
-    5. SPECIFIC NUMBERS: Use concrete data points ("saved us 340ms per request", "dropped our P99 from 2.1s to 380ms") instead of vague claims ("significantly improved performance").
-    6. PARAGRAPH VARIATION: Mix 1-sentence paragraphs with 3-4 sentence paragraphs. Not every paragraph should be the same length.
-    7. NATURAL TRANSITIONS: Don't start every section with a smooth transition. Sometimes just jump in. Other times use casual connectors like "So here's where it gets interesting" or "Now, the part everyone gets wrong".
+    MANDATORY WRITING TECHNIQUES (TO DEFEAT AI DETECTION):
+    1. EXTREME BURSTINESS: You must wildly vary your sentence lengths. Write a 30-word complex technical run-on sentence. Then write a 3-word punchy sentence. "It failed." Never write 3 sentences of similar length in a row.
+    2. HIGH PERPLEXITY VOCABULARY: Avoid predictable word pairings. Instead of "fast performance," say "blistering throughput." Instead of "hard to configure," say "a configuration nightmare." Use uncommon, specific technical idioms.
+    3. FORMAT IMPERFECTIONS: Humans write messy markdown. Occasionally bold a weird phrase, use em-dashes (—) heavily instead of commas, and drop occasional rhetorical questions. Don't format every single list perfectly. 
+    4. FIRST PERSON GRIT: Use "I", "we", "our team" naturally. Share specific, messy scenarios like "Last month we hit this exact issue on our prod cluster and it took us 3 hours to realize it was DNS" or "I personally tested this on a 3-node setup and the docs were completely wrong."
+    5. OPINIONS & EDGE: Take clear stances. Say "X is frankly overpriced for what you get" or "I'd pick A over B nine times out of ten". Don't hedge everything with "may" and "might".
+    6. SPECIFIC NUMBERS: Use concrete data points ("saved us 340ms per request", "dropped our P99 from 2.1s to 380ms") instead of vague claims ("significantly improved performance").
+    7. NATURAL TRANSITIONS: Don't start every section with a smooth transition like "Moving on to...". Sometimes just jump in. Other times use casual connectors like "So here's where it gets interesting" or "Now, the part everyone gets wrong".
     8. COLLOQUIAL TOUCHES: Sprinkle in real engineer talk — "this blew up our monitoring", "we brute-forced the config", "the docs are garbage on this part".
-    9. For Chinese: write in a conversational technical blog tone (技术博客口语化), NOT in a formal report style. Use "我" and "我们" naturally. Mix in common developer slang where appropriate (比如"踩坑"、"翻车"、"真香"、"白嫖").
+    9. For Chinese: write in a conversational technical blog tone (技术博客口语化), NOT in a formal report style. Use "我" and "我们" naturally. Mix in common developer slang where appropriate (比如"踩坑"、"翻车"、"真香"、"白嫖", "直接被劝退", "跑路").
 
     [CONTENT QUALITY & SEO REQUIREMENTS (Applies to both versions)]
     - LENGTH & DEPTH (CRITICAL): The article MUST be extremely comprehensive, at least 1500 words per language. Do not write short fluff. Break down the topic into a highly logical flow:
@@ -158,6 +178,8 @@ def process_payload():
 title: "生成一个包含 {keyword_context} 的硬核中文标题"
 date: {current_time}
 draft: false
+description: "用中文生成一个 120-160 字符的 SEO 元描述，必须包含核心关键词，吸引点击"
+summary: "用中文写 2-3 句话概述文章核心观点"
 categories: ["{category_name}"]
 tags: ["Tech", "Analysis"]
 cover:
@@ -167,6 +189,7 @@ cover:
   hiddenInSingle: false
 ---
     Followed by the highly structured technical article in Chinese (including Table and FAQ).
+    MANDATORY: Start the article body with a "## 核心要点 (Key Takeaways)" section — a bullet list of 3-5 key insights the reader will gain. This dramatically improves user engagement and reduces bounce rate.
 
     ====LANG_SEPARATOR====
 
@@ -176,6 +199,8 @@ cover:
 title: "Generate a hardcore English title for {keyword_context}"
 date: {current_time}
 draft: false
+description: "Generate a 120-160 character SEO meta description in English, must contain the core keyword, written to attract clicks"
+summary: "Write 2-3 sentences summarizing the core insights of this article"
 categories: ["{category_name}"]
 tags: ["Tech", "Analysis"]
 cover:
@@ -185,6 +210,7 @@ cover:
   hiddenInSingle: false
 ---
     Followed by the highly structured technical article in English (including Table and FAQ).
+    MANDATORY: Start the article body with a "## Key Takeaways" section — a bullet list of 3-5 key insights the reader will gain. This dramatically improves user engagement and reduces bounce rate.
     """
 
     print("[*] 正在拉起大模型双语算力，执行带有信息增量约束的重构任务...")
@@ -192,8 +218,8 @@ cover:
     payload = {
         "model": "deepseek-chat",
         "messages": [{"role": "system", "content": prompt}],
-        "temperature": 0.7,  # 提高温度以增加文风多样性，降低 AI 感
-        "max_tokens": 8192
+        "temperature": 0.85,  # 提高温度以增加文风多样性(Perplexity)，降低 AI 感，原 0.7
+        "max_tokens": 16384  # 从 8192 提升至 16384，防止长文被截断导致 JSON-LD 损坏
     }
 
     try:
@@ -223,10 +249,15 @@ cover:
             chinese_content = repair_json_ld(chinese_content)
             english_content = repair_json_ld(english_content)
 
-            output_dir = os.path.abspath(os.path.join(cwd, "../site_payload/content/posts"))
+            now = datetime.now()
+            output_dir = os.path.abspath(os.path.join(cwd, "../site_payload/content/posts", str(now.year), f"{now.month:02d}"))
             os.makedirs(output_dir, exist_ok=True)
 
-            base_name = f"post-{int(datetime.now().timestamp())}"
+            # 使用关键词生成 SEO 友好的 URL slug（替代时间戳命名）
+            base_name = slugify(keyword_context)
+            # 如果 slug 已存在，追加短时间戳避免冲突
+            if os.path.exists(os.path.join(output_dir, f"{base_name}.en.md")):
+                base_name = f"{base_name}-{int(datetime.now().timestamp()) % 10000}"
 
             # 移除了 {{< ad300 >}} 短代码的追加，以满足 AdSense 质量合规要求
             chinese_content = chinese_content.strip() + "\n"

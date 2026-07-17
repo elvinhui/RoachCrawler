@@ -6,3 +6,4 @@ __pycache__/
 .env
 RoachCrawler/
 site_payload/themes/
+quarantine/

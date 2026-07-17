@@ -1,25 +1,7 @@
 {{ if .Params.noindex }}
 <meta name="robots" content="noindex, nofollow">
 {{ end }}
-<script>
-  window.tailwind = window.tailwind || {};
-  window.tailwind.config = {
-    darkMode: ['selector', '[data-theme="dark"]'],
-    theme: {
-      extend: {
-        fontFamily: {
-          sans: ['"Geist Sans"', 'ui-sans-serif', 'system-ui', 'sans-serif'],
-          mono: ['"Geist Mono"', 'ui-monospace', 'monospace'],
-        },
-        boxShadow: {
-          diffusion: '0 20px 40px -15px rgba(0,0,0,0.05)',
-          'diffusion-dark': '0 20px 40px -15px rgba(0,0,0,0.4)',
-        },
-      },
-    },
-  };
-</script>
-<script src="https://cdn.tailwindcss.com"></script>
+
 
 <!-- Mermaid.js integration for rendering architecture diagrams -->
 <script type="module">
@@ -775,12 +757,7 @@
 <!-- AdSense Auto Ads -->
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9134811771930340" crossorigin="anonymous"></script>
 
-<!-- AMP Auto Ads -->
-<script async custom-element="amp-auto-ads" src="https://cdn.ampproject.org/v0/amp-auto-ads-0.1.js"></script>
-<amp-auto-ads type="adsense" data-ad-client="ca-pub-9134811771930340"></amp-auto-ads>
 
-<!-- SEO Referrer Policy -->
-<meta name="referrer" content="no-referrer-when-downgrade" />
 
 <!-- Umami Analytics -->
 <script defer src="https://unami-eta.vercel.app/script.js" data-website-id="02989802-51b1-4ed8-9838-68cb825e5e51"></script>

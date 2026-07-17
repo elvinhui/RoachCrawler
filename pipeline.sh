@@ -42,16 +42,33 @@ echo "[*] 阶段 2/3: 调度 DeepSeek 算力，重构中英双语对称载荷...
 # 强制清空当前终端可能残存的代理幽灵变量，保证直连 DeepSeek API
 HTTP_PROXY="" HTTPS_PROXY="" http_proxy="" https_proxy="" ALL_PROXY="" all_proxy="" python scripts/coder_agent.py
 
+# 5.5 阶段 2.5：存量内容清洗 + 内容质量关卡 (AdSense 合规必备)
+echo "[*] 阶段 2.5/4: 启动 Post Cleanup 存量内容清洗..."
+python scripts/post_cleanup.py || echo "[-] Post Cleanup 异常，跳过清洗。"
+
+echo "[*] 阶段 2.6/4: 启动 Quality Gate 内容质量扫描..."
+python scripts/quality_gate.py || {
+    echo "[-] Quality Gate 检测到不合规内容，已隔离至 quarantine/ 目录。"
+    echo "[-] 请检查隔离内容后重新运行。流水线继续提交合格内容..."
+}
+
 # 6. 阶段三：云端数据中心同步
-echo "[*] 阶段 3/3: 打包资产，向云端边缘节点推送全量固件..."
+echo "[*] 阶段 3/4: 打包资产，向云端边缘节点推送全量固件..."
+
+# 只提交有变更的文件，避免空提交
 git add .
 
-# 抓取当前物理机时间戳，动态写入提交日志
-CURRENT_TIMESTAMP=$(date "+%Y-%m-%d %H:%M:%S")
-git commit -m "auto: automated content matrix refresh via pipeline at $CURRENT_TIMESTAMP"
+# 检查是否有变更需要提交
+if git diff --cached --quiet; then
+    echo "[*] 无新内容变更，跳过提交。"
+else
+    # 抓取当前物理机时间戳，动态写入提交日志
+    CURRENT_TIMESTAMP=$(date "+%Y-%m-%d %H:%M:%S")
+    git commit -m "auto: automated content matrix refresh via pipeline at $CURRENT_TIMESTAMP"
 
-echo "[*] 正在向 GitHub 发送数据包..."
-git push origin main
+    echo "[*] 正在向 GitHub 发送数据包..."
+    git push origin main
+fi
 
 echo "[+] ========================================================"
 echo "[+]  流水线全部跑通！云端 Cloudflare Pages 已触发全球 CDN 编译！"

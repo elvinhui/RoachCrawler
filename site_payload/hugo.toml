@@ -10,6 +10,9 @@ paginate = 6
 [outputs]
   home = ["HTML", "RSS", "JSON"]
 
+[permalinks]
+  posts = "/posts/:contentbasename/"
+
 
 [params]
   env = 'production'
@@ -39,6 +42,16 @@ paginate = 6
   url = "/privacy/"
   weight = 3
 
+[[languages.en.menu.main]]
+  name = "Contact"
+  url = "/contact/"
+  weight = 4
+
+[[languages.en.menu.main]]
+  name = "Terms"
+  url = "/terms/"
+  weight = 5
+
 # ================================
 # 中文网段配置 (路由 /zh/)
 # ================================
@@ -61,6 +74,16 @@ paginate = 6
   name = "隐私协议"
   url = "/zh/privacy/"
   weight = 3
+
+[[languages.zh.menu.main]]
+  name = "联系我们"
+  url = "/zh/contact/"
+  weight = 4
+
+[[languages.zh.menu.main]]
+  name = "服务条款"
+  url = "/zh/terms/"
+  weight = 5
 
 [markup]
   [markup.goldmark]

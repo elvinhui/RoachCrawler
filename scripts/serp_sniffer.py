@@ -2,10 +2,37 @@ import requests
 import json
 import os
 import sqlite3
+from datetime import datetime, date
 from dotenv import load_dotenv
 
 # 强制挂载根目录的机密金库 (.env)
 load_dotenv(os.path.join(os.path.dirname(__file__), '..', '.env'))
+
+# AdSense 合规：每日发布上限，防止被 Google 判定为内容农场
+MAX_DAILY_PUBLISH = 3
+
+
+def check_daily_limit():
+    """检查今天已经发布了多少篇文章，超限则跳过"""
+    db_path = os.path.join(os.path.dirname(__file__), '..', 'roach_matrix.db')
+    if not os.path.exists(db_path):
+        return False  # DB 不存在，不限制
+
+    conn = sqlite3.connect(db_path)
+    cursor = conn.cursor()
+    today = date.today().strftime("%Y-%m-%d")
+    cursor.execute(
+        "SELECT COUNT(*) FROM seo_matrix WHERE status = 'published' AND published_at LIKE ?",
+        (f"{today}%",)
+    )
+    count = cursor.fetchone()[0]
+    conn.close()
+
+    if count >= MAX_DAILY_PUBLISH:
+        print(f"[*] 今日已发布 {count} 篇文章（上限 {MAX_DAILY_PUBLISH}），跳过本次生成以符合 AdSense 合规。")
+        return True
+    print(f"[*] 今日已发布 {count}/{MAX_DAILY_PUBLISH} 篇，剩余配额充足。")
+    return False
 
 
 def get_task_from_db():
@@ -104,11 +131,16 @@ def deploy_recon_probe(task):
 
 if __name__ == "__main__":
     print("[*] 正在连接 SQLite 矩阵中枢...")
-    task = get_task_from_db()
 
-    if not task:
-        print("[*] 矩阵中所有长尾词节点均已打光！流水线进入休眠。")
+    # AdSense 合规：每日发布速率限制
+    if check_daily_limit():
+        print("[*] 已达今日发布上限，流水线安全退出。")
     else:
-        print(f"[*] 锁定目标节点 ID: {task['id']} -> [{task['keyword']}]")
-        print(f"[*] =========================================")
-        deploy_recon_probe(task)
+        task = get_task_from_db()
+
+        if not task:
+            print("[*] 矩阵中所有长尾词节点均已打光！流水线进入休眠。")
+        else:
+            print(f"[*] 锁定目标节点 ID: {task['id']} -> [{task['keyword']}]")
+            print(f"[*] =========================================")
+            deploy_recon_probe(task)
