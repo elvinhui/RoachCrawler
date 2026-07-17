@@ -45,6 +45,18 @@ $env:HTTPS_PROXY=""
 & $py_engine scripts/coder_agent.py
 if ($LASTEXITCODE -ne 0) { Write-Host "[-] 算力层执行失败，流水线熔断。" -ForegroundColor Red; exit }
 
+Write-Host "`n[*] 阶段 2.5/3: 启动 Quality Gate 内容质量扫描..." -ForegroundColor Yellow
+& $py_engine scripts/quality_gate.py
+if ($LASTEXITCODE -ne 0) {
+    Write-Host "[-] Quality Gate 检测到不合规内容，触发 AI 自动修复..." -ForegroundColor Yellow
+    & $py_engine scripts/auto_fixer.py
+    Write-Host "[*] 修复完成，重新执行 Quality Gate..." -ForegroundColor Yellow
+    & $py_engine scripts/quality_gate.py
+    if ($LASTEXITCODE -ne 0) {
+        Write-Host "[-] 二次检测仍未通过，请手动检查 quarantine/ 目录。流水线继续提交合格内容..." -ForegroundColor Red
+    }
+}
+
 Write-Host "`n[*] 阶段 3/3: 打包资产推送到云端..." -ForegroundColor Yellow
 git add .
 

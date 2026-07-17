@@ -48,8 +48,10 @@ python scripts/post_cleanup.py || echo "[-] Post Cleanup 异常，跳过清洗�
 
 echo "[*] 阶段 2.6/4: 启动 Quality Gate 内容质量扫描..."
 python scripts/quality_gate.py || {
-    echo "[-] Quality Gate 检测到不合规内容，已隔离至 quarantine/ 目录。"
-    echo "[-] 请检查隔离内容后重新运行。流水线继续提交合格内容..."
+    echo "[-] Quality Gate 检测到不合规内容，触发 AI 自动修复..."
+    python scripts/auto_fixer.py
+    echo "[*] 修复完成，重新执行 Quality Gate..."
+    python scripts/quality_gate.py || echo "[-] 二次检测仍未通过，请手动检查 quarantine/ 目录。流水线继续提交合格内容..."
 }
 
 # 6. 阶段三：云端数据中心同步

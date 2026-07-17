@@ -69,6 +69,14 @@ jobs:
           HTTPS_PROXY: ""
         run: python scripts/coder_agent.py
 
+      - name: Phase 2.5 - Quality Gate & Auto-Fix
+        run: |
+          if ! python scripts/quality_gate.py; then
+            echo "[-] Quality Gate detected issues. Running AI Auto-Fixer..."
+            python scripts/auto_fixer.py
+            echo "[*] Re-running Quality Gate after fixes..."
+            python scripts/quality_gate.py || echo "[-] Quality Gate still failing after auto-fix, check quarantine/"
+          fi
 
       # ── Step 9: 阶段 3 — 发布：推送触发 Vercel ──────────────────
       - name: Phase 3 - Commit & Push (trigger Vercel deploy)
