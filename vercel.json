@@ -1,7 +1,7 @@
 {
-  "buildCommand": "cd site_payload && hugo --gc --minify",
+  "buildCommand": "cd site_payload && ../bin/hugo --gc --minify",
   "outputDirectory": "site_payload/public",
-  "installCommand": "curl -L https://github.com/gohugoio/hugo/releases/download/v0.162.1/hugo_extended_0.162.1_linux-amd64.tar.gz | tar -xz && mv hugo /usr/local/bin/hugo",
+  "installCommand": "curl -L https://github.com/gohugoio/hugo/releases/download/v0.162.1/hugo_extended_0.162.1_linux-amd64.tar.gz | tar -xz && mkdir -p bin && mv hugo bin/hugo",
   "framework": null,
   "cleanUrls": true,
   "trailingSlash": false,
@@ -11,7 +11,7 @@
       "headers": [
         {
           "key": "Cache-Control",
-          "value": "public, max-age=0, s-maxage=86400, stale-while-revalidate=600"
+          "value": "public, max-age=0, s-maxage=3600, stale-while-revalidate=600"
         }
       ]
     }
