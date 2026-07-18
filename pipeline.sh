@@ -58,7 +58,10 @@ python scripts/quality_gate.py || {
 echo "[*] 阶段 3/4: 打包资产，向云端边缘节点推送全量固件..."
 
 # 只提交有变更的文件，避免空提交
-git add .
+if [ -f scripts/new_posts.txt ]; then
+    cat scripts/new_posts.txt | xargs -I {} git add "{}"
+    git add site_payload/static/images/ || true
+fi
 
 # 检查是否有变更需要提交
 if git diff --cached --quiet; then

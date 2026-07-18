@@ -83,13 +83,21 @@ FILE CONTENT:
             fixed_content = re.sub(r'^```\s*', '', fixed_content)
             fixed_content = re.sub(r'\s*```$', '', fixed_content)
             
-            # Save back to posts dir
+            # Try to find original path from new_posts.txt
             dest = os.path.join(POSTS_DIR, filename)
+            new_posts_path = os.path.join(os.path.dirname(__file__), 'new_posts.txt')
+            if os.path.exists(new_posts_path):
+                with open(new_posts_path, 'r', encoding='utf-8') as f:
+                    for line in f:
+                        if line.strip().endswith(filename):
+                            dest = line.strip()
+                            break
+
             with open(dest, 'w', encoding='utf-8') as f:
                 f.write(fixed_content)
                 
             os.remove(filepath)
-            print(f"[+] Successfully fixed {filename} and moved back to posts/ directory.")
+            print(f"[+] Successfully fixed {filename} and restored to {dest}.")
         except Exception as e:
             print(f"[-] Failed to fix {filename}: {e}")
 

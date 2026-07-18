@@ -10,7 +10,20 @@ import sys
 import shutil
 import yaml
 import statistics
+import subprocess
 from datetime import datetime
+
+def get_git_changed_files():
+    """Returns absolute paths of all changed/untracked files in the git repo."""
+    try:
+        repo_root = subprocess.check_output(['git', 'rev-parse', '--show-toplevel']).decode('utf-8').strip()
+        untracked = subprocess.check_output(['git', 'ls-files', '-o', '--exclude-standard']).decode('utf-8').splitlines()
+        modified = subprocess.check_output(['git', 'ls-files', '-m']).decode('utf-8').splitlines()
+        staged = subprocess.check_output(['git', 'diff', '--name-only', '--cached']).decode('utf-8').splitlines()
+        changed = set(untracked + modified + staged)
+        return set(os.path.abspath(os.path.join(repo_root, f)) for f in changed)
+    except Exception:
+        return set()
 
 POSTS_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'site_payload', 'content', 'posts'))
 QUARANTINE_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'quarantine'))
@@ -172,7 +185,7 @@ def validate_post(filepath):
         issues.append("WARNING: No References section found")
 
     # ── 5. Ad shortcode check (made-for-ads signal) ──────────────────────
-    if '{{< ad300 >}}' in body or '{{<ad300>}}' in body:
+    if re.search(r'\{\{<\s*ad300\s*>\}\}', body):
         issues.append("Ad shortcode {{< ad300 >}} detected (remove before AdSense review)")
 
     # ── 6. JSON-LD validation ─────────────────────────────────────────────
@@ -195,9 +208,9 @@ def validate_post(filepath):
 
     # ── 8. Content uniqueness signals ─────────────────────────────────────
     # Check for first-person experience markers (E-E-A-T signal)
-    first_person_markers = ['I ', 'I\'ve', 'I\'m', 'we ', 'our ', 'my ',
+    first_person_markers = ['i ', 'i\'ve', 'i\'m', 'we ', 'our ', 'my ',
                             '我', '我们', '我的']
-    has_first_person = any(marker in body for marker in first_person_markers)
+    has_first_person = any(marker in body.lower() for marker in first_person_markers)
     if not has_first_person:
         issues.append("WARNING: No first-person voice detected (E-E-A-T: experience signal missing)")
 
@@ -218,6 +231,18 @@ def validate_post(filepath):
     return passed, issues
 
 
+def get_new_posts():
+    """Returns absolute paths of newly generated posts from new_posts.txt."""
+    try:
+        new_posts_path = os.path.join(os.path.dirname(__file__), 'new_posts.txt')
+        if not os.path.exists(new_posts_path):
+            return set()
+        with open(new_posts_path, 'r', encoding='utf-8') as f:
+            return set(os.path.abspath(line.strip()) for line in f if line.strip())
+    except Exception:
+        return set()
+
+
 def run_quality_gate():
     """Scan all posts and quarantine failing ones."""
     if not os.path.exists(POSTS_DIR):
@@ -225,8 +250,19 @@ def run_quality_gate():
         return
 
     os.makedirs(QUARANTINE_DIR, exist_ok=True)
+    
+    if len(sys.argv) > 1:
+        all_files = [os.path.abspath(f) for f in sys.argv[1:]]
+    else:
+        changed_files = get_new_posts()
+        all_files = []
+        for root, _, files in os.walk(POSTS_DIR):
+            for f in files:
+                if f.endswith('.md'):
+                    abs_path = os.path.abspath(os.path.join(root, f))
+                    if abs_path in changed_files:
+                        all_files.append(os.path.relpath(abs_path, POSTS_DIR))
 
-    all_files = [f for f in os.listdir(POSTS_DIR) if f.endswith('.md')]
     if not all_files:
         print("[*] No posts found to validate.")
         return
@@ -261,7 +297,7 @@ def run_quality_gate():
                 print(f"      {prefix} {issue}")
 
             # Move to quarantine
-            quarantine_path = os.path.join(QUARANTINE_DIR, filename)
+            quarantine_path = os.path.join(QUARANTINE_DIR, os.path.basename(filepath))
             shutil.move(filepath, quarantine_path)
             print(f"      → Quarantined to {quarantine_path}")
             failed_count += 1

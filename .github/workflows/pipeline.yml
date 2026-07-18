@@ -69,8 +69,9 @@ jobs:
           HTTPS_PROXY: ""
         run: python scripts/coder_agent.py
 
-      - name: Phase 2.5 - Quality Gate & Auto-Fix
+      - name: Phase 2.5 - Post Cleanup & Quality Gate
         run: |
+          python scripts/post_cleanup.py || echo "[-] Post Cleanup failed, skipping"
           if ! python scripts/quality_gate.py; then
             echo "[-] Quality Gate detected issues. Running AI Auto-Fixer..."
             python scripts/auto_fixer.py
@@ -81,7 +82,12 @@ jobs:
       # ── Step 9: 阶段 3 — 发布：推送触发 Vercel ──────────────────
       - name: Phase 3 - Commit & Push (trigger Vercel deploy)
         run: |
-          git add .
+          if [ -f scripts/new_posts.txt ]; then
+            cat scripts/new_posts.txt | xargs -I {} git add "{}"
+            # Also add images that were downloaded
+            git add site_payload/static/images/ || true
+          fi
+          
           # 检查是否有新文件变动
           if git diff --cached --quiet; then
             echo "[*] 本次无新内容生成，跳过 Git 推送。"

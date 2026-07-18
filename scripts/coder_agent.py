@@ -276,6 +276,10 @@ cover:
             print(f"[+] 自动化双语矩阵对齐成功！")
             print(f"    -> 中文节点: {zh_path}")
             print(f"    -> 英文节点: {en_path}")
+            
+            with open(os.path.join(cwd, "new_posts.txt"), "w", encoding="utf-8") as f:
+                f.write(zh_path + "\n")
+                f.write(en_path + "\n")
 
             # ==========================================
             # 第三阶段核心：向 SQLite 数据库汇报战果，完成核销

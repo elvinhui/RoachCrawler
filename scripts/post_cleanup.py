@@ -15,6 +15,19 @@ import re
 import sys
 import shutil
 import yaml
+import subprocess
+
+def get_git_changed_files():
+    """Returns absolute paths of all changed/untracked files in the git repo."""
+    try:
+        repo_root = subprocess.check_output(['git', 'rev-parse', '--show-toplevel']).decode('utf-8').strip()
+        untracked = subprocess.check_output(['git', 'ls-files', '-o', '--exclude-standard']).decode('utf-8').splitlines()
+        modified = subprocess.check_output(['git', 'ls-files', '-m']).decode('utf-8').splitlines()
+        staged = subprocess.check_output(['git', 'diff', '--name-only', '--cached']).decode('utf-8').splitlines()
+        changed = set(untracked + modified + staged)
+        return set(os.path.abspath(os.path.join(repo_root, f)) for f in changed)
+    except Exception:
+        return set()
 
 POSTS_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'site_payload', 'content', 'posts'))
 REMOVED_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'quarantine', 'removed_drafts'))
@@ -70,6 +83,17 @@ def count_words(text):
     return cjk + latin
 
 
+def get_new_posts():
+    """Returns absolute paths of newly generated posts from new_posts.txt."""
+    try:
+        new_posts_path = os.path.join(os.path.dirname(__file__), 'new_posts.txt')
+        if not os.path.exists(new_posts_path):
+            return set()
+        with open(new_posts_path, 'r', encoding='utf-8') as f:
+            return set(os.path.abspath(line.strip()) for line in f if line.strip())
+    except Exception:
+        return set()
+
 def run_cleanup():
     if not os.path.exists(POSTS_DIR):
         print("[-] Posts directory not found.")
@@ -77,7 +101,14 @@ def run_cleanup():
 
     os.makedirs(REMOVED_DIR, exist_ok=True)
 
-    all_files = [f for f in os.listdir(POSTS_DIR) if f.endswith('.md') and f != '_index.en.md' and f != '_index.zh.md']
+    changed_files = get_new_posts()
+    all_files = []
+    for root, _, files in os.walk(POSTS_DIR):
+        for f in files:
+            if f.endswith('.md') and f != '_index.en.md' and f != '_index.zh.md':
+                abs_path = os.path.abspath(os.path.join(root, f))
+                if abs_path in changed_files:
+                    all_files.append(os.path.relpath(abs_path, POSTS_DIR))
 
     stats = {
         'total': len(all_files),
@@ -116,7 +147,7 @@ def run_cleanup():
 
             print(f"  [✗] {filename}: {label} → removing")
             if not DRY_RUN:
-                dest = os.path.join(REMOVED_DIR, filename)
+                dest = os.path.join(REMOVED_DIR, os.path.basename(filename))
                 shutil.move(filepath, dest)
             continue
 
@@ -127,8 +158,8 @@ def run_cleanup():
         modified = False
 
         # ── 2. Remove {{< ad300 >}} shortcodes ───────────────────────────
-        if '{{< ad300 >}}' in body:
-            body = body.replace('{{< ad300 >}}', '').rstrip() + '\n'
+        if re.search(r'\{\{<\s*ad300\s*>\}\}', body):
+            body = re.sub(r'\{\{<\s*ad300\s*>\}\}', '', body).rstrip() + '\n'
             changes.append('removed ad300 shortcode')
             stats['ad_shortcodes_removed'] += 1
             modified = True
