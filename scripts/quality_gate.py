@@ -281,17 +281,16 @@ def run_quality_gate():
         warnings = [i for i in issues if i.startswith("WARNING")]
         errors = [i for i in issues if not i.startswith("WARNING")]
 
-        if passed and not errors:
-            if warnings:
-                warning_count += 1
-                print(f"  [~] {filename}: PASS (with {len(warnings)} warnings)")
-                for w in warnings:
-                    print(f"      ⚠ {w}")
-            else:
-                print(f"  [+] {filename}: PASS")
+        if passed and not errors and not warnings:
+            print(f"  [+] {filename}: PASS")
             passed_count += 1
         else:
-            print(f"  [✗] {filename}: FAIL")
+            if warnings and not errors:
+                print(f"  [✗] {filename}: FAIL (Warnings present)")
+                warning_count += 1
+            else:
+                print(f"  [✗] {filename}: FAIL")
+            
             for issue in issues:
                 prefix = "⚠" if issue.startswith("WARNING") else "✗"
                 print(f"      {prefix} {issue}")

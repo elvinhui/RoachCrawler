@@ -59,7 +59,7 @@ echo "[*] 阶段 3/4: 打包资产，向云端边缘节点推送全量固件..."
 
 # 只提交有变更的文件，避免空提交
 if [ -f scripts/new_posts.txt ]; then
-    cat scripts/new_posts.txt | xargs -I {} git add "{}"
+    cat scripts/new_posts.txt | while read f; do [ -f "$f" ] && git add "$f"; done
     git add site_payload/static/images/ || true
 fi
 
@@ -74,6 +74,7 @@ else
     echo "[*] 正在向 GitHub 发送数据包..."
     git push origin main
 fi
+rm -f scripts/new_posts.txt
 
 echo "[+] ========================================================"
 echo "[+]  流水线全部跑通！云端 Cloudflare Pages 已触发全球 CDN 编译！"

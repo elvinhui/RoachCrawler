@@ -83,7 +83,7 @@ jobs:
       - name: Phase 3 - Commit & Push (trigger Vercel deploy)
         run: |
           if [ -f scripts/new_posts.txt ]; then
-            cat scripts/new_posts.txt | xargs -I {} git add "{}"
+            cat scripts/new_posts.txt | while read f; do [ -f "$f" ] && git add "$f"; done
             # Also add images that were downloaded
             git add site_payload/static/images/ || true
           fi
@@ -98,3 +98,6 @@ jobs:
             git push origin main
             echo "[+] 推送完成！Vercel 已触发自动部署。"
           fi
+          
+          # Clean up the manifest so it doesn't linger
+          rm -f scripts/new_posts.txt
