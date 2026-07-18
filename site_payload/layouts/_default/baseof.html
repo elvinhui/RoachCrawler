@@ -223,6 +223,13 @@
       transform: scale(0.96);
     }
 
+    .menu-toggle {
+      display: none;
+      cursor: pointer;
+      color: var(--text);
+      padding: 4px;
+    }
+
     /* ── MAIN CONTENT ── */
     .site-main {
       min-height: calc(100vh - 60px);
@@ -320,24 +327,58 @@
     }
 
     /* ── MOBILE RESPONSIVE NAV ── */
-    @media (max-width: 640px) {
-      .site-nav {
-        gap: 12px;
-        padding: 0 16px;
+    @media (max-width: 768px) {
+      .menu-toggle {
+        display: block;
       }
       .site-nav-links {
-        gap: 4px;
+        position: absolute;
+        top: 60px;
+        left: 0;
+        right: 0;
+        background: rgba(9, 9, 11, 0.95);
+        backdrop-filter: blur(20px);
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 20px;
+        border-bottom: 1px solid var(--border);
+        display: none;
+        gap: 16px;
+        box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+      }
+      .site-nav-links.active {
+        display: flex;
+        animation: slideDown 0.2s ease-out forwards;
+      }
+      @keyframes slideDown {
+        from { opacity: 0; transform: translateY(-10px); }
+        to { opacity: 1; transform: translateY(0); }
       }
       .site-nav-links a {
-        padding: 6px 8px;
-        font-size: 12px;
+        font-size: 15px;
+        width: 100%;
+        padding: 10px 12px;
+        border-bottom: 1px solid rgba(255,255,255,0.05);
+      }
+      .site-nav-links a:last-of-type {
+        border-bottom: none;
+      }
+      .search-container {
+        width: 100%;
+        margin-top: 8px;
       }
       .search-input {
-        width: 140px;
+        width: 100%;
       }
-      .site-logo {
-        font-size: 14px;
-        gap: 6px;
+      .search-input:focus {
+        width: 100%;
+      }
+      .search-results {
+        width: 100%;
+        position: static;
+        box-shadow: none;
+        background: rgba(255, 255, 255, 0.05);
+        margin-top: 12px;
       }
     }
   </style>
@@ -350,7 +391,14 @@
     <span class="site-logo-dot"></span>
     SmartInfraLog
   </a>
-  <div class="site-nav-links">
+  <div class="menu-toggle" id="menuToggle">
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </div>
+  <div class="site-nav-links" id="siteNavLinks">
     {{ range .Site.Menus.main }}
     <a href="{{ .URL }}">{{ .Name }}</a>
     {{ end }}
@@ -376,6 +424,16 @@
 
 <script>
   document.addEventListener('DOMContentLoaded', function() {
+    // Mobile menu toggle
+    const menuToggle = document.getElementById('menuToggle');
+    const siteNavLinks = document.getElementById('siteNavLinks');
+    
+    if (menuToggle) {
+      menuToggle.addEventListener('click', () => {
+        siteNavLinks.classList.toggle('active');
+      });
+    }
+
     const searchInput = document.getElementById('searchInput');
     const searchResults = document.getElementById('searchResults');
     let searchIndex = null;
