@@ -94,7 +94,7 @@ jobs:
           else
             TIMESTAMP=$(date "+%Y-%m-%d %H:%M UTC")
             git commit -m "auto: content matrix refresh at ${TIMESTAMP}"
-            git pull --rebase origin main
+            git pull --rebase --autostash origin main
             git push origin main
             echo "[+] 推送完成！Vercel 已触发自动部署。"
           fi
