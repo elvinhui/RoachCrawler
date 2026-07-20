@@ -1,5 +1,6 @@
 import os
 import boto3
+import hashlib
 from pathlib import Path
 from dotenv import load_dotenv
 
@@ -15,6 +16,13 @@ if not AWS_S3_BUCKET:
 
 # Initialize S3 client
 s3_client = boto3.client('s3', region_name=AWS_REGION)
+
+def calculate_md5(file_path):
+    hash_md5 = hashlib.md5()
+    with open(file_path, "rb") as f:
+        for chunk in iter(lambda: f.read(4096), b""):
+            hash_md5.update(chunk)
+    return hash_md5.hexdigest()
 
 def upload_directory_to_s3(local_dir, s3_prefix=""):
     """
@@ -33,6 +41,19 @@ def upload_directory_to_s3(local_dir, s3_prefix=""):
                 relative_path = os.path.relpath(file_path, local_dir)
                 s3_key = os.path.join(s3_prefix, relative_path).replace("\\", "/")
                 
+                # Check if file needs to be uploaded
+                local_md5 = calculate_md5(file_path)
+                try:
+                    head = s3_client.head_object(Bucket=AWS_S3_BUCKET, Key=s3_key)
+                    # S3 ETags for non-multipart uploads are the MD5 hash enclosed in quotes
+                    s3_etag = head.get('ETag', '').strip('"')
+                    if s3_etag == local_md5:
+                        print(f"  Skipping {s3_key} (already up to date)")
+                        continue
+                except Exception as e:
+                    # If it throws a 404, it means the object doesn't exist, which is fine
+                    pass
+
                 print(f"Uploading {file_path} to s3://{AWS_S3_BUCKET}/{s3_key}...")
                 try:
                     s3_client.upload_file(file_path, AWS_S3_BUCKET, s3_key)
