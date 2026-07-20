@@ -79,6 +79,14 @@ jobs:
             python scripts/quality_gate.py || echo "[-] Quality Gate still failing after auto-fix, check quarantine/"
           fi
 
+      - name: Phase 2.7 - Upload to AWS S3
+        env:
+          AWS_REGION: ${{ secrets.AWS_REGION }}
+          AWS_S3_BUCKET: ${{ secrets.AWS_S3_BUCKET }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        run: python scripts/upload_to_s3.py || echo "[-] S3 Upload failed, skipping"
+
       # ── Step 9: 阶段 3 — 发布：推送触发 Vercel ──────────────────
       - name: Phase 3 - Commit & Push (trigger Vercel deploy)
         run: |
@@ -94,8 +102,8 @@ jobs:
           else
             TIMESTAMP=$(date "+%Y-%m-%d %H:%M UTC")
             git commit -m "auto: content matrix refresh at ${TIMESTAMP}"
-            git pull --rebase --autostash origin main
-            git push origin main
+            git pull --rebase --autostash origin ${{ github.ref_name }}
+            git push origin HEAD
             echo "[+] 推送完成！Vercel 已触发自动部署。"
           fi
           
