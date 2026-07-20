@@ -57,6 +57,10 @@ if ($LASTEXITCODE -ne 0) {
     }
 }
 
+Write-Host "`n[*] 阶段 2.7/3: 将新增内容推送到云端对象存储 (AWS S3)..." -ForegroundColor Yellow
+& $py_engine scripts/upload_to_s3.py
+if ($LASTEXITCODE -ne 0) { Write-Host "[-] S3 上传异常，部分内容可能未推送到云端。" -ForegroundColor DarkGray }
+
 Write-Host "`n[*] 阶段 3/3: 打包资产推送到云端..." -ForegroundColor Yellow
 git add .
 

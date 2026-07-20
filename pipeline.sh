@@ -54,6 +54,9 @@ python scripts/quality_gate.py || {
     python scripts/quality_gate.py || echo "[-] 二次检测仍未通过，请手动检查 quarantine/ 目录。流水线继续提交合格内容..."
 }
 
+echo "[*] 阶段 2.7/4: 将新增内容推送到云端对象存储 (AWS S3)..."
+python scripts/upload_to_s3.py || echo "[-] S3 上传异常，部分内容可能未推送到云端。"
+
 # 6. 阶段三：云端数据中心同步
 echo "[*] 阶段 3/4: 打包资产，向云端边缘节点推送全量固件..."
 
