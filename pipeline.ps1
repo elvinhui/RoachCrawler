@@ -68,7 +68,7 @@ git add .
 if (git status --porcelain) {
     $current_time = Get-Date -Format "yyyy-MM-dd HH:mm:ss"
     git commit -m "auto: automated content matrix refresh via windows pipeline at $current_time"
-    git push origin main
+    git push origin HEAD
 
     Write-Host "`n[+] ========================================================" -ForegroundColor Green
     Write-Host "[+]  流水线全部跑通！新节点代码已推入仓库！" -ForegroundColor Green

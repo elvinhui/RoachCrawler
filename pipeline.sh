@@ -74,8 +74,7 @@ else
     CURRENT_TIMESTAMP=$(date "+%Y-%m-%d %H:%M:%S")
     git commit -m "auto: automated content matrix refresh via pipeline at $CURRENT_TIMESTAMP"
 
-    echo "[*] 正在向 GitHub 发送数据包..."
-    git push origin main
+    git push origin HEAD
 fi
 rm -f scripts/new_posts.txt
 
