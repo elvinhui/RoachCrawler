@@ -1,5 +1,5 @@
 {
-  "buildCommand": "pip3 install boto3 && python3 scripts/download_from_s3.py && cd site_payload && ../bin/hugo --gc --minify",
+  "buildCommand": "pip3 install boto3 --break-system-packages && python3 scripts/download_from_s3.py && cd site_payload && ../bin/hugo --gc --minify",
   "outputDirectory": "site_payload/public",
   "installCommand": "curl -L https://github.com/gohugoio/hugo/releases/download/v0.162.1/hugo_extended_0.162.1_linux-amd64.tar.gz | tar -xz && mkdir -p bin && mv hugo bin/hugo",
   "framework": null,
