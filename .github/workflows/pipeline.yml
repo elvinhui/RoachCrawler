@@ -6,6 +6,12 @@ on:
     - cron: '0 0 * * *'
   # 手动触发入口
   workflow_dispatch:
+    inputs:
+      sync_only:
+        description: 'Only sync to AWS S3 (skip generation)'
+        required: false
+        type: boolean
+        default: false
 
 jobs:
   run-pipeline:
@@ -54,22 +60,27 @@ jobs:
 
       # ── Step 6: 阶段 0 — Trend Crawler 挖掘热词注入矩阵 ─────────
       - name: Phase 0 - Trend Crawler
+        if: ${{ github.event.inputs.sync_only != 'true' }}
         run: python scripts/trend_crawler.py || echo "[-] Trend Crawler 异常，跳过"
 
       # ── Step 7 & 8: 循环生成 2 篇文章（Serp → Social Radar → AI，执行 2 次）────
       - name: Article 1 - Serp Sniffer
+        if: ${{ github.event.inputs.sync_only != 'true' }}
         run: python scripts/serp_sniffer.py
 
       - name: Article 1 - Social Radar (last30days)
+        if: ${{ github.event.inputs.sync_only != 'true' }}
         run: node scripts/auto_draft.js || echo "[-] Social Radar failed, skipping"
 
       - name: Article 1 - AI Content Generation (DeepSeek)
+        if: ${{ github.event.inputs.sync_only != 'true' }}
         env:
           HTTP_PROXY: ""
           HTTPS_PROXY: ""
         run: python scripts/coder_agent.py
 
       - name: Phase 2.5 - Post Cleanup & Quality Gate
+        if: ${{ github.event.inputs.sync_only != 'true' }}
         run: |
           python scripts/post_cleanup.py || echo "[-] Post Cleanup failed, skipping"
           if ! python scripts/quality_gate.py; then
