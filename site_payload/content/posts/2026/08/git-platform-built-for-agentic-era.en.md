@@ -10,7 +10,6 @@ cover:
   image: "/images/cover_1786322522_3453.jpg"
   alt: "Developer Tools Visualization"
   hiddenInList: false
-  hiddenInList: false
 ---
 
 ## Key Takeaways

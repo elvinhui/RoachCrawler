@@ -248,6 +248,10 @@ cover:
 
             chinese_content = repair_json_ld(chinese_content)
             english_content = repair_json_ld(english_content)
+            
+            # 自动修复 AI 幻觉导致的重复 yaml 键
+            chinese_content = chinese_content.replace("  hiddenInList: false\n  hiddenInList: false", "  hiddenInList: false")
+            english_content = english_content.replace("  hiddenInList: false\n  hiddenInList: false", "  hiddenInList: false")
 
             now = datetime.now()
             output_dir = os.path.abspath(os.path.join(cwd, "../site_payload/content/posts", str(now.year), f"{now.month:02d}"))
