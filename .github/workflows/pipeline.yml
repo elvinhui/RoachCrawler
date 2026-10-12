@@ -102,7 +102,11 @@ jobs:
       - name: Phase 3 - Commit & Push (trigger Vercel deploy)
         run: |
           if [ -f scripts/new_posts.txt ]; then
-            cat scripts/new_posts.txt | while read f; do [ -f "$f" ] && git add "$f"; done
+            while read -r f; do
+              if [ -f "$f" ]; then
+                git add "$f"
+              fi
+            done < scripts/new_posts.txt
             # Also add images that were downloaded
             git add site_payload/static/images/ || true
           fi

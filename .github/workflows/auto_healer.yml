@@ -1,0 +1,139 @@
+name: 🪳 RoachCrawler Autonomous Self-Healing Engine (Auto-Fix -> Branch -> Verify -> Merge -> Rerun)
+
+on:
+  workflow_run:
+    workflows:
+      - "🪳 RoachCrawler Auto Pipeline"
+    types:
+      - completed
+  workflow_dispatch:
+    inputs:
+      failed_run_id:
+        description: "Optional failed Workflow Run ID to diagnose and heal"
+        required: false
+        type: string
+      failed_workflow_name:
+        description: "Name of the failed workflow"
+        required: false
+        default: "🪳 RoachCrawler Auto Pipeline"
+        type: string
+
+permissions:
+  contents: write
+  pull-requests: write
+  actions: write
+
+jobs:
+  auto-heal:
+    runs-on: ubuntu-latest
+    if: >
+      github.event_name == 'workflow_dispatch' ||
+      github.event.workflow_run.conclusion == 'failure'
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: 'pip'
+
+      - name: Install Auto-Healer & Verification dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r module_auto_healer/requirements.txt
+          if [ -f requirements.txt ]; then
+            pip install -r requirements.txt
+          fi
+
+      - name: Fetch Failed Workflow Logs
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          EVENT_NAME: ${{ github.event_name }}
+          DISPATCH_RUN_ID: ${{ inputs.failed_run_id }}
+          WORKFLOW_RUN_ID: ${{ github.event.workflow_run.id }}
+        run: |
+          RUN_ID="${WORKFLOW_RUN_ID}"
+          if [ "$EVENT_NAME" = "workflow_dispatch" ] && [ -n "$DISPATCH_RUN_ID" ]; then
+            RUN_ID="$DISPATCH_RUN_ID"
+          fi
+          echo "TARGET_RUN_ID=$RUN_ID" >> "$GITHUB_ENV"
+
+          if [ -n "$RUN_ID" ]; then
+            gh run view "$RUN_ID" --repo "${{ github.repository }}" --log-failed > /tmp/failed_run.log 2>&1 || \
+            gh run view "$RUN_ID" --repo "${{ github.repository }}" --log > /tmp/failed_run.log 2>&1 || \
+            echo "Could not fetch logs via gh cli." > /tmp/failed_run.log
+          else
+            echo "Manual dispatch without run_id." > /tmp/failed_run.log
+          fi
+
+      - name: Run AI Diagnosis & Patch Generator
+        id: healer
+        env:
+          DEEPSEEK_API_KEY: ${{ secrets.DEEPSEEK_API_KEY }}
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          NOC_WEBHOOK_URL: ${{ secrets.NOC_WEBHOOK_URL }}
+          WF_NAME: ${{ github.event.workflow_run.name || inputs.failed_workflow_name }}
+        run: |
+          python -m module_auto_healer.healer \
+            --mode heal-run \
+            --run-id "${TARGET_RUN_ID:-manual}" \
+            --workflow-name "$WF_NAME" \
+            --log-file /tmp/failed_run.log \
+            --project-root .
+
+      - name: Re-run Directly on Transient Error
+        if: steps.healer.outputs.action == 'TRANSIENT_RERUN' && env.TARGET_RUN_ID != ''
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          echo "Transient failure detected. Re-running failed jobs for run $TARGET_RUN_ID..."
+          gh run rerun "$TARGET_RUN_ID" --repo "${{ github.repository }}" --failed || true
+
+      - name: Create Fix Branch, Run Verification Suite, Merge & Redeploy
+        if: steps.healer.outputs.action == 'CODE_FIXED'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TARGET_FILE: ${{ steps.healer.outputs.target_file }}
+          ROOT_CAUSE: ${{ steps.healer.outputs.root_cause }}
+          WF_NAME: ${{ github.event.workflow_run.name || inputs.failed_workflow_name }}
+        run: |
+          set -e
+          BRANCH_NAME="auto-fix/run-${TARGET_RUN_ID:-${GITHUB_RUN_ID}}"
+
+          echo "1. Creating isolated fix branch: $BRANCH_NAME"
+          git config user.name "roachcrawler-auto-healer[bot]"
+          git config user.email "auto-healer@smartinfralog.com"
+          git checkout -b "$BRANCH_NAME"
+
+          echo "2. Running Verification Gate (Bytecode Compile + Pytest Suite)..."
+          python -m py_compile "$TARGET_FILE"
+          python -m pytest tests/ -v
+
+          echo "3. Committing verified fix to $BRANCH_NAME..."
+          git add "$TARGET_FILE"
+          git commit -m "fix(auto-heal): resolve failure in $TARGET_FILE" -m "Root cause: $ROOT_CAUSE"
+          git push -u origin "$BRANCH_NAME"
+
+          echo "4. Merging verified fix branch into main..."
+          if gh pr create \
+            --base main \
+            --head "$BRANCH_NAME" \
+            --title "fix(auto-heal): automatic repair for $TARGET_FILE" \
+            --body "Automated fix generated and verified by RoachCrawler Auto-Healer.\n\n**Root Cause:** $ROOT_CAUSE"; then
+            gh pr merge "$BRANCH_NAME" --squash --delete-branch || (
+              git checkout main && git merge --ff-only "$BRANCH_NAME" && git push origin main && git push origin --delete "$BRANCH_NAME"
+            )
+          else
+            git checkout main
+            git merge --ff-only "$BRANCH_NAME"
+            git push origin main
+            git push origin --delete "$BRANCH_NAME" || true
+          fi
+
+          echo "5. Triggering healed workflow ($WF_NAME) on main..."
+          gh workflow run "pipeline.yml" --ref main || true

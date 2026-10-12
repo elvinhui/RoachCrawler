@@ -1,0 +1,87 @@
+name: 🪳 RoachCrawler Security Vulnerability Auto-Patcher (Audit -> Fix Branch -> Verify -> Merge)
+
+on:
+  schedule:
+    # Runs at 09:00 AM UTC+8 (01:00 UTC) every Monday
+    - cron: '0 1 * * 1'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  security-auto-patch:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: 'pip'
+
+      - name: Install Audit & Test Tools
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r module_auto_healer/requirements.txt
+
+      - name: Scan & Patch Dependency Vulnerabilities
+        id: audit_patch
+        run: |
+          if [ -f "requirements.txt" ]; then
+            echo "Auditing requirements.txt..."
+            pip-audit -r requirements.txt --format=json -o /tmp/audit_report.json || true
+            if [ -f /tmp/audit_report.json ]; then
+              python -m module_auto_healer.healer \
+                --mode audit-fix \
+                --requirements-file requirements.txt \
+                --audit-json-file /tmp/audit_report.json
+            fi
+          fi
+
+          if ! git diff --quiet requirements.txt; then
+            echo "patched=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "patched=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Create Security Fix Branch, Verify & Auto-Merge
+        if: steps.audit_patch.outputs.patched == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -e
+          BRANCH_NAME="security-fix/deps-${GITHUB_RUN_ID}"
+
+          git config user.name "roachcrawler-security-bot[bot]"
+          git config user.email "security-bot@smartinfralog.com"
+          git checkout -b "$BRANCH_NAME"
+
+          echo "Verifying upgraded dependencies install cleanly and pass tests..."
+          pip install -r requirements.txt
+          python -m pytest tests/ -v
+
+          git add requirements.txt
+          git commit -m "fix(security): auto-upgrade vulnerable Python dependencies"
+          git push -u origin "$BRANCH_NAME"
+
+          if gh pr create \
+            --base main \
+            --head "$BRANCH_NAME" \
+            --title "fix(security): automated dependency vulnerability patch" \
+            --body "Automated CVE remediation verified by `pip-audit` and `pytest`."; then
+            gh pr merge "$BRANCH_NAME" --squash --delete-branch || (
+              git checkout main && git merge --ff-only "$BRANCH_NAME" && git push origin main && git push origin --delete "$BRANCH_NAME"
+            )
+          else
+            git checkout main
+            git merge --ff-only "$BRANCH_NAME"
+            git push origin main
+            git push origin --delete "$BRANCH_NAME" || true
+          fi
