@@ -28,7 +28,7 @@ def check_daily_limit():
     count = cursor.fetchone()[0]
     conn.close()
 
-    if count >= MAX_DAILY_PUBLISH_LIMIT:
+    if count >= MAX_DAILY_PUBLISH:
         print(f"[*] 今日已发布 {count} 篇文章（上限 {MAX_DAILY_PUBLISH}），跳过本次生成以符合 AdSense 合规。")
         return True
     print(f"[*] 今日已发布 {count}/{MAX_DAILY_PUBLISH} 篇，剩余配额充足。")
