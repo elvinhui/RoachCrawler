@@ -55,6 +55,9 @@ jobs:
         if: steps.audit_patch.outputs.patched == 'true'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NOC_WEBHOOK_URL: ${{ secrets.NOC_WEBHOOK_URL }}
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+          VULN_SUMMARY: ${{ steps.audit_patch.outputs.vuln_summary }}
         run: |
           set -e
           BRANCH_NAME="security-fix/deps-${GITHUB_RUN_ID}"
@@ -75,7 +78,7 @@ jobs:
             --base main \
             --head "$BRANCH_NAME" \
             --title "fix(security): automated dependency vulnerability patch" \
-            --body "Automated CVE remediation verified by `pip-audit` and `pytest`."; then
+            --body "Automated CVE remediation verified by \`pip-audit\` and \`pytest\`."; then
             gh pr merge "$BRANCH_NAME" --squash --delete-branch || (
               git checkout main && git merge --ff-only "$BRANCH_NAME" && git push origin main && git push origin --delete "$BRANCH_NAME"
             )
@@ -85,3 +88,12 @@ jobs:
             git push origin main
             git push origin --delete "$BRANCH_NAME" || true
           fi
+
+          python -m module_auto_healer.healer \
+            --mode notify-complete \
+            --workflow-name "RoachCrawler Security Vulnerability Auto-Patcher" \
+            --target-file "requirements.txt" \
+            --branch-name "$BRANCH_NAME" \
+            --root-cause "Upgraded vulnerable dependencies: ${VULN_SUMMARY:-pip-audit auto-patch}" \
+            --run-url "${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}"
+

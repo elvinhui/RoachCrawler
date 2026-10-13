@@ -17,6 +17,11 @@ on:
         required: false
         default: "🪳 RoachCrawler Auto Pipeline"
         type: string
+      test_slack_notification:
+        description: "Send a test Auto-Fix Completion notification to Slack"
+        required: false
+        default: "false"
+        type: string
 
 permissions:
   contents: write
@@ -77,6 +82,7 @@ jobs:
           DEEPSEEK_API_KEY: ${{ secrets.DEEPSEEK_API_KEY }}
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
           NOC_WEBHOOK_URL: ${{ secrets.NOC_WEBHOOK_URL }}
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
           WF_NAME: ${{ github.event.workflow_run.name || inputs.failed_workflow_name }}
         run: |
           python -m module_auto_healer.healer \
@@ -98,6 +104,8 @@ jobs:
         if: steps.healer.outputs.action == 'CODE_FIXED'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NOC_WEBHOOK_URL: ${{ secrets.NOC_WEBHOOK_URL }}
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
           TARGET_FILE: ${{ steps.healer.outputs.target_file }}
           ROOT_CAUSE: ${{ steps.healer.outputs.root_cause }}
           WF_NAME: ${{ github.event.workflow_run.name || inputs.failed_workflow_name }}
@@ -137,3 +145,28 @@ jobs:
 
           echo "5. Triggering healed workflow ($WF_NAME) on main..."
           gh workflow run "pipeline.yml" --ref main || true
+
+          echo "6. Sending Slack Auto-Fix Completion Notification..."
+          python -m module_auto_healer.healer \
+            --mode notify-complete \
+            --workflow-name "$WF_NAME" \
+            --target-file "$TARGET_FILE" \
+            --branch-name "$BRANCH_NAME" \
+            --root-cause "$ROOT_CAUSE" \
+            --run-url "${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}"
+
+      - name: Send Test Slack Completion Notification (Manual Verification)
+        if: inputs.test_slack_notification == 'true'
+        env:
+          NOC_WEBHOOK_URL: ${{ secrets.NOC_WEBHOOK_URL }}
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+        run: |
+          python -m module_auto_healer.healer \
+            --mode notify-complete \
+            --workflow-name "🪳 RoachCrawler Auto Pipeline" \
+            --target-file "scripts/serp_sniffer.py" \
+            --branch-name "auto-fix/run-38251449688" \
+            --root-cause "Verified Slack Auto-Heal Completion Notification integration." \
+            --run-url "${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}"
+
+

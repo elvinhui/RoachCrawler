@@ -22,6 +22,7 @@ from module_auto_healer.analyzer import (
     extract_referenced_files,
 )
 from module_auto_healer.healer import (
+    build_completion_slack_payload,
     build_heal_webhook_payload,
     execute_heal_workflow,
     main as healer_main,
@@ -209,3 +210,43 @@ def test_cli_modes(tmp_path: Path, monkeypatch):
     ])
     assert rc2 == 0
     assert "action=UNFIXABLE" in gh_out.read_text(encoding="utf-8")
+
+
+def test_notify_complete_slack_integration(monkeypatch):
+    sent_requests = []
+
+    class DummyResp:
+        def raise_for_status(self):
+            return None
+
+    def fake_post(url, json=None, timeout=10):
+        sent_requests.append((url, json))
+        return DummyResp()
+
+    monkeypatch.setattr("module_auto_healer.healer.requests.post", fake_post)
+    monkeypatch.setenv("SLACK_WEBHOOK_URL", "https://hooks.slack.com/services/T00/B00/X00")
+
+    payload = build_completion_slack_payload(
+        workflow_name="🪳 RoachCrawler Auto Pipeline",
+        target_file="scripts/serp_sniffer.py",
+        branch_name="auto-fix/run-999",
+        root_cause="Fixed MAX_DAILY_PUBLISH_LIMIT",
+        run_url="https://github.com/elvinhui/RoachCrawler/actions/runs/999",
+    )
+    assert "text" in payload
+    assert "blocks" in payload
+    assert "scripts/serp_sniffer.py" in json.dumps(payload)
+
+    rc = healer_main([
+        "--mode", "notify-complete",
+        "--workflow-name", "🪳 RoachCrawler Auto Pipeline",
+        "--target-file", "scripts/serp_sniffer.py",
+        "--branch-name", "auto-fix/run-999",
+        "--root-cause", "Fixed MAX_DAILY_PUBLISH_LIMIT",
+        "--run-url", "https://github.com/elvinhui/RoachCrawler/actions/runs/999",
+    ])
+    assert rc == 0
+    assert len(sent_requests) == 1
+    assert sent_requests[0][0] == "https://hooks.slack.com/services/T00/B00/X00"
+    assert "auto-fix/run-999" in json.dumps(sent_requests[0][1])
+
