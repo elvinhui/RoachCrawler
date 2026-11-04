@@ -171,6 +171,7 @@ def test_cli_modes(tmp_path: Path, monkeypatch):
     gh_out = tmp_path / "gh_out.txt"
     monkeypatch.setenv("GITHUB_OUTPUT", str(gh_out))
     monkeypatch.setenv("NOC_WEBHOOK_URL", "")
+    monkeypatch.setenv("SLACK_WEBHOOK_URL", "")
 
     req_file = tmp_path / "requirements.txt"
     req_file.write_text("requests>=2.31.0\n", encoding="utf-8")
